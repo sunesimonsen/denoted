@@ -1,0 +1,42 @@
+{
+  "type": "module",
+  "name": "denoted",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Dropbox frontend for Emacs Denote files",
+  "keywords": ["emacs", "denote"],
+  "author": "Sune Simonsen",
+  "license": "MIT",
+  "scripts": {
+    "start": "vite --port 5000 public",
+    "build": "rm -rf dist && rollup -c node:@dependable/rollup-config",
+    "format": "prettier --write '**/*.{js,mjs,md,json}'",
+    "lint": "eslint '**/*.{js,mjs}' && prettier --check '**/*.{js,mjs,md,json}'",
+    "deploy": "npm run build && surge dist denoted.surge.sh",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "@dependable/rollup-config": "^0.4.0",
+    "eslint": "^8.30.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-mocha": "^10.1.0",
+    "fake-promise": "^2.5.44",
+    "mocha": "^10.0.0",
+    "prettier": "^3.0.3",
+    "surge": "^0.23.1",
+    "unexpected": "^13.0.0",
+    "unexpected-dependable": "^1.1.0",
+    "vite": "^5.0.10"
+  },
+  "dependencies": {
+    "@dependable/vite": "^0.1.0",
+    "@dependable/cache": "^0.6.0",
+    "@dependable/nano-router": "^0.8.0",
+    "@dependable/state": "^0.19.0",
+    "@dependable/view": "^0.17.0",
+    "@nano-router/history": "^2.11.0",
+    "@nano-router/router": "^2.11.0",
+    "stylewars": "^2.1.0"
+  }
+}
