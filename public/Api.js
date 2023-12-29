@@ -1,18 +1,25 @@
-import { searches } from "./state.js";
+import { searches, currentNote, notesCache } from "./state.js";
 import { isAuthorized, getAuthHeader } from "./auth.js";
 
 export class Api {
-  async fetch(...args) {
-    const response = await fetch(...args);
+  async fetch(url, options) {
+    const response = await fetch(url, options);
 
     if (!response.ok) {
       throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
     }
 
-    return response.json();
+    if (
+      options?.headers &&
+      options.headers["Content-Type"] === "application/json"
+    ) {
+      return response.json();
+    } else {
+      return response.text();
+    }
   }
 
-  async searchFiles() {
+  async fetchFiles() {
     const paths = [];
 
     let result = await this.fetch(
@@ -57,12 +64,38 @@ export class Api {
     return paths;
   }
 
-  async loadNotes() {
+  loadNotes() {
     if (isAuthorized()) {
       searches.initialize("notes", async () => {
-        const files = this.searchFiles();
+        const files = this.fetchFiles();
         return files;
       });
     }
+  }
+
+  async fetchNote(id) {
+    let result = await this.fetch(
+      "https://content.dropboxapi.com/2/files/download",
+      {
+        method: "POST",
+        headers: {
+          Authorization: getAuthHeader(),
+          "Content-Type": "text/plain; charset=utf-8",
+          "Dropbox-API-Arg": JSON.stringify({
+            path: `/org/denote/${id}`,
+          }),
+        },
+      },
+    );
+    console.log(result);
+
+    return result;
+  }
+
+  loadNote(id) {
+    notesCache.initialize(id, async () => {
+      const content = this.fetchNote(id);
+      return content;
+    });
   }
 }
