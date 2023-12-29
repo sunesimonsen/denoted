@@ -6,12 +6,14 @@ import { FAILED, LOADED } from "@dependable/cache";
 import { FileSearch } from "./FileSearch.js";
 import { NoteReference } from "./NoteReference.js";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
+import { ReferencesSkeleton } from "./ReferencesSkeleton.js";
 
 const styles = css`
   & {
     overflow: hidden;
     width: 300px;
     background: var(--dc-color-neutral-1);
+    border-inline-end: thin solid var(--dc-color-neutral-3);
   }
 
   & ul {
@@ -26,7 +28,9 @@ const styles = css`
   }
 
   & [data-layout="top"] {
-    margin: 16px 16px;
+    padding: 16px 16px;
+    box-shadow: rgb(47 57 65 / 5%) 0px 16px 24px 0px;
+    z-index: 1;
   }
 `;
 
@@ -39,7 +43,7 @@ export class Sidebar {
     }
 
     if (status !== LOADED) {
-      return "loading";
+      return html`<${ReferencesSkeleton} />`;
     }
 
     const items = notes.map((note) => {

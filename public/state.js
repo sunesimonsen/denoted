@@ -23,7 +23,7 @@ const searchTerms = computed(() => {
   return { words, tags };
 });
 
-const nameToNote = (name) => {
+export const nameToNote = (name) => {
   const [timestamp, title, tags] = name.replace(/\..+$/, "").split(/--|__/);
 
   const [_, year, month, day, hours, minutes, seconds] = timestamp.match(

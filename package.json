@@ -4,10 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": [
-    "emacs",
-    "denote"
-  ],
+  "keywords": ["emacs", "denote"],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -43,6 +40,7 @@
     "@dependable/vite": "^0.1.0",
     "@nano-router/history": "^2.11.0",
     "@nano-router/router": "^2.11.0",
+    "@orgajs/editor": "^1.1.7",
     "stylewars": "^2.1.0"
   }
 }

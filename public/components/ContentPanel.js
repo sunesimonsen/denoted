@@ -1,6 +1,13 @@
 import { html } from "@dependable/view";
+import { css } from "stylewars";
 import { route } from "@dependable/nano-router";
 import { NotePanel } from "./NotePanel.js";
+
+const styles = css`
+  & {
+    overflow: hidden;
+  }
+`;
 
 export class ContentPanel {
   renderPanel() {
@@ -12,6 +19,8 @@ export class ContentPanel {
   }
 
   render() {
-    return html`<main data-layout="main">${this.renderPanel()}</main>`;
+    return html`
+      <main data-layout="main" className=${styles}>${this.renderPanel()}</main>
+    `;
   }
 }

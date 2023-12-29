@@ -11,6 +11,8 @@ const styles = css`
     position: relative;
     box-shadow: rgb(47 57 65 / 5%) 0px 16px 24px 0px;
     z-index: 1;
+    height: 72px;
+    padding: 0 24px;
   }
 `;
 

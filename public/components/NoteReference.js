@@ -2,6 +2,7 @@ import { html } from "@dependable/view";
 import { computed } from "@dependable/state";
 import { route, params, Link } from "@dependable/nano-router";
 import { css, classes } from "stylewars";
+import { Skeleton } from "@dependable/components/Skeleton/v0";
 
 const styles = css`
   & {
@@ -31,6 +32,16 @@ const activeStyles = css`
     background: var(--dc-color-neutral-2);
   }
 `;
+
+export class NoteReferenceSkeleton {
+  render({ width }) {
+    return html`
+      <span className=${styles} style=${{ width }}>
+        <${Skeleton} />
+      </span>
+    `;
+  }
+}
 
 export class NoteReference {
   isActive() {
