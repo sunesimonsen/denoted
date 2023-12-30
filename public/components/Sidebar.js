@@ -29,6 +29,7 @@ const styles = css`
 
   & [data-layout="top"] {
     padding: 16px 16px;
+    border-bottom: thin solid var(--dc-color-neutral-3);
     box-shadow: rgb(47 57 65 / 5%) 0px 16px 24px 0px;
     z-index: 1;
   }
