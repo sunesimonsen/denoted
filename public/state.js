@@ -47,7 +47,11 @@ export const nameToNote = (name) => {
 const allNotes = computed(() => {
   const [files, status, error] = searches.byId("notes");
 
-  const notes = (files || []).map(nameToNote);
+  const notes = (files || []).map(nameToNote).sort((a, b) => {
+    if (a.title < b.title) return -1;
+    if (a.title > b.title) return 1;
+    return 0;
+  });
 
   return [notes, status, error];
 });

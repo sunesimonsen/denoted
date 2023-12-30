@@ -1,5 +1,11 @@
 import { searches, currentNote, notesCache, nameToNote } from "./state.js";
 import { isAuthorized, getAuthHeader } from "./auth.js";
+import { reorg } from "@orgajs/reorg";
+import { stream } from "unified-stream";
+import mutate from "@orgajs/reorg-rehype";
+import html from "rehype-stringify";
+
+const processor = reorg().use(mutate).use(html);
 
 export class Api {
   async fetch(url, options) {
@@ -97,9 +103,12 @@ export class Api {
 
     const { title } = content.match(/^#\+title:\s*\b(?<title>.*)/).groups;
 
+    const { value: htmlContent } = await processor.process(content);
+
     return {
       ...info,
       title,
+      html: htmlContent,
       content: content
         .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
         .trim(),

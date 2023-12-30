@@ -41,6 +41,12 @@
     "@nano-router/history": "^2.11.0",
     "@nano-router/router": "^2.11.0",
     "@orgajs/editor": "^1.1.7",
-    "stylewars": "^2.1.0"
+    "@orgajs/reorg": "^4.1.2",
+    "@orgajs/reorg-rehype": "^4.1.2",
+    "oast-to-hast": "^4.1.2",
+    "orga": "^4.3.0",
+    "rehype-stringify": "^9.0.4",
+    "stylewars": "^2.1.0",
+    "unified-stream": "^3.0.0"
   }
 }
