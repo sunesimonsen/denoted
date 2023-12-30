@@ -1,11 +1,47 @@
-import { searches, currentNote, notesCache, nameToNote } from "./state.js";
+import {
+  searches,
+  currentNote,
+  notesCache,
+  nameToNote,
+  timestampToNote,
+} from "./state.js";
 import { isAuthorized, getAuthHeader } from "./auth.js";
 import { reorg } from "@orgajs/reorg";
 import { stream } from "unified-stream";
 import mutate from "@orgajs/reorg-rehype";
 import html from "rehype-stringify";
+import { visit } from "unist-util-visit";
 
-const processor = reorg().use(mutate).use(html);
+const resolveDenoteLinks = () => (tree) => {
+  console.log(tree);
+  return visit(tree, "link", (node) => {
+    if (node.path.protocol === "denote") {
+      node.path.protocol = "https";
+
+      const note = timestampToNote(node.path.value);
+
+      if (note) {
+        node.path.value = "/note/" + note.id;
+      }
+    }
+  });
+};
+
+const isExternalAnchor = (node) =>
+  node.tagName === "a" && node.properties.href.startsWith("https://");
+
+const addTargetBlankToExternalLinks = () => (tree) => {
+  return visit(tree, isExternalAnchor, (node) => {
+    node.properties.target = "_blank";
+    node.properties.rel = "noopener noreferrer";
+  });
+};
+
+const processor = reorg()
+  .use(resolveDenoteLinks)
+  .use(mutate)
+  .use(addTargetBlankToExternalLinks)
+  .use(html);
 
 export class Api {
   async fetch(url, options) {

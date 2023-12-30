@@ -4,7 +4,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": ["emacs", "denote"],
+  "keywords": [
+    "emacs",
+    "denote"
+  ],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -47,6 +50,7 @@
     "orga": "^4.3.0",
     "rehype-stringify": "^9.0.4",
     "stylewars": "^2.1.0",
-    "unified-stream": "^3.0.0"
+    "unified-stream": "^3.0.0",
+    "unist-util-visit": "^5.0.0"
   }
 }

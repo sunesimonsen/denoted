@@ -56,6 +56,12 @@ const allNotes = computed(() => {
   return [notes, status, error];
 });
 
+export const timestampToNote = (timestamp) => {
+  const [notes, status, error] = allNotes();
+
+  return notes.find((note) => note.timestamp === timestamp);
+};
+
 export const filteredNotes = computed(() => {
   const [notes, status, error] = allNotes();
 

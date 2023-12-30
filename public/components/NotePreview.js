@@ -83,6 +83,20 @@ export class NotePreview {
   constructor() {
     this.setRef = (ref) => {
       this.ref = ref;
+
+      this.ref.addEventListener("click", (e) => {
+        if (e.target.nodeName === "A") {
+          const href = e.target.getAttribute("href");
+          if (href.startsWith("/note/")) {
+            this.context.router.navigate({
+              route: "note",
+              params: { id: href.slice("/note/".length) },
+            });
+
+            e.preventDefault();
+          }
+        }
+      });
     };
   }
 
