@@ -13,7 +13,6 @@ import html from "rehype-stringify";
 import { visit } from "unist-util-visit";
 
 const resolveDenoteLinks = () => (tree) => {
-  console.log(tree);
   return visit(tree, "link", (node) => {
     if (node.path.protocol === "denote") {
       node.path.protocol = "https";
@@ -37,9 +36,29 @@ const addTargetBlankToExternalLinks = () => (tree) => {
   });
 };
 
+const urlRegex =
+  /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
+
+const isUrlText = (node) => node.type === "text" && node.value.match(urlRegex);
+
+const autoLink = () => (tree) => {
+  return visit(tree, isUrlText, (node, index, parent) => {
+    parent.children[index] = {
+      tagName: "a",
+      type: "element",
+      properties: {
+        href: node.value,
+      },
+      children: [node],
+    };
+    return "skip";
+  });
+};
+
 const processor = reorg()
   .use(resolveDenoteLinks)
   .use(mutate)
+  .use(autoLink)
   .use(addTargetBlankToExternalLinks)
   .use(html);
 
