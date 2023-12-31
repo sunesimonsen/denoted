@@ -45,7 +45,7 @@ export class NoteReferenceSkeleton {
 
 export class NoteReference {
   isActive() {
-    return route() === "note" && this.props.id === params().id;
+    return route() === "note" && this.props.note.id === params().id;
   }
 
   render({ note, children, ...other }) {
