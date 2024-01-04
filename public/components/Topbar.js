@@ -1,11 +1,12 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
+import { FileSearch } from "./FileSearch.js";
 
 const styles = css`
   & {
     display: grid;
     align-items: center;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 400px 1fr 400px;
     background: var(--dc-color-neutral-0);
     position: relative;
     border-bottom: thin solid var(--dc-color-neutral-3);
@@ -16,8 +17,16 @@ const styles = css`
   }
 `;
 
-export class NoteTopbar {
+export class Topbar {
   render() {
-    return html` <div data-layout="top" className=${styles}></div> `;
+    return html`
+      <div data-layout="top" className=${styles}>
+        <div></div>
+        <div>
+          <${FileSearch} />
+        </div>
+        <div></div>
+      </div>
+    `;
   }
 }

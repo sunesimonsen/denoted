@@ -3,13 +3,13 @@ import { css } from "stylewars";
 import { filteredNotes } from "../state.js";
 import { BorderLayout } from "@dependable/components/BorderLayout/v0";
 import { FAILED, LOADED } from "@dependable/cache";
-import { FileSearch } from "./FileSearch.js";
 import { NoteReference } from "./NoteReference.js";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { ReferencesSkeleton } from "./ReferencesSkeleton.js";
 
 const styles = css`
   & {
+    display: flex;
     overflow: hidden;
     width: 300px;
     background: var(--dc-color-neutral-1);
@@ -18,20 +18,13 @@ const styles = css`
 
   & ul {
     padding: 0 16px;
-    margin: 0;
+    margin: 20px 0;
   }
 
   & ul > li {
     padding: 0;
     margin: 4px;
     list-style-type: none;
-  }
-
-  & [data-layout="top"] {
-    padding: 16px 16px;
-    border-bottom: thin solid var(--dc-color-neutral-3);
-    box-shadow: rgb(47 57 65 / 5%) 0px 16px 24px 0px;
-    z-index: 1;
   }
 `;
 
@@ -62,12 +55,7 @@ export class Sidebar {
   render() {
     return html`
       <nav data-layout="start" className=${styles}>
-        <${BorderLayout} stretched>
-          <div data-layout="top">
-            <${FileSearch} />
-          </div>
-          <${ScrollArea}>${this.renderFileList()}<//>
-        <//>
+        <${ScrollArea}>${this.renderFileList()}<//>
       </nav>
     `;
   }
