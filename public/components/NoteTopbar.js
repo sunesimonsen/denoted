@@ -1,6 +1,5 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { NoteInfo } from "./NoteInfo.js";
 
 const styles = css`
   & {
@@ -19,10 +18,6 @@ const styles = css`
 
 export class NoteTopbar {
   render() {
-    return html`
-      <div data-layout="top" className=${styles}>
-        <${NoteInfo} />
-      </div>
-    `;
+    return html` <div data-layout="top" className=${styles}></div> `;
   }
 }

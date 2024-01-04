@@ -7,6 +7,12 @@ const host =
     ? "https://denoted.surge.sh"
     : "http://localhost:5000";
 
+export const reauthorize = () => {
+  token = null;
+  sessionStorage.removeItem("dropbox-token");
+  authorize();
+};
+
 export const authorize = (context) => {
   if (!token) {
     token = sessionStorage.getItem("dropbox-token");

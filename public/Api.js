@@ -5,15 +5,15 @@ import {
   nameToNote,
   timestampToNote,
 } from "./state.js";
-import { isAuthorized, getAuthHeader } from "./auth.js";
+import { isAuthorized, getAuthHeader, reauthorize } from "./auth.js";
 import { reorg } from "@orgajs/reorg";
 import { stream } from "unified-stream";
 import mutate from "@orgajs/reorg-rehype";
 import html from "rehype-stringify";
 import { visit } from "unist-util-visit";
 
-const resolveDenoteLinks = () => (tree) => {
-  return visit(tree, "link", (node) => {
+const resolveDenoteLinks = () => (tree) =>
+  visit(tree, "link", (node) => {
     if (node.path.protocol === "denote") {
       node.path.protocol = "https";
 
@@ -24,25 +24,23 @@ const resolveDenoteLinks = () => (tree) => {
       }
     }
   });
-};
 
 const isExternalAnchor = (node) =>
   node.tagName === "a" && node.properties.href.startsWith("https://");
 
-const addTargetBlankToExternalLinks = () => (tree) => {
-  return visit(tree, isExternalAnchor, (node) => {
+const addTargetBlankToExternalLinks = () => (tree) =>
+  visit(tree, isExternalAnchor, (node) => {
     node.properties.target = "_blank";
     node.properties.rel = "noopener noreferrer";
   });
-};
 
 const urlRegex =
   /(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?\/[a-zA-Z0-9]{2,}|((https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z]{2,}(\.[a-zA-Z]{2,})(\.[a-zA-Z]{2,})?)|(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?/g;
 
 const isUrlText = (node) => node.type === "text" && node.value.match(urlRegex);
 
-const autoLink = () => (tree) => {
-  return visit(tree, isUrlText, (node, index, parent) => {
+const autoLink = () => (tree) =>
+  visit(tree, isUrlText, (node, index, parent) => {
     parent.children[index] = {
       tagName: "a",
       type: "element",
@@ -53,6 +51,14 @@ const autoLink = () => (tree) => {
     };
     return "skip";
   });
+
+const isHeading = (node) => node.tagName?.match(/h\d/);
+
+const incrementHeaderLevels = () => (tree) => {
+  return visit(tree, isHeading, (node) => {
+    node.tagName = node.tagName.replace(/\d/, (v) => parseInt(v) + 1);
+    return "skip";
+  });
 };
 
 const processor = reorg()
@@ -60,14 +66,23 @@ const processor = reorg()
   .use(mutate)
   .use(autoLink)
   .use(addTargetBlankToExternalLinks)
+  .use(incrementHeaderLevels)
   .use(html);
 
 export class Api {
+  constructor({ router }) {
+    this.router = router;
+  }
+
   async fetch(url, options) {
     const response = await fetch(url, options);
 
     if (!response.ok) {
-      throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
+      if (response.status === 401) {
+        reauthorize({ router: this.router });
+      } else {
+        throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
+      }
     }
 
     return response;

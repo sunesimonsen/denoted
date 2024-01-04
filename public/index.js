@@ -14,7 +14,7 @@ const router = new Router({ routes, history });
 render(html`
   <${Routing} router=${router}>
     <${ThemeProvider}>
-      <Context api=${new Api()}>
+      <Context api=${new Api({ router })}>
         <${RootView} />
       </Context>
     <//>

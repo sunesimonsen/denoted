@@ -6,6 +6,7 @@ import { params } from "@dependable/nano-router";
 import { makeEditor } from "@orgajs/editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
+import { NoteDate } from "./NoteDate.js";
 
 const containerStyles = css`
   & {
@@ -17,7 +18,7 @@ const styles = css`
   & {
     background: var(--dc-color-neutral-0);
     border: thin solid var(--dc-color-neutral-2);
-    padding: 50px 60px;
+    padding: 40px 60px;
     margin: 30px auto;
     width: 800px;
     min-height: 1200px;
@@ -50,8 +51,8 @@ const styles = css`
   }
 
   & h1 {
-    font-size: 1.6em;
-    margin-bottom: 0.6em;
+    font-size: 2em;
+    margin-bottom: 0.2em;
   }
 
   & h2 {
@@ -168,7 +169,11 @@ export class NotePreview {
 
     return html`
       <${ScrollArea} className=${containerStyles}>
-        <div ref=${this.setRef} className=${styles} />
+        <div className=${styles}>
+          <h1>${note.title}</h1>
+          <${NoteDate} note=${note} />
+          <div ref=${this.setRef} />
+        </div>
       <//>
     `;
   }
