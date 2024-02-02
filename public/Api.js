@@ -101,12 +101,14 @@ export class Api {
   async fetchFiles() {
     const paths = [];
 
+    const authHeader = await getAuthHeader();
+
     let result = await this.fetchJson(
       "https://api.dropboxapi.com/2/files/list_folder",
       {
         method: "POST",
         headers: {
-          Authorization: getAuthHeader(),
+          Authorization: authHeader,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -126,7 +128,7 @@ export class Api {
         {
           method: "POST",
           headers: {
-            Authorization: getAuthHeader(),
+            Authorization: authHeader,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -144,21 +146,21 @@ export class Api {
   }
 
   loadNotes() {
-    if (isAuthorized()) {
-      searches.initialize("notes", async () => {
-        const files = this.fetchFiles();
-        return files;
-      });
-    }
+    searches.initialize("notes", async () => {
+      const files = this.fetchFiles();
+      return files;
+    });
   }
 
   async fetchNote(id) {
+    const authHeader = await getAuthHeader();
+
     const response = await this.fetch(
       "https://content.dropboxapi.com/2/files/download",
       {
         method: "POST",
         headers: {
-          Authorization: getAuthHeader(),
+          Authorization: authHeader,
           "Content-Type": "text/plain; charset=utf-8",
           "Dropbox-API-Arg": JSON.stringify({
             path: `/org/denote/${id}`,
