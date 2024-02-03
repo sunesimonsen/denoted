@@ -5,6 +5,7 @@ import { route, params } from "@dependable/nano-router";
 
 export const searches = new Cache("searches");
 export const notesCache = new Cache("notes");
+export const authCache = new Cache("authCache");
 
 export const searchText = observable("", { id: "searchText" });
 const debouncedSearchText = debounce(searchText, 50);

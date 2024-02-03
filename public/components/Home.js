@@ -5,11 +5,9 @@ import { DefaultLayout } from "./DefaultLayout.js";
 import { Topbar } from "./Topbar.js";
 
 export class Home {
-  didMount() {
-    this.context.api.loadNotes();
-  }
-
   render() {
+    this.context.api.loadNotes();
+
     return html`
       <${DefaultLayout} stretched>
         <${Topbar} />

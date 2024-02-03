@@ -3,14 +3,16 @@ import {
   currentNote,
   notesCache,
   nameToNote,
+  authCache,
   timestampToNote,
 } from "./state.js";
-import { isAuthorized, getAuthHeader, reauthorize } from "./auth.js";
+import { sha256 } from "./utils/sha256.js";
 import { reorg } from "@orgajs/reorg";
 import { stream } from "unified-stream";
 import mutate from "@orgajs/reorg-rehype";
 import html from "rehype-stringify";
 import { visit } from "unist-util-visit";
+import { LOADED } from "@dependable/cache";
 
 const resolveDenoteLinks = () => (tree) =>
   visit(tree, "link", (node) => {
@@ -79,7 +81,7 @@ export class Api {
 
     if (!response.ok) {
       if (response.status === 401) {
-        reauthorize({ router: this.router });
+        this.reauthorize();
       } else {
         throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
       }
@@ -101,7 +103,7 @@ export class Api {
   async fetchFiles() {
     const paths = [];
 
-    const authHeader = await getAuthHeader();
+    const authHeader = this.getAuthHeader();
 
     let result = await this.fetchJson(
       "https://api.dropboxapi.com/2/files/list_folder",
@@ -146,14 +148,16 @@ export class Api {
   }
 
   loadNotes() {
-    searches.initialize("notes", async () => {
-      const files = this.fetchFiles();
-      return files;
-    });
+    if (this.isAuthenticated()) {
+      searches.initialize("notes", async () => {
+        const files = this.fetchFiles();
+        return files;
+      });
+    }
   }
 
   async fetchNote(id) {
-    const authHeader = await getAuthHeader();
+    const authHeader = this.getAuthHeader();
 
     const response = await this.fetch(
       "https://content.dropboxapi.com/2/files/download",
@@ -188,9 +192,99 @@ export class Api {
   }
 
   loadNote(id) {
-    notesCache.initialize(id, async () => {
-      const content = this.fetchNote(id);
-      return content;
+    if (this.isAuthenticated()) {
+      notesCache.initialize(id, async () => {
+        const content = this.fetchNote(id);
+        return content;
+      });
+    }
+  }
+
+  getAuthHeader() {
+    const [token] = authCache.byId("token");
+    return `Bearer ${token}`;
+  }
+
+  reauthorize() {
+    sessionStorage.getItem("dropbox-token");
+    authCache.evict("token");
+  }
+
+  isAuthenticated() {
+    const [, status] = authCache.byId("token");
+    return status === LOADED;
+  }
+
+  async tradeCodeForAccessToken(code, codeVerifier) {
+    const body = Object.entries({
+      client_id: "23m5fpdg74lyhna",
+      redirect_uri: window.location.origin + "/authorized",
+      code,
+      grant_type: "authorization_code",
+      code_verifier: codeVerifier,
+    })
+      .map(
+        ([name, value]) =>
+          encodeURIComponent(name) + "=" + encodeURIComponent(value),
+      )
+      .join("&");
+
+    const response = await fetch("https://api.dropboxapi.com/oauth2/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+      body,
+    });
+
+    if (response.ok) {
+      const { access_token } = await response.json();
+
+      return access_token;
+    } else {
+      throw new Error("Extracting access token failed");
+    }
+  }
+
+  authenticate() {
+    authCache.initialize("token", async () => {
+      const token = sessionStorage.getItem("dropbox-token");
+      if (token) return token;
+
+      const { code } = this.router.queryParams;
+      if (this.router.route === "authorized" && code) {
+        const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
+        sessionStorage.removeItem("dropbox-code-verifier");
+
+        const token = await this.tradeCodeForAccessToken(code, codeVerifier);
+        sessionStorage.setItem("dropbox-token", token);
+
+        this.router.navigate({
+          route: "home",
+          queryParams: {},
+          hash: "",
+          replace: true,
+        });
+
+        return token;
+      } else {
+        const codeVerifier = (
+          crypto.randomUUID() + crypto.randomUUID()
+        ).replaceAll("-", "");
+
+        sessionStorage.setItem("dropbox-code-verifier", codeVerifier);
+
+        this.router.navigate({
+          route: "authorize",
+          queryParams: {
+            client_id: "23m5fpdg74lyhna",
+            response_type: "code",
+            code_challenge: await sha256(codeVerifier),
+            code_challenge_method: "S256",
+            redirect_uri: window.location.origin + "/authorized",
+          },
+        });
+      }
     });
   }
 }
