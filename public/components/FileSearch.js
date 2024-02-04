@@ -6,7 +6,7 @@ import {
   AutocompletePopup,
 } from "@dependable/components/Autocomplete/v0";
 import { route } from "@dependable/nano-router";
-import { searchText, filteredNotes } from "../state.js";
+import { searchText, searchResults } from "../state.js";
 
 const onInput = (e) => {
   searchText(e.target.value);
@@ -20,15 +20,23 @@ export class FileSearch {
   constructor() {
     this.onSelect = (e) => {
       if (e.detail) {
-        const { key, value } = e.detail;
+        const { value } = e.detail;
 
-        this.context.router.navigate({
-          route: "note",
-          params: { id: key },
-          state: { scrollIntoView: true },
-        });
+        if (value.type === "note") {
+          this.context.router.navigate({
+            route: "note",
+            params: { id: value.data.id },
+            state: { scrollIntoView: true },
+          });
 
-        searchText("");
+          searchText("");
+        } else if (value.type === "tag") {
+          searchText(
+            searchText().replace(/_[^_ ]*$/, "_" + value.data.tag + " "),
+          );
+
+          e.preventDefault();
+        }
       } else {
         e.preventDefault();
       }
@@ -36,14 +44,25 @@ export class FileSearch {
   }
 
   renderItems() {
-    const [notes] = filteredNotes();
+    const [notes] = searchResults();
 
-    return notes.map(({ id, title, tags }) => {
-      const label = tags.length ? `${title} (${tags.join(",")})` : title;
+    return notes.map((match) => {
+      const { type, data } = match;
 
-      return html`
-        <${AutocompleteOption} key=${id} value=${title}>${label}<//>
-      `;
+      if (type === "note") {
+        const { id, title, tags } = data;
+        const label = tags.length ? `${title} (${tags.join(",")})` : title;
+
+        return html`
+          <${AutocompleteOption} key=${id} value=${match}>${label}<//>
+        `;
+      } else {
+        const { id, tag } = data;
+
+        return html`
+          <${AutocompleteOption} key=${id} value=${match}>tag: ${tag}<//>
+        `;
+      }
     });
   }
 

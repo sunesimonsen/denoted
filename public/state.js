@@ -63,6 +63,53 @@ export const filteredNotes = computed(() => {
   return [filteredNotes, status, error];
 });
 
+const currentTagFilter = computed(() => {
+  const m = debouncedSearchText().match(/_[^_ ]*$/);
+  return m && m[0];
+});
+
+const filteredNotesTags = computed(() => {
+  const [notes, status, error] = filteredNotes();
+  const tags = new Set();
+
+  for (const note of notes) {
+    for (const tag of note.tags) {
+      tags.add(tag);
+    }
+  }
+
+  return Array.from(tags).sort();
+});
+
+export const searchResults = computed(() => {
+  const [notes, status, error] = filteredNotes();
+
+  const searchResults = [];
+
+  if (currentTagFilter()) {
+    const tags = filteredNotesTags();
+    searchResults.push(
+      ...tags
+        .filter(
+          (tag) =>
+            currentTagFilter() !== "_" + tag &&
+            tag.startsWith(currentTagFilter().slice(1)),
+        )
+        .map((tag) => ({
+          type: "tag",
+          data: {
+            id: "tag:" + tag,
+            tag: tag,
+          },
+        })),
+    );
+  }
+
+  searchResults.push(...notes.map((note) => ({ type: "note", data: note })));
+
+  return [searchResults, status, error];
+});
+
 export const currentNote = computed(() => {
   if (route() !== "note") return null;
 
