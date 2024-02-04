@@ -81,7 +81,7 @@ export class Api {
 
     if (!response.ok) {
       if (response.status === 401) {
-        this.reauthorize();
+        this.reauthenticate();
       } else {
         throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
       }
@@ -205,8 +205,8 @@ export class Api {
     return `Bearer ${token}`;
   }
 
-  reauthorize() {
-    sessionStorage.getItem("dropbox-token");
+  reauthenticate() {
+    sessionStorage.removeItem("dropbox-token");
     authCache.evict("token");
   }
 
