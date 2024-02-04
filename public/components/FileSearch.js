@@ -5,6 +5,7 @@ import {
   AutocompleteOption,
   AutocompletePopup,
 } from "@dependable/components/Autocomplete/v0";
+import { route } from "@dependable/nano-router";
 import { searchText, filteredNotes } from "../state.js";
 
 const onInput = (e) => {
@@ -24,6 +25,7 @@ export class FileSearch {
         this.context.router.navigate({
           route: "note",
           params: { id: key },
+          state: { scrollIntoView: true },
         });
 
         searchText("");
@@ -47,8 +49,12 @@ export class FileSearch {
 
   render() {
     return html`
-      <${Autocomplete} id="default-autocomplete" onSelect=${this.onSelect}>
-        <${AutocompleteInput} .value=${searchText()} onInput=${onInput} />
+      <${Autocomplete} id="file-search" onSelect=${this.onSelect}>
+        <${AutocompleteInput}
+          .value=${searchText()}
+          onInput=${onInput}
+          autofocus=${route() === "home"}
+        />
         <${AutocompletePopup}>${this.renderItems()}<//>
       <//>
     `;

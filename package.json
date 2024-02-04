@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@dependable/cache": "^0.6.0",
-    "@dependable/components": "^0.7.0",
+    "@dependable/components": "^0.9.0",
     "@dependable/debounce": "^0.1.1",
     "@dependable/icons": "^0.1.0",
     "@dependable/nano-router": "^0.8.1",

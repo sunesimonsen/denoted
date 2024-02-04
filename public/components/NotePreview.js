@@ -12,6 +12,9 @@ const containerStyles = css`
   & {
     background: var(--dc-color-neutral-3);
   }
+  &:focus {
+    outline: none;
+  }
 `;
 
 const styles = css`
@@ -125,10 +128,14 @@ class NotePreviewSkeleton {
 
 export class NotePreview {
   constructor() {
-    this.setRef = (ref) => {
-      this.ref = ref;
+    this.setScrollRef = (ref) => {
+      this.scrollRef = ref;
+    };
 
-      this.ref.addEventListener("click", (e) => {
+    this.setDocmentRef = (ref) => {
+      this.documentRef = ref;
+
+      this.documentRef.addEventListener("click", (e) => {
         if (e.target.nodeName === "A") {
           const href = e.target.getAttribute("href");
           if (href.startsWith("/note/")) {
@@ -150,9 +157,10 @@ export class NotePreview {
     const [note, status] = notesCache.byId(id);
 
     if (status === LOADED && id !== this.id) {
-      this.ref.innerHTML = note.html;
+      this.documentRef.innerHTML = note.html;
 
       this.id = id;
+      this.scrollRef.focus();
     }
   }
 
@@ -168,11 +176,15 @@ export class NotePreview {
     }
 
     return html`
-      <${ScrollArea} className=${containerStyles}>
+      <${ScrollArea}
+        className=${containerStyles}
+        ref=${this.setScrollRef}
+        tabindex="-1"
+      >
         <div className=${styles}>
           <h1>${note.title}</h1>
           <${NoteDate} note=${note} />
-          <div ref=${this.setRef} />
+          <div ref=${this.setDocmentRef} />
         </div>
       <//>
     `;

@@ -1,6 +1,6 @@
 import { html } from "@dependable/view";
 import { computed } from "@dependable/state";
-import { route, params, Link } from "@dependable/nano-router";
+import { route, params, location, Link } from "@dependable/nano-router";
 import { css, classes } from "stylewars";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 
@@ -44,13 +44,28 @@ export class NoteReferenceSkeleton {
 }
 
 export class NoteReference {
+  constructor() {
+    this.setRef = (ref) => {
+      this.ref = ref;
+    };
+  }
+
   isActive() {
     return route() === "note" && this.props.note.id === params().id;
+  }
+
+  didRender() {
+    const { state } = location();
+    if (this.isActive() && state?.scrollIntoView) {
+      this.ref.scrollIntoView(false);
+      this.context.router.navigate({ state: {}, replace: true });
+    }
   }
 
   render({ note, children, ...other }) {
     return html`
       <${Link}
+        ref=${this.setRef}
         route="note"
         params=${{ id: note.id }}
         hash=""

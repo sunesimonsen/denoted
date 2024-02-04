@@ -4,6 +4,7 @@ import { RootView } from "./components/RootView.js";
 import { Router, Routing } from "@dependable/nano-router";
 import { createBrowserHistory } from "@nano-router/history";
 import { ThemeProvider } from "@dependable/components/default-theme/v0";
+import { Keyboard } from "./components/Keyboard.js";
 import { routes } from "./routes.js";
 import { Api } from "./api.js";
 
@@ -13,10 +14,12 @@ const router = new Router({ routes, history });
 
 render(html`
   <${Routing} router=${router}>
-    <${ThemeProvider}>
-      <Context api=${new Api({ router })}>
-        <${RootView} />
-      </Context>
-    <//>
+    <Context api=${new Api({ router })}>
+      <${ThemeProvider}>
+        <${Keyboard}>
+          <${RootView} />
+        <//>
+      <//>
+    </Context>
   <//>
 `);

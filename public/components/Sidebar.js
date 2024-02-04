@@ -61,9 +61,9 @@ export class Sidebar {
   render() {
     return html`
       <nav data-layout="start" className=${styles}>
-        <${ScrollArea} className=${scrollAreaStyles}
-          >${this.renderFileList()}<//
-        >
+        <${ScrollArea} className=${scrollAreaStyles}>
+          ${this.renderFileList()}
+        <//>
       </nav>
     `;
   }
