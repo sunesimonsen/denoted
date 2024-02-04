@@ -28,6 +28,12 @@ const styles = css`
   }
 `;
 
+const scrollAreaStyles = css`
+  & {
+    flex: 1;
+  }
+`;
+
 export class Sidebar {
   renderFileList() {
     const [notes, status, error] = allNotes();
@@ -55,7 +61,9 @@ export class Sidebar {
   render() {
     return html`
       <nav data-layout="start" className=${styles}>
-        <${ScrollArea}>${this.renderFileList()}<//>
+        <${ScrollArea} className=${scrollAreaStyles}
+          >${this.renderFileList()}<//
+        >
       </nav>
     `;
   }

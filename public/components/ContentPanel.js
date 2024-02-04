@@ -2,6 +2,7 @@ import { html } from "@dependable/view";
 import { css } from "stylewars";
 import { route } from "@dependable/nano-router";
 import { NotePanel } from "./NotePanel.js";
+import { Usage } from "./Usage.js";
 
 const styles = css`
   & {
@@ -14,7 +15,7 @@ export class ContentPanel {
     if (route() === "note") {
       return html`<${NotePanel} />`;
     } else {
-      return html`ContentPanel`;
+      return html`<${Usage} />`;
     }
   }
 
