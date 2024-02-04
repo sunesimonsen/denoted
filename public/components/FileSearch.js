@@ -24,7 +24,7 @@ export class FileSearch {
 
         if (value.type === "note") {
           this.context.router.navigate({
-            route: "note",
+            route: "note/view",
             params: { id: value.data.id },
             state: { scrollIntoView: true },
           });

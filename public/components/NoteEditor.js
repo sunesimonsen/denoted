@@ -1,6 +1,6 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { notesCache, currentNote } from "../state.js";
+import { notesCache } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { makeEditor } from "@orgajs/editor";
@@ -40,7 +40,7 @@ class NotePreviewSkeleton {
   }
 }
 
-export class NotePreview {
+export class NoteEditor {
   constructor() {
     this.setRef = (ref) => {
       this.ref = ref;
@@ -79,6 +79,6 @@ export class NotePreview {
       return html`<${NotePreviewSkeleton} />`;
     }
 
-    return html`<div ref=${this.setRef} style="overflow: hidden" />`;
+    return html` <div ref=${this.setRef} style="overflow: hidden" />`;
   }
 }

@@ -1,7 +1,6 @@
 import { observable, computed } from "@dependable/state";
 import { Cache } from "@dependable/cache";
 import { debounce } from "@dependable/debounce";
-import { route, params } from "@dependable/nano-router";
 
 export const searches = new Cache("searches");
 export const notesCache = new Cache("notes");
@@ -108,12 +107,4 @@ export const searchResults = computed(() => {
   searchResults.push(...notes.map((note) => ({ type: "note", data: note })));
 
   return [searchResults, status, error];
-});
-
-export const currentNote = computed(() => {
-  if (route() !== "note") return null;
-
-  const [notes, status, error] = allNotes();
-
-  return notes.find(({ id }) => id === params().id);
 });

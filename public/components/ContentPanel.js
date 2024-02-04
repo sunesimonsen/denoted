@@ -12,11 +12,11 @@ const styles = css`
 
 export class ContentPanel {
   renderPanel() {
-    if (route() === "note") {
+    if (route().startsWith("note/")) {
       return html`<${NotePanel} />`;
-    } else {
-      return html`<${Usage} />`;
     }
+
+    return html`<${Usage} />`;
   }
 
   render() {

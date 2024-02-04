@@ -1,6 +1,5 @@
 import {
   searches,
-  currentNote,
   notesCache,
   nameToNote,
   authCache,

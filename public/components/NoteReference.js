@@ -51,7 +51,7 @@ export class NoteReference {
   }
 
   isActive() {
-    return route() === "note" && this.props.note.id === params().id;
+    return route().startsWith("note") && this.props.note.id === params().id;
   }
 
   didRender() {
@@ -66,7 +66,7 @@ export class NoteReference {
     return html`
       <${Link}
         ref=${this.setRef}
-        route="note"
+        route="note/view"
         params=${{ id: note.id }}
         hash=""
         className=${classes(styles, this.isActive() && activeStyles)}

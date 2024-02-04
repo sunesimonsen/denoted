@@ -1,12 +1,13 @@
 import { html } from "@dependable/view";
 import { css, classes } from "stylewars";
-import { notesCache, currentNote } from "../state.js";
+import { notesCache } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { makeEditor } from "@orgajs/editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { NoteDate } from "./NoteDate.js";
+import { Paper } from "./Paper.js";
 
 const containerStyles = css`
   & {
@@ -14,62 +15,6 @@ const containerStyles = css`
   }
   &:focus {
     outline: none;
-  }
-`;
-
-const styles = css`
-  & {
-    background: var(--dc-color-neutral-0);
-    border: thin solid var(--dc-color-neutral-2);
-    padding: 40px 60px;
-    margin: 30px auto;
-    width: 800px;
-    min-height: 1200px;
-    overflow-x: hidden;
-    overflow-wrap: break-word;
-  }
-
-  & a {
-    text-decoration: none;
-    color: var(--dc-color-primary-0);
-  }
-
-  & a:focus,
-  & a:hover {
-    outline: none;
-    text-decoration: underline;
-    color: var(--dc-color-primary-1);
-  }
-
-  & a:active {
-    text-decoration: underline;
-    color: var(--dc-color-primary-2);
-  }
-
-  & h1,
-  & h2,
-  & h3 {
-    font-weight: normal;
-    margin: 0;
-  }
-
-  & h1 {
-    font-size: 2em;
-    margin-bottom: 0.2em;
-  }
-
-  & h2 {
-    font-size: 1.4em;
-    margin-bottom: 0.4em;
-  }
-
-  & h3 {
-    font-size: 1.2em;
-    margin-bottom: 0.2em;
-  }
-
-  & p {
-    margin: 0.5em 0;
   }
 `;
 
@@ -83,7 +28,7 @@ class NotePreviewSkeleton {
   render() {
     return html`
       <div className=${classes(containerStyles, skeletonStyles)}>
-        <div className=${styles}>
+        <${Paper}>
           <h2>
             <${Skeleton} />
           </h2>
@@ -120,7 +65,7 @@ class NotePreviewSkeleton {
             <${Skeleton} />
             <${Skeleton} />
           </p>
-        </div>
+        <//>
       </div>
     `;
   }
@@ -140,7 +85,7 @@ export class NotePreview {
           const href = e.target.getAttribute("href");
           if (href.startsWith("/note/")) {
             this.context.router.navigate({
-              route: "note",
+              route: "note/view",
               params: { id: href.slice("/note/".length) },
             });
 
@@ -166,6 +111,7 @@ export class NotePreview {
 
   render() {
     const [note, status, error] = notesCache.byId(params().id);
+    console.log("view", note, status, error);
 
     if (status === FAILED) {
       return html`Failed`;
@@ -181,11 +127,11 @@ export class NotePreview {
         ref=${this.setScrollRef}
         tabindex="-1"
       >
-        <div className=${styles}>
+        <${Paper}>
           <h1>${note.title}</h1>
           <${NoteDate} note=${note} />
           <div ref=${this.setDocmentRef} />
-        </div>
+        <//>
       <//>
     `;
   }
