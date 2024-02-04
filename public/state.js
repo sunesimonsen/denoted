@@ -10,19 +10,7 @@ export const authCache = new Cache("authCache");
 export const searchText = observable("", { id: "searchText" });
 const debouncedSearchText = debounce(searchText, 50);
 
-const searchTerms = computed(() => {
-  const words = [];
-  const tags = [];
-  for (const part of debouncedSearchText().split(/\s+/)) {
-    if (part.startsWith("tag:")) {
-      tags.push(part.slice(4));
-    } else {
-      words.push(part);
-    }
-  }
-
-  return { words, tags };
-});
+const searchTerms = computed(() => debouncedSearchText().split(/\s+/));
 
 export const nameToNote = (name) => {
   const [timestamp, title, tags] = name.replace(/\..+$/, "").split(/--|__/);
@@ -45,7 +33,7 @@ export const nameToNote = (name) => {
   };
 };
 
-const allNotes = computed(() => {
+export const allNotes = computed(() => {
   const [files, status, error] = searches.byId("notes");
 
   const notes = (files || []).map(nameToNote).sort((a, b) => {
@@ -66,12 +54,10 @@ export const timestampToNote = (timestamp) => {
 export const filteredNotes = computed(() => {
   const [notes, status, error] = allNotes();
 
-  const { words, tags } = searchTerms();
+  const terms = searchTerms();
 
-  const filteredNotes = notes.filter(
-    (node) =>
-      words.every((word) => node.title.includes(word)) &&
-      tags.every((tag) => node.tags.includes(tag)),
+  const filteredNotes = notes.filter((node) =>
+    terms.every((term) => node.id.includes(term)),
   );
 
   return [filteredNotes, status, error];

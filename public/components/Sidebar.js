@@ -1,6 +1,6 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { filteredNotes } from "../state.js";
+import { allNotes } from "../state.js";
 import { BorderLayout } from "@dependable/components/BorderLayout/v0";
 import { FAILED, LOADED } from "@dependable/cache";
 import { NoteReference } from "./NoteReference.js";
@@ -30,7 +30,7 @@ const styles = css`
 
 export class Sidebar {
   renderFileList() {
-    const [notes, status, error] = filteredNotes();
+    const [notes, status, error] = allNotes();
 
     if (status === FAILED) {
       return "Failed";
