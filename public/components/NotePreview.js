@@ -3,7 +3,6 @@ import { css, classes } from "stylewars";
 import { notesCache } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
-import { makeEditor } from "@orgajs/editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { NoteDate } from "./NoteDate.js";

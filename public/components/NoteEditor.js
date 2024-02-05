@@ -3,13 +3,12 @@ import { css } from "stylewars";
 import { notesCache } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
-import { makeEditor } from "@orgajs/editor";
+import { makeEditor } from "../editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 
 const skeletonStyles = css`
   & {
-    padding: 0 30px;
-    width: 800px;
+    padding: 60px calc(30vw - 300px);
   }
 `;
 
@@ -57,7 +56,7 @@ export class NoteEditor {
         this.editor.destroy();
       }
 
-      const { editor } = makeEditor({
+      const { editor, setTheme } = makeEditor({
         target: this.ref,
         content: note.content,
       });
