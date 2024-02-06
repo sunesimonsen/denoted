@@ -61,6 +61,7 @@ export class NoteEditor {
         content: note.content,
       });
 
+      editor.focus();
       this.editor = editor;
 
       this.id = id;
@@ -78,6 +79,6 @@ export class NoteEditor {
       return html`<${NotePreviewSkeleton} />`;
     }
 
-    return html` <div ref=${this.setRef} style="overflow: hidden" />`;
+    return html`<div ref=${this.setRef} style="overflow: hidden" />`;
   }
 }

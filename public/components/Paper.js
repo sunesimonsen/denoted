@@ -3,6 +3,7 @@ import { css, classes } from "stylewars";
 
 const styles = css`
   & {
+    position: relative;
     background: var(--dc-color-neutral-0);
     border: thin solid var(--dc-color-neutral-2);
     margin: 30px auto;

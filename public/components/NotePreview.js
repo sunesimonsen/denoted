@@ -6,6 +6,7 @@ import { params } from "@dependable/nano-router";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { NoteDate } from "./NoteDate.js";
+import { EditButton } from "./EditButton.js";
 import { Paper } from "./Paper.js";
 
 const containerStyles = css`
@@ -20,6 +21,14 @@ const containerStyles = css`
 const skeletonStyles = css`
   & {
     overflow-y: auto;
+  }
+`;
+
+const editButtonStyles = css`
+  & {
+    position: absolute;
+    top: 20px;
+    right: 20px;
   }
 `;
 
@@ -110,7 +119,6 @@ export class NotePreview {
 
   render() {
     const [note, status, error] = notesCache.byId(params().id);
-    console.log("view", note, status, error);
 
     if (status === FAILED) {
       return html`Failed`;
@@ -127,6 +135,7 @@ export class NotePreview {
         tabindex="-1"
       >
         <${Paper}>
+          <${EditButton} className=${editButtonStyles} />
           <h1>${note.title}</h1>
           <${NoteDate} note=${note} />
           <div ref=${this.setDocmentRef} />
