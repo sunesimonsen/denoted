@@ -5,6 +5,8 @@ import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { makeEditor } from "../editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
+import { BorderLayout } from "@dependable/components/BorderLayout/v0";
+import { NoteEditorFooter } from "./NoteEditorFooter.js";
 
 const skeletonStyles = css`
   & {
@@ -79,6 +81,11 @@ export class NoteEditor {
       return html`<${NotePreviewSkeleton} />`;
     }
 
-    return html`<div ref=${this.setRef} style="overflow: hidden" />`;
+    return html`
+      <${BorderLayout} stretched>
+        <div ref=${this.setRef} data-layout="main" style="overflow: hidden" />
+        <${NoteEditorFooter} />
+      <//>
+    `;
   }
 }

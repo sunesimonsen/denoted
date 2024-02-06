@@ -54,13 +54,6 @@ const baseStyle = HighlightStyle.define([
 
 const theme = [baseTheme, syntaxHighlighting(baseStyle)];
 
-const keys = [
-  {
-    key: "Tab",
-    run: toggleFold,
-  },
-];
-
 export function makeEditor(config) {
   const themeConfig = new Compartment();
 
@@ -81,7 +74,6 @@ export function makeEditor(config) {
       EditorView.lineWrapping,
       bracketMatching(),
       foldGutter(),
-      keymap.of([...defaultKeymap, ...keys]),
       theme,
       cleanup,
       extensions,

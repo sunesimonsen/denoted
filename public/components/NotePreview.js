@@ -12,6 +12,7 @@ import { Paper } from "./Paper.js";
 const containerStyles = css`
   & {
     background: var(--dc-color-neutral-3);
+    height: 100%;
   }
   &:focus {
     outline: none;
