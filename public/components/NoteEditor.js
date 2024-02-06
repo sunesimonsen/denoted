@@ -60,7 +60,7 @@ export class NoteEditor {
 
       const { editor, setTheme } = makeEditor({
         target: this.ref,
-        content: note.content,
+        content: note.rawContent,
       });
 
       editor.focus();

@@ -187,6 +187,7 @@ export class Api {
       content: content
         .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
         .trim(),
+      rawContent: content,
     };
   }
 
