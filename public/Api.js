@@ -90,11 +90,7 @@ export class Api {
   }
 
   async fetchJson(url, options) {
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
-    }
+    const response = await this.fetch(url, options);
 
     return response.json();
   }
@@ -187,16 +183,12 @@ export class Api {
       content: content
         .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
         .trim(),
-      rawContent: content,
     };
   }
 
   loadNote(id) {
     if (this.isAuthenticated()) {
-      notesCache.initialize(id, async () => {
-        const content = this.fetchNote(id);
-        return content;
-      });
+      notesCache.initialize(id, async () => this.fetchNote(id));
     }
   }
 

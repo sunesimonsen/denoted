@@ -6,11 +6,12 @@ import { params } from "@dependable/nano-router";
 import { makeEditor } from "../editor";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { BorderLayout } from "@dependable/components/BorderLayout/v0";
+import { NoteEditorHeader } from "./NoteEditorHeader.js";
 import { NoteEditorFooter } from "./NoteEditorFooter.js";
 
 const skeletonStyles = css`
   & {
-    padding: 60px calc(30vw - 300px);
+    padding: 30px 60px;
   }
 `;
 
@@ -60,7 +61,7 @@ export class NoteEditor {
 
       const { editor, setTheme } = makeEditor({
         target: this.ref,
-        content: note.rawContent,
+        content: note.content,
       });
 
       editor.focus();
@@ -77,12 +78,10 @@ export class NoteEditor {
       return html`Failed`;
     }
 
-    if (status !== LOADED) {
-      return html`<${NotePreviewSkeleton} />`;
-    }
-
     return html`
       <${BorderLayout} stretched>
+        <${NoteEditorHeader} />
+        ${status !== LOADED && html`<${NotePreviewSkeleton} />`}
         <div ref=${this.setRef} data-layout="main" style="overflow: hidden" />
         <${NoteEditorFooter} />
       <//>

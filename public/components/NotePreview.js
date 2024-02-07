@@ -139,6 +139,7 @@ export class NotePreview {
           <${EditButton} className=${editButtonStyles} />
           <h1>${note.title}</h1>
           <${NoteDate} note=${note} />
+          <hr />
           <div ref=${this.setDocmentRef} />
         <//>
       <//>

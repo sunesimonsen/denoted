@@ -31,6 +31,12 @@ const styles = css`
     color: var(--dc-color-primary-2);
   }
 
+  & hr {
+    border: none;
+    border-bottom: thin solid var(--dc-color-neutral-3);
+    margin: 20px 0;
+  }
+
   & h1,
   & h2,
   & h3 {

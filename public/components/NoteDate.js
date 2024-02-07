@@ -5,10 +5,6 @@ import { Skeleton } from "@dependable/components/Skeleton/v0";
 const styles = css`
   & {
     color: var(--dc-text-color-1);
-    margin-top: 0.4em;
-    padding-bottom: 1.4em;
-    margin-bottom: 1.4em;
-    border-bottom: thin solid var(--dc-color-neutral-3);
     font-size: 12px;
   }
 `;

@@ -12,7 +12,7 @@ const baseTheme = EditorView.baseTheme({
     height: "100%",
   },
   ".cm-content": {
-    padding: "60px calc(30vw - 300px)",
+    padding: "30px 60px",
   },
   ".cm-link": {
     cursor: "pointer",
@@ -66,7 +66,7 @@ export function makeEditor(config) {
   } = config;
 
   const state = EditorState.create({
-    doc: content,
+    doc: "",
     extensions: [
       org(),
       keymap.of([...defaultKeymap]),
@@ -87,6 +87,10 @@ export function makeEditor(config) {
       editor.update([tr]);
       tr.docChanged && onChange && onChange(editor.state);
     },
+  });
+
+  editor.dispatch({
+    changes: { from: 0, to: editor.state.doc.length, insert: content },
   });
 
   return { editor };
