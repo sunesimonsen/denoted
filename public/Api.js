@@ -7,6 +7,7 @@ import {
   noteDirtyState,
 } from "./state.js";
 import { sha256 } from "./utils/sha256.js";
+import { delay } from "./utils/delay.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { reorg } from "@orgajs/reorg";
 import { stream } from "unified-stream";
@@ -144,6 +145,76 @@ export class Api {
     return paths;
   }
 
+  async refresh() {
+    const authHeader = this.getAuthHeader();
+
+    if (!this.cursor) {
+      let { cursor } = await this.fetchJson(
+        "https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor",
+        {
+          method: "POST",
+          headers: {
+            Authorization: authHeader,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            path: "/org/denote/",
+          }),
+        },
+      );
+
+      this.cursor = cursor;
+    }
+
+    const result = await this.fetchJson(
+      "https://api.dropboxapi.com/2/files/list_folder/continue",
+      {
+        method: "POST",
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cursor: this.cursor,
+        }),
+      },
+    );
+
+    this.cursor = result.cursor;
+
+    for (const entry of result.entries) {
+      const tag = entry[".tag"];
+
+      const [notes] = searches.byId("notes");
+
+      if (tag === "file") {
+        if (!notes.includes(entry.name)) {
+          searches.load("notes", () => [...notes, entry.name]);
+        }
+
+        const [note] = notesCache.byId(entry.name);
+        if (note && note.rev !== entry.rev) {
+          const updatedNote = await this.fetchNote(entry.name);
+          notesCache.load(updatedNote.id, () => updatedNote);
+        }
+      } else if (tag === "deleted") {
+        notesCache.evict(entry.name);
+        searches.load("notes", () => notes.filter((id) => id !== entry.name));
+      }
+    }
+  }
+
+  async startRefreshing() {
+    if (this.isAuthenticated() && !this.refreshing) {
+      this.refreshing = true;
+
+      while (true) {
+        await this.refresh();
+        await delay(5000);
+      }
+    }
+  }
+
   loadNotes() {
     if (this.isAuthenticated()) {
       searches.initialize("notes", async () => {
@@ -209,7 +280,7 @@ export class Api {
   async saveNote() {
     const [note] = notesCache.byId(noteDirtyState.id);
     if (!note) {
-      throw new Error(`Note is not loaded`);
+      throw new Error("Note is not loaded");
     }
 
     const content = noteDirtyState.content();
@@ -227,7 +298,7 @@ export class Api {
             "Content-Type": "application/octet-stream",
             "Dropbox-API-Arg": JSON.stringify({
               path: `/org/denote/${note.id}`,
-              mode: { ".tag": "update", update: note.rev },
+              mode: { ".tag": "update", update: noteDirtyState.rev },
             }),
           },
           body: contentWithFrontmatter,

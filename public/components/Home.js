@@ -6,8 +6,6 @@ import { Topbar } from "./Topbar.js";
 
 export class Home {
   render() {
-    this.context.api.loadNotes();
-
     return html`
       <${DefaultLayout} stretched>
         <${Topbar} />

@@ -8,6 +8,9 @@ export class RootView {
   }
 
   render() {
+    this.context.api.loadNotes();
+    this.context.api.startRefreshing();
+
     switch (route()) {
       default:
         return html`<${Home} />`;

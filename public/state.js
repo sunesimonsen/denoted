@@ -111,6 +111,7 @@ export const searchResults = computed(() => {
 
 export const noteDirtyState = {
   id: null,
+  rev: null,
   title: observable(""),
   content: observable(""),
   saving: observable(false),

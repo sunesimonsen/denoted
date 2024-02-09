@@ -64,6 +64,7 @@ export class NoteEditor {
       }
 
       noteDirtyState.id = note.id;
+      noteDirtyState.rev = note.rev;
       noteDirtyState.title(note.title);
       noteDirtyState.content(note.content);
 

@@ -110,10 +110,11 @@ export class NotePreview {
 
     const [note, status] = notesCache.byId(id);
 
-    if (status === LOADED && id !== this.id) {
+    if (status === LOADED && (id !== this.id || note.rev !== this.rev)) {
       this.documentRef.innerHTML = note.html;
 
       this.id = id;
+      this.rev = note.rev;
       this.scrollRef.focus();
     }
   }
