@@ -1,6 +1,6 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { notesCache } from "../state.js";
+import { notesCache, noteDirtyState } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { makeEditor } from "../editor";
@@ -47,6 +47,10 @@ export class NoteEditor {
     this.setRef = (ref) => {
       this.ref = ref;
     };
+
+    this.onChange = (state) => {
+      noteDirtyState.content(state.doc.toString());
+    };
   }
 
   didRender() {
@@ -59,9 +63,14 @@ export class NoteEditor {
         this.editor.destroy();
       }
 
+      noteDirtyState.id = note.id;
+      noteDirtyState.title(note.title);
+      noteDirtyState.content(note.content);
+
       const { editor, setTheme } = makeEditor({
         target: this.ref,
         content: note.content,
+        onChange: this.onChange,
       });
 
       editor.focus();

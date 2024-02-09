@@ -108,3 +108,10 @@ export const searchResults = computed(() => {
 
   return [searchResults, status, error];
 });
+
+export const noteDirtyState = {
+  id: null,
+  title: observable(""),
+  content: observable(""),
+  saving: observable(false),
+};

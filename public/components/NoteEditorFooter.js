@@ -1,4 +1,5 @@
 import { html } from "@dependable/view";
+import { noteDirtyState } from "../state.js";
 import { css } from "stylewars";
 import { Button } from "@dependable/components/Button/v0";
 import { ms2 } from "@dependable/components/spacing/v0";
@@ -17,8 +18,12 @@ const styles = css`
 
 export class NoteEditorFooter {
   constructor() {
-    this.onCancel = () => {
+    this.onView = () => {
       this.context.router.navigate("note/view");
+    };
+
+    this.onSave = () => {
+      this.context.api.saveNote();
     };
   }
 
@@ -27,8 +32,15 @@ export class NoteEditorFooter {
       <div className=${styles} data-layout="bottom">
         <div></div>
         <div>
-          <${Button} onClick=${this.onCancel}>Cancel<//>
-          <${Button} className=${ms2} primary>Save<//>
+          <${Button} onClick=${this.onView}>View<//>
+          <${Button}
+            className=${ms2}
+            primary
+            loading=${noteDirtyState.saving()}
+            onClick=${this.onSave}
+          >
+            Save
+          <//>
         </div>
       </div>
     `;

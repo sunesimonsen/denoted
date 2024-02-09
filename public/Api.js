@@ -4,8 +4,10 @@ import {
   nameToNote,
   authCache,
   timestampToNote,
+  noteDirtyState,
 } from "./state.js";
 import { sha256 } from "./utils/sha256.js";
+import { frontmatter } from "./utils/frontmatter.js";
 import { reorg } from "@orgajs/reorg";
 import { stream } from "unified-stream";
 import mutate from "@orgajs/reorg-rehype";
@@ -172,14 +174,26 @@ export class Api {
 
     const content = await response.text();
 
-    const { title } = content.match(/^#\+title:\s*\b(?<title>.*)/).groups;
+    const properties = {};
+    const propertiesMatches = content.matchAll(
+      /^#\+(?<key>[^:]+):\s*(?<value>.*)/gm,
+    );
 
-    const { value: htmlContent } = await processor.process(content);
+    for (const propertyMatch of propertiesMatches) {
+      const { key, value } = propertyMatch.groups;
+      properties[key] = value;
+    }
+
+    const { value: html } = await processor.process(content);
+
+    const { rev } = JSON.parse(response.headers.get("Dropbox-Api-Result"));
 
     return {
       ...info,
-      title,
-      html: htmlContent,
+      rev,
+      properties,
+      title: properties.title,
+      html,
       content: content
         .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
         .trim(),
@@ -189,6 +203,47 @@ export class Api {
   loadNote(id) {
     if (this.isAuthenticated()) {
       notesCache.initialize(id, async () => this.fetchNote(id));
+    }
+  }
+
+  async saveNote() {
+    const [note] = notesCache.byId(noteDirtyState.id);
+    if (!note) {
+      throw new Error(`Note is not loaded`);
+    }
+
+    const content = noteDirtyState.content();
+    const contentWithFrontmatter = frontmatter(note) + "\n\n" + content;
+
+    noteDirtyState.saving(true);
+
+    try {
+      const { rev } = await this.fetchJson(
+        "https://content.dropboxapi.com/2/files/upload",
+        {
+          method: "POST",
+          headers: {
+            Authorization: this.getAuthHeader(),
+            "Content-Type": "application/octet-stream",
+            "Dropbox-API-Arg": JSON.stringify({
+              path: `/org/denote/${note.id}`,
+              mode: { ".tag": "update", update: note.rev },
+            }),
+          },
+          body: contentWithFrontmatter,
+        },
+      );
+
+      const { value: html } = await processor.process(content);
+
+      notesCache.load(note.id, {
+        ...note,
+        rev,
+        content,
+        html,
+      });
+    } finally {
+      noteDirtyState.saving(false);
     }
   }
 
