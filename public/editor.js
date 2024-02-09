@@ -13,6 +13,7 @@ const baseTheme = EditorView.baseTheme({
   },
   ".cm-content": {
     padding: "30px 60px",
+    maxWidth: "1000px",
   },
   ".cm-link": {
     cursor: "pointer",
