@@ -204,10 +204,22 @@ export class Api {
   }
 
   async startRefreshing() {
-    if (this.isAuthenticated() && !this.refreshing) {
+    window.addEventListener("visibilitychange", (event) => {
+      if (document.visibilityState === "hidden") {
+        this.refreshing = false;
+      } else if (!this.refreshing) {
+        this.startRefreshing();
+      }
+    });
+
+    if (
+      this.isAuthenticated() &&
+      !this.refreshing &&
+      document.visibilityState === "visible"
+    ) {
       this.refreshing = true;
 
-      while (true) {
+      while (this.refreshing) {
         await this.refresh();
         await delay(5000);
       }

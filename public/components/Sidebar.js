@@ -58,12 +58,6 @@ export class Sidebar {
     `;
   }
 
-  didMount() {
-    setInterval(() => {
-      this.context.api.refresh();
-    }, 10000);
-  }
-
   render() {
     return html`
       <nav data-layout="start" className=${styles}>
