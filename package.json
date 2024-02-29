@@ -48,7 +48,7 @@
     "@codemirror/language": "^6.10.1",
     "@codemirror/state": "^6.4.0",
     "@orgajs/cm-lang": "^1.1.4",
-    "rehype-stringify": "^10.0.0",
+    "rehype-stringify": "^9.0.4",
     "stylewars": "^2.4.0",
     "unified-stream": "^3.0.0",
     "unist-util-visit": "^5.0.0"
