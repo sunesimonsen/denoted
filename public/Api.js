@@ -10,7 +10,6 @@ import { sha256 } from "./utils/sha256.js";
 import { delay } from "./utils/delay.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { reorg } from "@orgajs/reorg";
-import { stream } from "unified-stream";
 import mutate from "@orgajs/reorg-rehype";
 import html from "rehype-stringify";
 import { visit } from "unist-util-visit";
