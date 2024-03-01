@@ -1,6 +1,6 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { BorderLayout } from "@dependable/components/BorderLayout/v0";
+import { SidebarLayout } from "@dependable/components/Sidebar/v0";
 
 const styles = css`
   & {
@@ -10,13 +10,19 @@ const styles = css`
     left: 0;
     bottom: 0;
 
-    width: 100%;
-    height: 100%;
+    --dc-sidebar-initial-display: flex;
+  }
+
+  @media screen and (max-width: 1200px) {
+    & {
+      --dc-sidebar-display: none;
+      --dc-sidebar-toggle-display: inline-flex;
+    }
   }
 `;
 
 export class DefaultLayout {
   render({ children }) {
-    return html`<${BorderLayout} className=${styles} stretched>${children}<//>`;
+    return html`<${SidebarLayout} className=${styles}>${children}<//>`;
   }
 }

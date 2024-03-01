@@ -4,8 +4,8 @@ import { css, classes } from "stylewars";
 const styles = css`
   & {
     position: relative;
-    background: var(--dc-color-neutral-0);
-    border: thin solid var(--dc-color-neutral-2);
+    background: var(--dc-color-background);
+    border: thin solid var(--dc-color-neutral-80);
     margin: 30px auto;
     width: 800px;
     padding: 40px 60px;
@@ -14,26 +14,38 @@ const styles = css`
     overflow-wrap: break-word;
   }
 
+  @media screen and (max-width: 1200px) {
+    & {
+      width: 70%;
+    }
+  }
+
+  @media screen and (max-width: 100px) {
+    & {
+      width: 70%;
+    }
+  }
+
   & a {
     text-decoration: none;
-    color: var(--dc-color-primary-0);
+    color: var(--dc-color-primary-50);
   }
 
   & a:focus,
   & a:hover {
     outline: none;
     text-decoration: underline;
-    color: var(--dc-color-primary-1);
+    color: var(--dc-color-primary-40);
   }
 
   & a:active {
     text-decoration: underline;
-    color: var(--dc-color-primary-2);
+    color: var(--dc-color-primary-30);
   }
 
   & hr {
     border: none;
-    border-bottom: thin solid var(--dc-color-neutral-3);
+    border-bottom: thin solid var(--dc-color-neutral-80);
     margin: 20px 0;
   }
 

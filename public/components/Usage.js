@@ -11,14 +11,14 @@ const containerStyles = css`
 const usageStyles = css`
   & {
     text-align: center;
-    color: var(--dc-text-color-1);
+    color: var(--dc-color-foreground);
   }
 
   & code {
     display: inline-block;
     padding: 4px 6px;
     margin-inline-start: 1ex;
-    background: var(--dc-color-neutral-2);
+    background: var(--dc-color-neutral-90);
     font-size: 14px;
   }
 `;

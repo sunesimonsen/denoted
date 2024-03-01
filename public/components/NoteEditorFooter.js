@@ -2,19 +2,9 @@ import { html } from "@dependable/view";
 import { noteDirtyState } from "../state.js";
 import { css } from "stylewars";
 import { Button } from "@dependable/components/Button/v0";
-import { ms2 } from "@dependable/components/spacing/v0";
-
-const styles = css`
-  & {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 1fr auto;
-    background: var(--dc-color-neutral-0);
-    border-top: thin solid var(--dc-color-neutral-3);
-    padding: 0 24px;
-    height: 72px;
-  }
-`;
+import { margin } from "@dependable/components/theming/v0";
+import { Bar } from "@dependable/components/Bar/v0";
+import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 
 export class NoteEditorFooter {
   constructor() {
@@ -29,20 +19,19 @@ export class NoteEditorFooter {
 
   render() {
     return html`
-      <div className=${styles} data-layout="bottom">
-        <div></div>
-        <div>
+      <${Bar} data-layout="bottom">
+        <${ToolbarLayout} sections="end">
           <${Button} onClick=${this.onView}>View<//>
           <${Button}
-            className=${ms2}
+            className=${margin(2, "start")}
             primary
             loading=${noteDirtyState.saving()}
             onClick=${this.onSave}
           >
             Save
           <//>
-        </div>
-      </div>
+        <//>
+      <//>
     `;
   }
 }

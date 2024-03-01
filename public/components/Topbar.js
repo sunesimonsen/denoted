@@ -1,32 +1,23 @@
 import { html } from "@dependable/view";
-import { css } from "stylewars";
 import { FileSearch } from "./FileSearch.js";
-
-const styles = css`
-  & {
-    display: grid;
-    align-items: center;
-    grid-template-columns: 400px 1fr 400px;
-    background: var(--dc-color-neutral-0);
-    position: relative;
-    border-bottom: thin solid var(--dc-color-neutral-3);
-    box-shadow: rgb(47 57 65 / 5%) 0px 16px 24px 0px;
-    z-index: 1;
-    height: 72px;
-    padding: 0 24px;
-  }
-`;
+import { Bar } from "@dependable/components/Bar/v0";
+import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
+import { SidebarToggle } from "@dependable/components/Sidebar/v0";
 
 export class Topbar {
   render() {
     return html`
-      <div data-layout="top" className=${styles}>
-        <div></div>
-        <div>
-          <${FileSearch} />
-        </div>
-        <div></div>
-      </div>
+      <${Bar} data-layout="top">
+        <${ToolbarLayout} sections="start center end">
+          <div>
+            <${SidebarToggle} />
+          </div>
+          <div style="width: 40vw">
+            <${FileSearch} />
+          </div>
+          <div></div>
+        <//>
+      <//>
     `;
   }
 }

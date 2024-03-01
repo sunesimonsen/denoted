@@ -6,14 +6,12 @@ import { FAILED, LOADED } from "@dependable/cache";
 import { NoteReference } from "./NoteReference.js";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { ReferencesSkeleton } from "./ReferencesSkeleton.js";
+import { SidebarLayout, Sidebar } from "@dependable/components/Sidebar/v0";
 
 const styles = css`
   & {
-    display: flex;
     overflow: hidden;
     width: 300px;
-    background: var(--dc-color-neutral-1);
-    border-inline-end: thin solid var(--dc-color-neutral-3);
   }
 
   & ul {
@@ -34,7 +32,13 @@ const scrollAreaStyles = css`
   }
 `;
 
-export class Sidebar {
+export class NotesSidebar {
+  constructor() {
+    this.onClick = () => {
+      this.context.visibleSidebar("");
+    };
+  }
+
   renderFileList() {
     const [notes, status, error] = allNotes();
 
@@ -60,11 +64,15 @@ export class Sidebar {
 
   render() {
     return html`
-      <nav data-layout="start" className=${styles}>
+      <${Sidebar}
+        data-layout="start"
+        className=${styles}
+        onClick=${this.onClick}
+      >
         <${ScrollArea} className=${scrollAreaStyles}>
-          ${this.renderFileList()}
+          <nav>${this.renderFileList()}</nav>
         <//>
-      </nav>
+      <//>
     `;
   }
 }
