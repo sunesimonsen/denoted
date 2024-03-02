@@ -5,9 +5,9 @@ import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
-import { NoteDate } from "./NoteDate.js";
 import { EditButton } from "./EditButton.js";
 import { Paper } from "./Paper.js";
+import { NoteMetadata } from "./NoteMetadata.js";
 
 const containerStyles = css`
   & {
@@ -144,8 +144,7 @@ export class NotePreview {
       >
         <${Paper}>
           <${EditButton} className=${editButtonStyles} />
-          <h1>${note.title}</h1>
-          <${NoteDate} note=${note} />
+          <${NoteMetadata} title=${note.title} date=${note} tags=${note.tags} />
           <hr />
           <div ref=${this.setDocmentRef} />
         <//>

@@ -10,15 +10,15 @@ const styles = css`
 `;
 
 export class NoteDate {
-  render({ note }) {
+  render({ date }) {
     const timestamp = new Date(
       Date.UTC(
-        note.year,
-        note.month,
-        note.day,
-        note.hours,
-        note.minutes,
-        note.seconds,
+        date.year,
+        date.month,
+        date.day,
+        date.hours,
+        date.minutes,
+        date.seconds,
       ),
     ).toISOString();
 
