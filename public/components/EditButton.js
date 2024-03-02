@@ -13,7 +13,7 @@ export class EditButton {
 
   render(props) {
     return html`
-      <${IconButton} onClick=${this.onEdit} ...${props}>
+      <${IconButton} basic pill onClick=${this.onEdit} ...${props}>
         <${PencilStroke12Icon} />
       <//>
     `;

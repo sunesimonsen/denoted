@@ -23,7 +23,7 @@ export class Topbar {
       <${Bar} data-layout="top">
         <${ToolbarLayout} sections="start center end">
           <div>
-            <${SidebarToggle} />
+            <${SidebarToggle} pill basic />
           </div>
           <div className=${centerStyles}>
             <${FileSearch} />
