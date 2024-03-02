@@ -17,6 +17,12 @@ const containerStyles = css`
   &:focus {
     outline: none;
   }
+
+  @media screen and (max-width: 900px) {
+    & {
+      background: var(--dc-color-background);
+    }
+  }
 `;
 
 const skeletonStyles = css`

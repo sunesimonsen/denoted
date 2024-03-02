@@ -12,17 +12,15 @@ const styles = css`
     min-height: 1200px;
     overflow-x: hidden;
     overflow-wrap: break-word;
+    box-sizing: border-box;
   }
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 900px) {
     & {
-      width: 70%;
-    }
-  }
-
-  @media screen and (max-width: 100px) {
-    & {
-      width: 70%;
+      width: 100%;
+      margin: 0;
+      border: none;
+      min-height: initial;
     }
   }
 
