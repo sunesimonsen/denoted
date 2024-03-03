@@ -4,7 +4,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": ["emacs", "denote"],
+  "keywords": [
+    "emacs",
+    "denote"
+  ],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -16,9 +19,11 @@
     "test": "mocha"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^5.3.0",
+    "babel-plugin-htm": "^3.0.0",
+    "babel-plugin-stylewars": "^0.1.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
-    "@rollup/plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-mocha": "^10.2.0",
     "fake-promise": "^2.5.44",
@@ -27,8 +32,6 @@
     "surge": "^0.23.1",
     "unexpected": "^13.0.0",
     "unexpected-dependable": "^1.1.0",
-    "babel-plugin-htm": "^3.0.0",
-    "babel-plugin-stylewars": "^0.1.0",
     "vite": "^5.0.12"
   },
   "dependencies": {
@@ -37,7 +40,7 @@
     "@codemirror/state": "^6.4.0",
     "@codemirror/view": "^6.23.1",
     "@dependable/cache": "^0.8.0",
-    "@dependable/components": "^0.21.2",
+    "@dependable/components": "^0.23.1",
     "@dependable/debounce": "^0.1.1",
     "@dependable/icons": "^0.1.0",
     "@dependable/nano-router": "^0.8.1",

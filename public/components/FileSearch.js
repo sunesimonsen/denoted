@@ -18,6 +18,11 @@ const onClear = () => {
 
 export class FileSearch {
   constructor() {
+    this.onFocus = () => {
+      console.log("wat");
+      this.context.visibleSidebar("");
+    };
+
     this.onSelect = (e) => {
       if (e.detail) {
         const { value } = e.detail;
@@ -72,6 +77,7 @@ export class FileSearch {
         <${AutocompleteInput}
           .value=${searchText()}
           onInput=${onInput}
+          onFocus=${this.onFocus}
           autofocus=${route() === "home"}
         />
         <${AutocompletePopup}>${this.renderItems()}<//>
