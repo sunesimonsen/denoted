@@ -12,6 +12,7 @@ import { noteDirtyState } from "../state.js";
 import { NoteMetadata, NoteMetadataSkeleton } from "./NoteMetadata.js";
 import { EditMetadataButton } from "./EditMetadataButton.js";
 import { NoteMetadataDialog } from "./NoteMetadataDialog.js";
+import { DeleteNoteDialog } from "./DeleteNoteDialog.js";
 
 const styles = css`
   & {
@@ -46,6 +47,7 @@ export class NoteEditorHeader {
         <${EditMetadataButton} />
       <//>
       <${NoteMetadataDialog} />
+      <${DeleteNoteDialog} />
     `;
   }
 }

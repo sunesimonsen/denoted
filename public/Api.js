@@ -317,6 +317,23 @@ export class Api {
     });
   }
 
+  async deleteNote({ id }) {
+    await this.fetchJson("https://api.dropboxapi.com/2/files/delete_v2", {
+      method: "POST",
+      headers: {
+        Authorization: this.getAuthHeader(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ path: `/org/denote/${id}` }),
+    });
+
+    this.router.navigate({
+      route: "home",
+    });
+
+    notesCache.evict(id);
+  }
+
   async saveNote() {
     const [note] = notesCache.byId(noteDirtyState.id);
     if (!note) {
