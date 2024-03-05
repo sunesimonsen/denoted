@@ -293,7 +293,6 @@ export class Api {
     const note = newNote({ title, tags });
 
     const contentWithFrontmatter = frontmatter(note) + "\n\n";
-    console.log("wat");
 
     const { rev } = await this.fetchJson(
       "https:content.dropboxapi.com/2/files/upload",
@@ -315,6 +314,9 @@ export class Api {
       route: "note/edit",
       params: { id: note.id },
     });
+
+    const [notes] = searches.byId("notes");
+    searches.load("notes", [...notes, note.id]);
   }
 
   async deleteNote({ id }) {
@@ -332,6 +334,12 @@ export class Api {
     });
 
     notesCache.evict(id);
+    const [notes] = searches.byId("notes");
+    const deletedId = id;
+    searches.load(
+      "notes",
+      notes.filter((id) => id !== deletedId),
+    );
   }
 
   async saveNote() {

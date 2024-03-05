@@ -19,25 +19,35 @@ import { queryParams } from "@dependable/nano-router";
 const title = observable("", { id: "newNoteTitle" });
 const tags = observable([], { id: "newNoteTags" });
 
+const creating = observable(false);
+
 export class NewNoteDialog {
   constructor() {
     this.onClose = () => {
-      this.context.router.navigate({
-        queryParams: {},
-        replace: true,
-      });
+      if (!creating()) {
+        this.context.router.navigate({
+          queryParams: {},
+          replace: true,
+        });
 
-      title("");
-      tags([]);
+        title("");
+        tags([]);
+      }
     };
 
     this.onSubmit = async () => {
-      await this.context.api.createNote({
-        title: title(),
-        tags: tags(),
-      });
+      creating(true);
+      try {
+        await this.context.api.createNote({
+          title: title(),
+          tags: tags(),
+        });
 
-      this.onClose();
+        creating(false);
+        this.onClose();
+      } catch {
+        creating(false);
+      }
     };
 
     this.onTitleChange = (e) => {
@@ -69,7 +79,7 @@ export class NewNoteDialog {
           />
         <//>
         <${DialogFooter}>
-          <${DialogSubmitButton} primary>Create<//>
+          <${DialogSubmitButton} primary loading=${creating()}>Create<//>
         <//>
         <${DialogCloseButton} />
       <//>

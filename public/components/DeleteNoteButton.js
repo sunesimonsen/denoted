@@ -4,8 +4,8 @@ import { showDeleteNoteDialog } from "./DeleteNoteDialog.js";
 
 export class DeleteNoteButton {
   render(props) {
-    return html`<${Button} onClick=${showDeleteNoteDialog} ...${props}>
-      Delete
-    <//>`;
+    return html`
+      <${Button} onClick=${showDeleteNoteDialog} ...${props}> Delete <//>
+    `;
   }
 }

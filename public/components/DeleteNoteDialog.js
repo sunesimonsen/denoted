@@ -18,16 +18,26 @@ export const showDeleteNoteDialog = () => {
   deleteNoteDialogVisible(true);
 };
 
+const deleting = observable(false);
+
 export class DeleteNoteDialog {
   constructor() {
     this.onClose = () => {
-      deleteNoteDialogVisible(false);
+      if (!deleting()) {
+        deleteNoteDialogVisible(false);
+      }
     };
 
-    this.onSubmit = () => {
+    this.onSubmit = async () => {
       const { id } = params();
-      this.context.api.deleteNote(params());
-      this.onClose();
+      deleting(true);
+      try {
+        await this.context.api.deleteNote(params());
+        deleting(false);
+        this.onClose();
+      } catch {
+        deleting(false);
+      }
     };
   }
 
@@ -42,7 +52,7 @@ export class DeleteNoteDialog {
           <p>Deleted content cannot be recovered.</p>
         <//>
         <${DialogFooter}>
-          <${DialogSubmitButton} danger primary>Delete<//>
+          <${DialogSubmitButton} loading=${deleting()} danger primary>Delete<//>
         <//>
         <${DialogCloseButton} />
       <//>
