@@ -144,7 +144,11 @@ export class NotePreview {
       >
         <${Paper}>
           <${EditButton} className=${editButtonStyles} />
-          <${NoteMetadata} title=${note.title} date=${note} tags=${note.tags} />
+          <${NoteMetadata}
+            title=${note.title}
+            date=${note.date}
+            tags=${note.tags}
+          />
           <hr />
           <div ref=${this.setDocmentRef} />
         <//>

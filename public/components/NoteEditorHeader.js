@@ -10,9 +10,12 @@ import { Bar } from "@dependable/components/Bar/v0";
 import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 import { noteDirtyState } from "../state.js";
 import { NoteMetadata, NoteMetadataSkeleton } from "./NoteMetadata.js";
+import { EditMetadataButton } from "./EditMetadataButton.js";
+import { NoteMetadataDialog } from "./NoteMetadataDialog.js";
 
 const styles = css`
   & {
+    position: relative;
     padding: 12px 30px;
   }
 `;
@@ -35,12 +38,14 @@ export class NoteEditorHeader {
           ? html`
               <${NoteMetadata}
                 title=${noteDirtyState.title()}
-                date=${note}
-                tags=${note.tags}
+                date=${note.date}
+                tags=${noteDirtyState.tags()}
               />
             `
           : html`<${NoteMetadataSkeleton} />`}
+        <${EditMetadataButton} />
       <//>
+      <${NoteMetadataDialog} />
     `;
   }
 }

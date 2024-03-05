@@ -67,6 +67,7 @@ export class NoteEditor {
       noteDirtyState.rev = note.rev;
       noteDirtyState.title(note.title);
       noteDirtyState.content(note.content);
+      noteDirtyState.tags(note.tags);
 
       const { editor, setTheme } = makeEditor({
         target: this.ref,

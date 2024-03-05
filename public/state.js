@@ -4,7 +4,7 @@ import { debounce } from "@dependable/debounce";
 
 export const searches = new Cache("searches");
 export const notesCache = new Cache("notes");
-export const authCache = new Cache("authCache");
+export const authCache = new Cache("auth");
 
 export const searchText = observable("", { id: "searchText" });
 const debouncedSearchText = debounce(searchText, 50);
@@ -21,12 +21,14 @@ export const nameToNote = (name) => {
   return {
     id: name,
     timestamp,
-    year,
-    month,
-    day,
-    hours,
-    minutes,
-    seconds,
+    date: {
+      year,
+      month,
+      day,
+      hours,
+      minutes,
+      seconds,
+    },
     title: title.replaceAll("-", " "),
     tags: (tags || "").split("_").filter(Boolean),
   };
@@ -67,8 +69,21 @@ const currentTagFilter = computed(() => {
   return m && m[0];
 });
 
+export const allNoteTags = computed(() => {
+  const [notes] = allNotes();
+  const tags = new Set();
+
+  for (const note of notes) {
+    for (const tag of note.tags) {
+      tags.add(tag);
+    }
+  }
+
+  return Array.from(tags).sort();
+});
+
 const filteredNotesTags = computed(() => {
-  const [notes, status, error] = filteredNotes();
+  const [notes] = filteredNotes();
   const tags = new Set();
 
   for (const note of notes) {
@@ -112,7 +127,8 @@ export const searchResults = computed(() => {
 export const noteDirtyState = {
   id: null,
   rev: null,
-  title: observable(""),
-  content: observable(""),
+  title: observable("", { id: "dirtyStateTitle" }),
+  content: observable("", { id: "dirtyStateContent" }),
+  tags: observable([], { id: "dirtyStateTags" }),
   saving: observable(false),
 };

@@ -8,6 +8,7 @@ import {
 } from "./state.js";
 import { sha256 } from "./utils/sha256.js";
 import { delay } from "./utils/delay.js";
+import { noteToId } from "./utils/ids.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { reorg } from "@orgajs/reorg";
 import mutate from "@orgajs/reorg-rehype";
@@ -293,12 +294,14 @@ export class Api {
       throw new Error("Note is not loaded");
     }
 
-    const content = noteDirtyState.content();
-    const contentWithFrontmatter = frontmatter(note) + "\n\n" + content;
-
-    noteDirtyState.saving(true);
-
     try {
+      const title = noteDirtyState.title();
+      const content = noteDirtyState.content();
+      const tags = noteDirtyState.tags();
+      const contentWithFrontmatter = frontmatter(note) + "\n\n" + content;
+
+      noteDirtyState.saving(true);
+
       const { rev } = await this.fetchJson(
         "https://content.dropboxapi.com/2/files/upload",
         {
@@ -307,7 +310,7 @@ export class Api {
             Authorization: this.getAuthHeader(),
             "Content-Type": "application/octet-stream",
             "Dropbox-API-Arg": JSON.stringify({
-              path: `/org/denote/${note.id}`,
+              path: `/org/denote/${noteDirtyState.id}`,
               mode: { ".tag": "update", update: noteDirtyState.rev },
             }),
           },
@@ -317,11 +320,45 @@ export class Api {
 
       const { value: html } = await processor.process(content);
 
-      notesCache.load(note.id, {
+      noteDirtyState.rev = rev;
+
+      const newId = noteToId({ timestamp: note.timestamp, title, tags });
+
+      if (newId !== note.id) {
+        const result = await this.fetchJson(
+          "https://api.dropboxapi.com/2/files/move_v2",
+          {
+            method: "POST",
+            headers: {
+              Authorization: this.getAuthHeader(),
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from_path: `/org/denote/${noteDirtyState.id}`,
+              to_path: `/org/denote/${newId}`,
+            }),
+          },
+        );
+
+        noteDirtyState.id = newId;
+        noteDirtyState.rev = result.rev;
+      }
+
+      notesCache.load(noteDirtyState.id, {
         ...note,
-        rev,
+        id: noteDirtyState.id,
+        rev: noteDirtyState.rev,
+        title,
         content,
+        tags,
         html,
+      });
+
+      this.router.navigate({
+        route: "note/view",
+        params: {
+          id: noteDirtyState.id,
+        },
       });
     } finally {
       noteDirtyState.saving(false);

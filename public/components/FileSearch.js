@@ -19,7 +19,6 @@ const onClear = () => {
 export class FileSearch {
   constructor() {
     this.onFocus = () => {
-      console.log("wat");
       this.context.visibleSidebar("");
     };
 

@@ -6,11 +6,11 @@ export class Tags {
     return html`<${Tag}>${tag}<//> `;
   }
 
-  render({ tags }) {
+  render({ className, tags }) {
     if (tags.length === 0) {
       return null;
     }
 
-    return html`<div>${tags.map(this.renderTag)}</div>`;
+    return html`<div className=${className}>${tags.map(this.renderTag)}</div>`;
   }
 }

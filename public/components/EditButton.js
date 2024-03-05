@@ -6,14 +6,14 @@ import { Link } from "@dependable/nano-router";
 
 export class EditButton {
   constructor() {
-    this.onEdit = () => {
+    this.onClick = () => {
       this.context.router.navigate("note/edit");
     };
   }
 
   render(props) {
     return html`
-      <${IconButton} basic pill onClick=${this.onEdit} ...${props}>
+      <${IconButton} basic pill onClick=${this.onClick} ...${props}>
         <${PencilStroke12Icon} />
       <//>
     `;

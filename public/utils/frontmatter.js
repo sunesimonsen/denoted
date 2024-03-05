@@ -9,7 +9,7 @@ const days = {
 };
 
 export const frontmatter = (note) => {
-  const { year, month, day, hours, minutes, seconds } = note;
+  const { year, month, day, hours, minutes, seconds } = note.date;
   const date = new Date(year, month, day, hours, minutes, seconds);
   const dayName = days[date.getDay()];
   const dateString = `[${year}-${month}-${day} ${dayName} ${hours}:${minutes}]`;
