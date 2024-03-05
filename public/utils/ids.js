@@ -1,6 +1,6 @@
 const removeInvalidChars = (text) => text.replace(/[^0-9a-z]/g, "");
 
-export const noteToId = ({ timestamp, title, tags }) => {
+export const idFrom = ({ timestamp, title, tags }) => {
   const escapedTitle = title
     .toLowerCase()
     .split(" ")

@@ -24,10 +24,19 @@ export class NewNoteDialog {
     this.onClose = () => {
       this.context.router.navigate({
         queryParams: {},
+        replace: true,
       });
+
+      title("");
+      tags([]);
     };
 
-    this.onSubmit = () => {
+    this.onSubmit = async () => {
+      await this.context.api.createNote({
+        title: title(),
+        tags: tags(),
+      });
+
       this.onClose();
     };
 

@@ -8,7 +8,8 @@ import {
 } from "./state.js";
 import { sha256 } from "./utils/sha256.js";
 import { delay } from "./utils/delay.js";
-import { noteToId } from "./utils/ids.js";
+import { newNote } from "./utils/notes.js";
+import { idFrom } from "./utils/ids.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { reorg } from "@orgajs/reorg";
 import mutate from "@orgajs/reorg-rehype";
@@ -288,6 +289,34 @@ export class Api {
     }
   }
 
+  async createNote({ title, tags }) {
+    const note = newNote({ title, tags });
+
+    const contentWithFrontmatter = frontmatter(note) + "\n\n";
+    console.log("wat");
+
+    const { rev } = await this.fetchJson(
+      "https:content.dropboxapi.com/2/files/upload",
+      {
+        method: "POST",
+        headers: {
+          Authorization: this.getAuthHeader(),
+          "Content-Type": "application/octet-stream",
+          "Dropbox-API-Arg": JSON.stringify({
+            path: `/org/denote/${note.id}`,
+            mode: "add",
+          }),
+        },
+        body: contentWithFrontmatter,
+      },
+    );
+
+    this.router.navigate({
+      route: "note/edit",
+      params: { id: note.id },
+    });
+  }
+
   async saveNote() {
     const [note] = notesCache.byId(noteDirtyState.id);
     if (!note) {
@@ -322,7 +351,7 @@ export class Api {
 
       noteDirtyState.rev = rev;
 
-      const newId = noteToId({ timestamp: note.timestamp, title, tags });
+      const newId = idFrom({ timestamp: note.timestamp, title, tags });
 
       if (newId !== note.id) {
         const result = await this.fetchJson(
