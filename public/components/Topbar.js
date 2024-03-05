@@ -4,6 +4,7 @@ import { FileSearch } from "./FileSearch.js";
 import { Bar } from "@dependable/components/Bar/v0";
 import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 import { SidebarToggle } from "@dependable/components/Sidebar/v0";
+import { NewNoteButton } from "./NewNoteButton.js";
 
 const centerStyles = css`
   & {
@@ -28,7 +29,9 @@ export class Topbar {
           <div className=${centerStyles}>
             <${FileSearch} />
           </div>
-          <div></div>
+          <div>
+            <${NewNoteButton} />
+          </div>
         <//>
       <//>
     `;
