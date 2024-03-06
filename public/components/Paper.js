@@ -21,6 +21,7 @@ const styles = css`
       margin: 0;
       border: none;
       min-height: initial;
+      padding: 20px 30px;
     }
   }
 

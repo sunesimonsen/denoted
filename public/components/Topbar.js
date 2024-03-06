@@ -13,7 +13,7 @@ const centerStyles = css`
 
   @media screen and (max-width: 900px) {
     & {
-      width: 70vw;
+      width: 60vw;
     }
   }
 `;

@@ -1,5 +1,4 @@
 import { html } from "@dependable/view";
-
 import { IconButton } from "@dependable/components/IconButton/v0";
 import PlusStroke16Icon from "@dependable/icons/PlusStroke16Icon";
 import { Link } from "@dependable/nano-router";

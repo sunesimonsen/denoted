@@ -24,7 +24,7 @@ export class NoteEditorFooter {
         <${ToolbarLayout} sections="start end">
           <div><${DeleteNoteButton} /></div>
           <div>
-            <${Button} onClick=${this.onView}>View<//>
+            <${Button} basic onClick=${this.onView}>View<//>
             <${Button}
               className=${margin(2, "start")}
               primary
