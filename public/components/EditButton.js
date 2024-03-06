@@ -1,7 +1,7 @@
 import { html } from "@dependable/view";
 
 import { IconButton } from "@dependable/components/IconButton/v0";
-import PencilStroke12Icon from "@dependable/icons/PencilStroke12Icon";
+import PencilStroke16Icon from "@dependable/icons/PencilStroke16Icon";
 import { Link } from "@dependable/nano-router";
 
 export class EditButton {
@@ -14,7 +14,7 @@ export class EditButton {
   render(props) {
     return html`
       <${IconButton} basic pill onClick=${this.onClick} ...${props}>
-        <${PencilStroke12Icon} />
+        <${PencilStroke16Icon} />
       <//>
     `;
   }
