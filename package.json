@@ -39,7 +39,7 @@
     "@codemirror/language": "^6.10.1",
     "@codemirror/state": "^6.4.0",
     "@codemirror/view": "^6.23.1",
-    "@dependable/cache": "^0.9.0",
+    "@dependable/cache": "^0.10.0",
     "@dependable/components": "^0.33.0",
     "@dependable/debounce": "^0.1.1",
     "@dependable/icons": "^0.1.0",

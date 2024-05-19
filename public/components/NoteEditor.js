@@ -91,8 +91,8 @@ export class NoteEditor {
 
   isLoading() {
     const { id } = params();
-    const [_0, moduleStatus] = moduleCache.byId("editor");
-    const [_1, noteStatus] = notesCache.byId(id);
+    const moduleStatus = moduleCache.statusById("editor");
+    const noteStatus = notesCache.statusById(id);
 
     return moduleStatus !== LOADED || noteStatus !== LOADED;
   }
