@@ -1,5 +1,6 @@
 import {
   searches,
+  moduleCache,
   notesCache,
   nameToNote,
   authCache,
@@ -233,6 +234,10 @@ export class Api {
     if (this.isAuthenticated()) {
       notesCache.initialize(id, async () => this.fetchNote(id));
     }
+  }
+
+  loadEditor() {
+    moduleCache.initialize("editor", import("./editor.js"));
   }
 
   async createNote({ title, tags }) {

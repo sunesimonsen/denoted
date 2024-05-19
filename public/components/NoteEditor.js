@@ -1,7 +1,6 @@
 import { html } from "@dependable/view";
-import { observable, computed } from "@dependable/state";
 import { css } from "stylewars";
-import { notesCache, noteDirtyState } from "../state.js";
+import { moduleCache, notesCache, noteDirtyState } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { params } from "@dependable/nano-router";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
@@ -51,66 +50,60 @@ export class NoteEditor {
     this.onChange = (state) => {
       noteDirtyState.content(state.doc.toString());
     };
+  }
 
-    this.editorLoaded = observable(false);
+  prepareEditor(id) {
+    if (this.id === id) return;
 
-    this.loadEditor = async (note) => {
-      if (note.id !== this.id) {
-        this.editorLoaded(false);
-        if (this.editor) {
-          this.editor.destroy();
-        }
+    const [editorModule, moduleStatus, moduleError] =
+      moduleCache.byId("editor");
+    const [note, noteStatus, noteError] = notesCache.byId(id);
 
-        const { makeEditor } = await import("../editor.js");
+    if (moduleError) throw moduleError;
+    if (noteError) throw noteError;
 
-        const { editor, setTheme } = makeEditor({
-          target: this.ref,
-          content: note.content,
-          onChange: this.onChange,
-        });
+    if (moduleStatus !== LOADED) return;
+    if (noteStatus !== LOADED) return;
 
-        this.editorLoaded(true);
-        this.editor = editor;
-        this.id = note.id;
+    if (this.editor) {
+      this.editor.destroy();
+    }
 
-        editor.focus();
-      }
-    };
+    noteDirtyState.id = note.id;
+    noteDirtyState.rev = note.rev;
+    noteDirtyState.title(note.title);
+    noteDirtyState.content(note.content);
+    noteDirtyState.tags(note.tags);
 
-    this.initializeDirtyState = (note) => {
-      if (noteDirtyState.id !== note.id) {
-        noteDirtyState.id = note.id;
-        noteDirtyState.rev = note.rev;
-        noteDirtyState.title(note.title);
-        noteDirtyState.content(note.content);
-        noteDirtyState.tags(note.tags);
-      }
-    };
+    const { makeEditor } = editorModule;
 
-    this.isLoading = computed(() => {
-      const { id } = params();
-      const [_, status] = notesCache.byId(id);
-      return !this.editorLoaded() && status !== LOADED;
+    const { editor, setTheme } = makeEditor({
+      target: this.ref,
+      content: note.content,
+      onChange: this.onChange,
     });
+
+    this.editor = editor;
+    this.id = note.id;
+
+    editor.focus();
+  }
+
+  isLoading() {
+    const { id } = params();
+    const [_0, moduleStatus] = moduleCache.byId("editor");
+    const [_1, noteStatus] = notesCache.byId(id);
+
+    return moduleStatus !== LOADED || noteStatus !== LOADED;
   }
 
   didRender() {
     const { id } = params();
-    const [note, status] = notesCache.byId(id);
-
-    if (status === LOADED) {
-      this.initializeDirtyState(note);
-      this.loadEditor(note);
-    }
+    this.context.api.loadEditor();
+    this.prepareEditor(id);
   }
 
   render() {
-    const [note, status, error] = notesCache.byId(params().id);
-
-    if (status === FAILED) {
-      return html`Failed`;
-    }
-
     return html`
       <${BorderLayout} stretched>
         <${NoteEditorHeader} />

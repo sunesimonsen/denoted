@@ -2,6 +2,7 @@ import { observable, computed } from "@dependable/state";
 import { Cache } from "@dependable/cache";
 import { debounce } from "@dependable/debounce";
 
+export const moduleCache = new Cache();
 export const searches = new Cache("searches");
 export const notesCache = new Cache("notes");
 export const authCache = new Cache("auth");
