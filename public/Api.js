@@ -155,27 +155,26 @@ export class Api {
       }
     });
 
-    if (
-      this.isAuthenticated() &&
-      !this.refreshing &&
-      document.visibilityState === "visible"
-    ) {
+    if (!this.refreshing && document.visibilityState === "visible") {
       this.refreshing = true;
 
       while (this.refreshing) {
+        if (!this.isAuthenticated()) break;
         await this.refresh();
         await delay(5000);
       }
+
+      this.refreshing = false;
     }
   }
 
   loadNotes() {
-    if (this.isAuthenticated()) {
-      searches.initialize("notes", async () => {
-        const files = this.fetchFiles();
-        return files;
-      });
-    }
+    if (!this.isAuthenticated()) return;
+
+    searches.initialize("notes", async () => {
+      const files = this.fetchFiles();
+      return files;
+    });
   }
 
   async fetchNote(id) {
@@ -231,9 +230,9 @@ export class Api {
   }
 
   loadNote(id) {
-    if (this.isAuthenticated()) {
-      notesCache.initialize(id, async () => this.fetchNote(id));
-    }
+    if (!this.isAuthenticated()) return;
+
+    notesCache.initialize(id, async () => this.fetchNote(id));
   }
 
   loadEditor() {
