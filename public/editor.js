@@ -5,7 +5,7 @@ import { cleanup } from "@orgajs/editor/extensions";
 import { org } from "@orgajs/cm-lang";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@orgajs/cm-lang";
-import { Compartment, EditorState } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 
 const baseTheme = EditorView.baseTheme({
   "&": {
@@ -56,15 +56,7 @@ const baseStyle = HighlightStyle.define([
 const theme = [baseTheme, syntaxHighlighting(baseStyle)];
 
 export function makeEditor(config) {
-  const themeConfig = new Compartment();
-
-  const {
-    target,
-    content = "",
-    extensions = [],
-    dark = false,
-    onChange,
-  } = config;
+  const { target, content = "", extensions = [], onChange } = config;
 
   const state = EditorState.create({
     doc: "",
