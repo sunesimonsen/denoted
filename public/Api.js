@@ -4,7 +4,6 @@ import {
   notesCache,
   nameToNote,
   authCache,
-  timestampToNote,
   noteDirtyState,
 } from "./state.js";
 import { sha256 } from "./utils/sha256.js";
@@ -14,6 +13,12 @@ import { idFrom } from "./utils/ids.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { LOADED } from "@dependable/cache";
 import { orgToHtml } from "./org.js";
+
+function headerSafeJson(v) {
+  return JSON.stringify(v).replace(/[\u007f-\uffff]/g, function (c) {
+    return "\\u" + ("000" + c.charCodeAt(0).toString(16)).slice(-4);
+  });
+}
 
 export class Api {
   constructor({ router }) {
@@ -187,7 +192,7 @@ export class Api {
         headers: {
           Authorization: authHeader,
           "Content-Type": "text/plain; charset=utf-8",
-          "Dropbox-API-Arg": JSON.stringify({
+          "Dropbox-API-Arg": headerSafeJson({
             path: `/org/denote/${id}`,
           }),
         },
@@ -251,7 +256,7 @@ export class Api {
         headers: {
           Authorization: this.getAuthHeader(),
           "Content-Type": "application/octet-stream",
-          "Dropbox-API-Arg": JSON.stringify({
+          "Dropbox-API-Arg": headerSafeJson({
             path: `/org/denote/${note.id}`,
             mode: "add",
           }),
@@ -313,7 +318,7 @@ export class Api {
           headers: {
             Authorization: this.getAuthHeader(),
             "Content-Type": "application/octet-stream",
-            "Dropbox-API-Arg": JSON.stringify({
+            "Dropbox-API-Arg": headerSafeJson({
               path: `/org/denote/${noteDirtyState.id}`,
               mode: { ".tag": "update", update: noteDirtyState.rev },
             }),
