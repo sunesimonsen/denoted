@@ -28,7 +28,8 @@ export class TagsInput {
 
       let updatedTags;
       if (key === ".add") {
-        updatedTags = [...tags, this.searchText()].sort();
+        const searchText = this.searchText().toLowerCase();
+        updatedTags = [...tags, searchText].sort();
       } else if (tags.includes(key)) {
         updatedTags = tags.filter((tag) => tag != key);
       } else {
@@ -45,8 +46,10 @@ export class TagsInput {
       ? Array.from(new Set([...allNoteTags(), ...this.props.tags])).sort()
       : this.props.tags;
 
+    const searchText = this.searchText().toLowerCase();
+
     const options = tags
-      .filter((tag) => tag.includes(this.searchText()))
+      .filter((tag) => tag.includes(searchText))
       .slice(0, 6)
       .map(
         (tag) => html`
@@ -60,12 +63,12 @@ export class TagsInput {
         `,
       );
 
-    if (this.searchText() && !tags.includes(this.searchText())) {
+    if (searchText && !tags.includes(searchText)) {
       return [
         ...options,
         html`
           <${AutocompleteOption} key=".add" value=".add">
-            Add tag "${this.searchText()}"
+            Add tag "${searchText}"
           <//>
         `,
       ];
