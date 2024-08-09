@@ -1,4 +1,5 @@
 import { html } from "@dependable/view";
+import { css } from "stylewars";
 import {
   Autocomplete,
   AutocompleteInput,
@@ -7,6 +8,19 @@ import {
 } from "@dependable/components/Autocomplete/v0";
 import { route } from "@dependable/nano-router";
 import { searchText, searchResults } from "../state.js";
+
+const popStyles = css`
+  & {
+    width: 40vw;
+  }
+
+  @media screen and (max-width: 900px) {
+    & {
+      margin-top: 2px;
+      width: 80vw;
+    }
+  }
+`;
 
 const onInput = (e) => {
   searchText(e.target.value);
@@ -72,7 +86,11 @@ export class FileSearch {
 
   render() {
     return html`
-      <${Autocomplete} id="file-search" onSelect=${this.onSelect}>
+      <${Autocomplete}
+        id="file-search"
+        onSelect=${this.onSelect}
+        placement="bottom"
+      >
         <${AutocompleteInput}
           .value=${searchText()}
           onInput=${onInput}
@@ -80,7 +98,7 @@ export class FileSearch {
           autofocus=${route() === "home"}
           onClear=${onClear}
         />
-        <${AutocompletePopup}>${this.renderItems()}<//>
+        <${AutocompletePopup} className=${popStyles}>${this.renderItems()}<//>
       <//>
     `;
   }

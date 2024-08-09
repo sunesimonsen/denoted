@@ -37,7 +37,7 @@
     "@codemirror/state": "^6.4.0",
     "@codemirror/view": "^6.23.1",
     "@dependable/cache": "^0.10.0",
-    "@dependable/components": "^0.34.1",
+    "@dependable/components": "^0.35.0",
     "@dependable/debounce": "^0.1.1",
     "@dependable/icons": "^0.1.0",
     "@dependable/nano-router": "^0.8.1",
