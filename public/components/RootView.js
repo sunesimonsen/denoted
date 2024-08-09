@@ -1,5 +1,5 @@
 import { html } from "@dependable/view";
-import { route, queryParams } from "@dependable/nano-router";
+import { route } from "@dependable/nano-router";
 import { Home } from "./Home.js";
 
 export class RootView {
