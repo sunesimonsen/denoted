@@ -2,6 +2,7 @@ import { reorg } from "@orgajs/reorg";
 import mutate from "@orgajs/reorg-rehype";
 import html from "rehype-stringify";
 import { visit } from "unist-util-visit";
+import { timestampToNote } from "./state.js";
 
 const resolveDenoteLinks = () => (tree) =>
   visit(tree, "link", (node) => {
