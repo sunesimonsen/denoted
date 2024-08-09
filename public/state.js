@@ -59,7 +59,7 @@ export const filteredNotes = computed(() => {
   const terms = searchTerms();
 
   const filteredNotes = notes.filter((node) =>
-    terms.every((term) => node.id.includes(term)),
+    terms.every((term) => node.id.toLowerCase().includes(term.toLowerCase())),
   );
 
   return [filteredNotes, status, error];

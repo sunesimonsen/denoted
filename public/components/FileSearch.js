@@ -78,6 +78,7 @@ export class FileSearch {
           onInput=${onInput}
           onFocus=${this.onFocus}
           autofocus=${route() === "home"}
+          onClear=${onClear}
         />
         <${AutocompletePopup}>${this.renderItems()}<//>
       <//>
