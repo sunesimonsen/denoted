@@ -26,7 +26,7 @@ const addTargetBlankToExternalLinks = () => (tree) =>
     node.properties.rel = "noopener noreferrer";
   });
 
-const urlRegex = /(?![^<]*>|[^<>]*<\/)((https?:)\/\/[a-z0-9&#=.\/\-?_]+)/gi;
+const urlRegex = /^((?![^<]*>|[^<>]*<\/)((https?:)\/\/[a-z0-9&#=.\/\-?_]+))$/gi;
 
 const isUrlText = (node) => node.type === "text" && node.value.match(urlRegex);
 
@@ -37,6 +37,24 @@ const autoLink = () => (tree) =>
       type: "element",
       properties: {
         href: node.value,
+      },
+      children: [node],
+    };
+    return "skip";
+  });
+
+// Notice this doesn't current handle all phone number formats
+const telRegex = /^((\+\d{2})?\d{8}|(\+\d{2} )?(\d{2} ){3}\d{2})$/gi;
+
+const isTelText = (node) => node.type === "text" && node.value.match(telRegex);
+
+const autoLinkTel = () => (tree) =>
+  visit(tree, isTelText, (node, index, parent) => {
+    parent.children[index] = {
+      tagName: "a",
+      type: "element",
+      properties: {
+        href: "tel:" + node.value.replaceAll(" ", ""),
       },
       children: [node],
     };
@@ -56,6 +74,7 @@ export const orgProcessor = reorg()
   .use(resolveDenoteLinks)
   .use(mutate)
   .use(autoLink)
+  .use(autoLinkTel)
   .use(addTargetBlankToExternalLinks)
   .use(incrementHeaderLevels)
   .use(html);
