@@ -10,14 +10,15 @@ import {
   DialogSubmitButton,
 } from "@dependable/components/Dialog/v0";
 
-import { noteDirtyState } from "../state.js";
 import { margin } from "@dependable/components/theming/v0";
 import { TitleInput } from "./TitleInput.js";
 import { TagsInput } from "./TagsInput.js";
 import { queryParams } from "@dependable/nano-router";
+import { InvalidTitleError } from "../errors/InvalidTitleError.js";
 
 const title = observable("", { id: "newNoteTitle" });
 const tags = observable([], { id: "newNoteTags" });
+const invalidTitle = observable(false, { id: "newNoteTitleInvalid" });
 
 const creating = observable(false);
 
@@ -32,6 +33,7 @@ export class NewNoteDialog {
 
         title("");
         tags([]);
+        invalidTitle(false);
       }
     };
 
@@ -43,9 +45,12 @@ export class NewNoteDialog {
           tags: tags(),
         });
 
-        creating(false);
         this.onClose();
-      } catch {
+      } catch (e) {
+        if (e instanceof InvalidTitleError) {
+          invalidTitle(true);
+        }
+      } finally {
         creating(false);
       }
     };
@@ -70,6 +75,7 @@ export class NewNoteDialog {
             id="metadata-title-input"
             title=${title()}
             onTitleChange=${this.onTitleChange}
+            invalid=${invalidTitle()}
           />
           <${TagsInput}
             id="metadata-tags-input"

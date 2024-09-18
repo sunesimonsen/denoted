@@ -250,7 +250,7 @@ export class Api {
     const contentWithFrontmatter = frontmatter(note) + "\n\n";
 
     const { rev } = await this.fetchJson(
-      "https:content.dropboxapi.com/2/files/upload",
+      "https://content.dropboxapi.com/2/files/upload",
       {
         method: "POST",
         headers: {

@@ -14,6 +14,7 @@ import { noteDirtyState } from "../state.js";
 import { margin } from "@dependable/components/theming/v0";
 import { TitleInput } from "./TitleInput.js";
 import { TagsInput } from "./TagsInput.js";
+import { isTitleInvalid } from "../validations/isTitleInvalid.js";
 
 const metadataDialogVisible = observable(false, {
   id: "metadataDialogVisible",
@@ -21,6 +22,7 @@ const metadataDialogVisible = observable(false, {
 
 const title = observable("", { id: "noteMetadataTitle" });
 const tags = observable([], { id: "noteMetadataTags" });
+const invalidTitle = observable(false, { id: "editNoteTitleInvalid" });
 
 export const showMetadataDialog = () => {
   title(noteDirtyState.title());
@@ -32,12 +34,17 @@ export class NoteMetadataDialog {
   constructor() {
     this.onClose = () => {
       metadataDialogVisible(false);
+      invalidTitle(false);
     };
 
     this.onSubmit = () => {
-      noteDirtyState.title(title());
-      noteDirtyState.tags(tags());
-      this.onClose();
+      if (isTitleInvalid(title())) {
+        invalidTitle(true);
+      } else {
+        noteDirtyState.title(title());
+        noteDirtyState.tags(tags());
+        this.onClose();
+      }
     };
 
     this.onTitleChange = (e) => {
@@ -60,6 +67,7 @@ export class NoteMetadataDialog {
             id="metadata-title-input"
             title=${title()}
             onTitleChange=${this.onTitleChange}
+            invalid=${invalidTitle()}
           />
           <${TagsInput}
             id="metadata-tags-input"
