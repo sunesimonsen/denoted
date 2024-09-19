@@ -45,13 +45,13 @@ export class NewNoteDialog {
           tags: tags(),
         });
 
+        creating(false);
         this.onClose();
       } catch (e) {
+        creating(false);
         if (e instanceof InvalidTitleError) {
           invalidTitle(true);
         }
-      } finally {
-        creating(false);
       }
     };
 
