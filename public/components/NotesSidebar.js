@@ -51,7 +51,6 @@ export class NotesSidebar {
     }
 
     const items = notes.map((note) => {
-      const tagString = note.tags.length ? ` (${note.tags.join(",")})` : "";
       return html`<li><${NoteReference} note=${note} /></li>`;
     });
 

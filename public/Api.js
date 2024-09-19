@@ -152,6 +152,8 @@ export class Api {
   }
 
   async startRefreshing() {
+    if (!this.isAuthenticated()) return;
+
     window.addEventListener("visibilitychange", (event) => {
       if (document.visibilityState === "hidden") {
         this.refreshing = false;
@@ -376,6 +378,7 @@ export class Api {
 
   getAuthHeader() {
     const [token] = authCache.byId("token");
+
     return `Bearer ${token}`;
   }
 
@@ -458,6 +461,8 @@ export class Api {
             redirect_uri: window.location.origin + "/authorized",
           },
         });
+
+        await new Promise(() => {});
       }
     });
   }
