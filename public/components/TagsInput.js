@@ -8,6 +8,7 @@ import {
   AutocompletePopup,
 } from "@dependable/components/Autocomplete/v0";
 import { allNoteTags } from "../state.js";
+import { FieldLayout } from "@dependable/components/FieldLayout/v0";
 import { margin } from "@dependable/components/theming/v0";
 
 export class TagsInput {
@@ -79,13 +80,9 @@ export class TagsInput {
 
   render({ id, className, tags }) {
     return html`
-      <div className=${className}>
+      <${FieldLayout} className=${className} stretched>
         <label for=${id}>Tags</label>
-        <${Autocomplete}
-          id=${id}
-          onSelect=${this.onTagSelect}
-          className=${margin(1, "block-start")}
-        >
+        <${Autocomplete} id=${id} onSelect=${this.onTagSelect}>
           <${AutocompleteInput}
             .value=${this.searchText()}
             onInput=${this.onSearchTextChange}
@@ -94,7 +91,7 @@ export class TagsInput {
           <${AutocompletePopup}>${this.renderTagsOptions()}<//>
         <//>
         <${Tags} tags=${tags} className=${margin(2, "block-start")} />
-      </div>
+      <//>
     `;
   }
 }

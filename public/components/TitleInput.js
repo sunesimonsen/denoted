@@ -1,7 +1,7 @@
 import { html } from "@dependable/view";
 import { TextInput } from "@dependable/components/TextInput/v0";
 import { Validation } from "@dependable/components/Validation/v0";
-import { ColumnLayout } from "@dependable/components/ColumnLayout/v0";
+import { FieldLayout } from "@dependable/components/FieldLayout/v0";
 
 export class TitleInput {
   renderValidation() {
@@ -12,7 +12,7 @@ export class TitleInput {
 
   render({ id, title, invalid, onTitleChange }) {
     return html`
-      <${ColumnLayout} justifyItems="start" gap="0.3em" stretched>
+      <${FieldLayout} stretched>
         <label for=${id}>Title</label>
         <${TextInput}
           id=${id}
