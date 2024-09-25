@@ -23,10 +23,29 @@ const usageStyles = css`
   }
 `;
 
+const drawingStyles = css`
+  & {
+    border: thin solid var(--dc-color-neutral-70);
+    width: 40vw;
+    border-radius: 2vw;
+    margin-bottom: 30px;
+  }
+
+  @media screen and (max-width: 1200px) {
+    & {
+      width: 60vw;
+    }
+  }
+`;
+
 export class Usage {
   render() {
     return html`<${Center} className=${containerStyles}>
       <article className=${usageStyles}>
+        <img
+          src=${new URL("../images/frontpage-drawing.png", import.meta.url)}
+          className=${drawingStyles}
+        />
         <p>Find notes by searching<code>⌘k</code></p>
         <p>All entered search terms will filter the notes displayed</p>
         <p>
