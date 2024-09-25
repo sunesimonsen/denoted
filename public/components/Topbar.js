@@ -1,7 +1,6 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
 import { FileSearch } from "./FileSearch.js";
-import { HomeLink } from "./HomeLink.js";
 import { Bar } from "@dependable/components/Bar/v0";
 import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 import { SidebarToggle } from "@dependable/components/Sidebar/v0";
@@ -26,7 +25,6 @@ export class Topbar {
         <${ToolbarLayout} sections="start center end">
           <div>
             <${SidebarToggle} pill basic />
-            <${HomeLink} />
           </div>
           <div className=${centerStyles}>
             <${FileSearch} />
