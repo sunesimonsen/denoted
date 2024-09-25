@@ -12,6 +12,7 @@ const usageStyles = css`
   & {
     text-align: center;
     color: var(--dc-color-foreground);
+    padding: var(--dc-spacing-3);
   }
 
   & code {
