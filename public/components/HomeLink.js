@@ -15,6 +15,12 @@ const homeStyles = css`
   & {
     text-decoration: none;
   }
+
+  @media only screen and (width <= 700px) {
+    & {
+      display: none;
+    }
+  }
 `;
 
 export class HomeLink {
