@@ -1,13 +1,12 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { Center } from "@dependable/components/Center/v0";
+import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 
 const containerStyles = css`
   & {
     height: 100%;
   }
 `;
-
 const usageStyles = css`
   & {
     text-align: center;
@@ -27,7 +26,7 @@ const usageStyles = css`
 const drawingStyles = css`
   & {
     border: thin solid var(--dc-color-neutral-70);
-    width: 40vw;
+    width: 35vw;
     border-radius: 2vw;
     margin-bottom: 30px;
   }
@@ -41,23 +40,25 @@ const drawingStyles = css`
 
 export class Usage {
   render() {
-    return html`<${Center} className=${containerStyles}>
-      <article className=${usageStyles}>
-        <img
-          src=${new URL("../images/taking-notes.jpeg", import.meta.url)}
-          className=${drawingStyles}
-        />
-        <p>Find notes by searching<code>⌘k</code></p>
-        <p>All entered search terms will filter the notes displayed</p>
-        <p>
-          Filter notes by title only prefix search term with a dash
-          <code>-term</code>
-        </p>
-        <p>
-          Filter notes by tags only prefix search term with an underscore
-          <code>_term</code>
-        </p>
-      </article>
-    <//>`;
+    return html`
+      <${ScrollArea} className=${containerStyles}>
+        <article className=${usageStyles}>
+          <img
+            src=${new URL("../images/taking-notes.jpeg", import.meta.url)}
+            className=${drawingStyles}
+          />
+          <p>Find notes by searching<code>⌘k</code></p>
+          <p>All entered search terms will filter the notes displayed</p>
+          <p>
+            Filter notes by title only prefix search term with a dash
+            <code>-term</code>
+          </p>
+          <p>
+            Filter notes by tags only prefix search term with an underscore
+            <code>_term</code>
+          </p>
+        </article>
+      <//>
+    `;
   }
 }
