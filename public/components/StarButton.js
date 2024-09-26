@@ -1,14 +1,20 @@
 import { html } from "@dependable/view";
+import { css } from "stylewars";
 import { IconButton } from "@dependable/components/IconButton/v0";
 import StarFill16Icon from "@dependable/icons/StarFill16Icon";
 import StarStroke16Icon from "@dependable/icons/StarStroke16Icon";
-import { noteDirtyState, toggleStarred, isStarred } from "../state";
-import { computed } from "@dependable/state";
+import { toggleStarred, isStarred } from "../state";
+
+const iconStyles = css`
+  & {
+    color: var(--dc-color-warning-50);
+  }
+`;
 
 export class StarButton {
   renderIcon() {
     return isStarred()
-      ? html`<${StarFill16Icon} />`
+      ? html`<${StarFill16Icon} className=${iconStyles} />`
       : html`<${StarStroke16Icon} />`;
   }
 

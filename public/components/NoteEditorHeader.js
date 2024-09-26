@@ -12,6 +12,7 @@ import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 const toolbarStyles = css`
   & {
     --dc-toolbar-align-items: start;
+    --dc-toolbar-gap: var(--dc-spacing-2);
   }
 `;
 
