@@ -9,10 +9,10 @@ import { NewNoteButton } from "./NewNoteButton.js";
 
 const centerStyles = css`
   & {
-    width: 40vw;
+    width: 60vw;
   }
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 600px) {
     & {
       width: 50vw;
     }

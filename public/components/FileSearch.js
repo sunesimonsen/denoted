@@ -11,7 +11,7 @@ import { searchText, searchResults } from "../state.js";
 
 const popStyles = css`
   & {
-    width: 40vw;
+    width: 60vw;
   }
 
   @media screen and (max-width: 900px) {
