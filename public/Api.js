@@ -351,6 +351,12 @@ export class Api {
           },
         );
 
+        const [notes] = searches.byId("notes");
+        searches.load("notes", () => [
+          newId,
+          ...notes.filter((id) => id !== note.id),
+        ]);
+
         noteDirtyState.id = newId;
         noteDirtyState.rev = result.rev;
       }

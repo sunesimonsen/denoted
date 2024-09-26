@@ -1,12 +1,12 @@
 import { html } from "@dependable/view";
 import { css } from "stylewars";
-import { allNotes } from "../state.js";
-import { BorderLayout } from "@dependable/components/BorderLayout/v0";
+import { allNotes, starredNotes } from "../state.js";
 import { FAILED, LOADED } from "@dependable/cache";
 import { NoteReference } from "./NoteReference.js";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { ReferencesSkeleton } from "./ReferencesSkeleton.js";
-import { SidebarLayout, Sidebar } from "@dependable/components/Sidebar/v0";
+import { Sidebar } from "@dependable/components/Sidebar/v0";
+import StarFill16Icon from "@dependable/icons/StarFill16Icon";
 
 const styles = css`
   & {
@@ -14,9 +14,24 @@ const styles = css`
     width: 300px;
   }
 
+  & h2 {
+    margin-block-start: var(--dc-spacing-4);
+    margin-inline-start: var(--dc-spacing-4);
+    font-size: 1em;
+    font-weight: normal;
+    color: var(--dc-color-neutral-40);
+    display: flex;
+    align-items: center;
+    gap: var(--dc-spacing-1);
+  }
+
+  & h2 svg {
+    color: var(--dc-color-warning-50);
+  }
+
   & ul {
-    padding: 0 16px;
-    margin: 20px 0;
+    padding: 0 var(--dc-spacing-4);
+    margin: 0;
   }
 
   & ul > li {
@@ -39,8 +54,35 @@ export class NotesSidebar {
     };
   }
 
+  renderStarred() {
+    const [notes, status] = starredNotes();
+
+    if (status === FAILED) {
+      return "Failed";
+    }
+
+    if (status !== LOADED) {
+      return html`<${ReferencesSkeleton} />`;
+    }
+
+    const items = notes.map((note) => {
+      return html`<li><${NoteReference} note=${note} /></li>`;
+    });
+
+    if (!items.length) {
+      return null;
+    }
+
+    return html`
+      <h2>Starred<${StarFill16Icon} /></h2>
+      <ul>
+        ${items}
+      </ul>
+    `;
+  }
+
   renderFileList() {
-    const [notes, status, error] = allNotes();
+    const [notes, status] = allNotes();
 
     if (status === FAILED) {
       return "Failed";
@@ -55,6 +97,7 @@ export class NotesSidebar {
     });
 
     return html`
+      <h2>All</h2>
       <ul>
         ${items}
       </ul>
@@ -69,7 +112,7 @@ export class NotesSidebar {
         onClick=${this.onClick}
       >
         <${ScrollArea} className=${scrollAreaStyles}>
-          <nav>${this.renderFileList()}</nav>
+          <nav>${this.renderStarred()} ${this.renderFileList()}</nav>
         <//>
       <//>
     `;

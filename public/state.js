@@ -47,8 +47,16 @@ export const allNotes = computed(() => {
   return [notes, status, error];
 });
 
-export const timestampToNote = (timestamp) => {
+export const starredNotes = computed(() => {
   const [notes, status, error] = allNotes();
+
+  const starredNotes = notes.filter((note) => note.tags.includes("star"));
+
+  return [starredNotes, status, error];
+});
+
+export const timestampToNote = (timestamp) => {
+  const [notes] = allNotes();
 
   return notes.find((note) => note.timestamp === timestamp);
 };
