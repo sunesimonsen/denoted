@@ -141,3 +141,17 @@ export const noteDirtyState = {
   tags: observable([], { id: "dirtyStateTags" }),
   saving: observable(false),
 };
+
+export const isStarred = computed(() => noteDirtyState.tags().includes("star"));
+
+export const toggleStarred = () => {
+  let tags = noteDirtyState.tags();
+
+  if (isStarred()) {
+    tags = tags.filter((tag) => tag !== "star");
+  } else {
+    tags = [...tags, "star"];
+  }
+
+  noteDirtyState.tags(tags);
+};

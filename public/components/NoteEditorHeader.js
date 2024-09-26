@@ -1,23 +1,17 @@
-import { html } from "@dependable/view";
-import { css } from "stylewars";
-import { notesCache } from "../state.js";
-import { Button } from "@dependable/components/Button/v0";
-import { NoteDate } from "./NoteDate.js";
-import { params } from "@dependable/nano-router";
 import { FAILED, LOADED } from "@dependable/cache";
-import { Skeleton } from "@dependable/components/Skeleton/v0";
+import { css } from "stylewars";
 import { Bar } from "@dependable/components/Bar/v0";
-import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
-import { noteDirtyState } from "../state.js";
-import { NoteMetadata, NoteMetadataSkeleton } from "./NoteMetadata.js";
+import { params } from "@dependable/nano-router";
+import { html } from "@dependable/view";
+import { noteDirtyState, notesCache } from "../state.js";
+import { StarButton } from "./StarButton.js";
 import { EditMetadataButton } from "./EditMetadataButton.js";
-import { NoteMetadataDialog } from "./NoteMetadataDialog.js";
-import { DeleteNoteDialog } from "./DeleteNoteDialog.js";
+import { NoteMetadata, NoteMetadataSkeleton } from "./NoteMetadata.js";
+import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 
-const styles = css`
+const toolbarStyles = css`
   & {
-    position: relative;
-    padding: 12px 30px;
+    --dc-toolbar-align-items: start;
   }
 `;
 
@@ -27,27 +21,32 @@ export class NoteEditorHeader {
   }
 
   render() {
-    const [note, status, error] = notesCache.byId(params().id);
+    const [note, status] = notesCache.byId(params().id);
 
     if (status === FAILED) {
       return "Failed";
     }
 
     return html`
-      <${Bar} data-layout="top" className=${styles}>
-        ${status === LOADED
-          ? html`
-              <${NoteMetadata}
-                title=${noteDirtyState.title()}
-                date=${note.date}
-                tags=${noteDirtyState.tags()}
-              />
-            `
-          : html`<${NoteMetadataSkeleton} />`}
-        <${EditMetadataButton} />
+      <${Bar} data-layout="top">
+        <${ToolbarLayout} sections="start end" className=${toolbarStyles}>
+          <div>
+            ${status === LOADED
+              ? html`
+                  <${NoteMetadata}
+                    title=${noteDirtyState.title()}
+                    date=${note.date}
+                    tags=${noteDirtyState.tags()}
+                  />
+                `
+              : html`<${NoteMetadataSkeleton} />`}
+          </div>
+          <div>
+            <${StarButton} />
+            <${EditMetadataButton} />
+          </div>
+        <//>
       <//>
-      <${NoteMetadataDialog} />
-      <${DeleteNoteDialog} />
     `;
   }
 }
