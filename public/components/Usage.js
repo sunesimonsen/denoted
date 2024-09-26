@@ -44,7 +44,7 @@ export class Usage {
     return html`<${Center} className=${containerStyles}>
       <article className=${usageStyles}>
         <img
-          src=${new URL("../images/frontpage-drawing.jpg", import.meta.url)}
+          src=${new URL("../images/taking-notes.jpeg", import.meta.url)}
           className=${drawingStyles}
         />
         <p>Find notes by searching<code>⌘k</code></p>
