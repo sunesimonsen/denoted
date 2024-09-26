@@ -2,7 +2,10 @@ import { html } from "@dependable/view";
 import { css } from "stylewars";
 import { Link } from "@dependable/nano-router";
 
-const logo = new URL("../icons/denoted-icon-114x114.png", import.meta.url);
+const logo = new URL(
+  "../icons/denoted-icon-transparent-42x42.png",
+  import.meta.url,
+);
 
 const logoStyles = css`
   & {
@@ -16,7 +19,7 @@ const homeStyles = css`
     text-decoration: none;
   }
 
-  @media only screen and (width <= 700px) {
+  @media screen and (max-width: 1200px) {
     & {
       display: none;
     }
