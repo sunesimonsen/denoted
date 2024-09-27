@@ -155,10 +155,12 @@ export class Api {
     if (!this.isAuthenticated()) return;
 
     window.addEventListener("visibilitychange", (event) => {
-      if (document.visibilityState === "hidden") {
-        this.refreshing = false;
-      } else if (!this.refreshing && this.isAuthenticated()) {
-        this.startRefreshing();
+      if (this.isAuthenticated()) {
+        if (document.visibilityState === "hidden") {
+          this.refreshing = false;
+        } else if (!this.refreshing) {
+          this.startRefreshing();
+        }
       } else {
         this.reauthenticate();
       }
