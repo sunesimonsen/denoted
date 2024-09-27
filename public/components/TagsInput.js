@@ -82,7 +82,7 @@ export class TagsInput {
     return html`
       <${FieldLayout} className=${className} stretched>
         <label for=${id}>Tags</label>
-        <${Autocomplete} id=${id} onSelect=${this.onTagSelect}>
+        <${Autocomplete} id=${id} onSelectItem=${this.onTagSelect}>
           <${AutocompleteInput}
             .value=${this.searchText()}
             onInput=${this.onSearchTextChange}

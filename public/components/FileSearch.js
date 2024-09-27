@@ -36,7 +36,7 @@ export class FileSearch {
       this.context.visibleSidebar("");
     };
 
-    this.onSelect = (e) => {
+    this.onSelectItem = (e) => {
       if (e.detail) {
         const { value } = e.detail;
 
@@ -88,7 +88,7 @@ export class FileSearch {
     return html`
       <${Autocomplete}
         id="file-search"
-        onSelect=${this.onSelect}
+        onSelectItem=${this.onSelectItem}
         placement="bottom"
       >
         <${AutocompleteInput}
