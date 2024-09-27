@@ -157,8 +157,10 @@ export class Api {
     window.addEventListener("visibilitychange", (event) => {
       if (document.visibilityState === "hidden") {
         this.refreshing = false;
-      } else if (!this.refreshing) {
+      } else if (!this.refreshing && this.isAuthenticated()) {
         this.startRefreshing();
+      } else {
+        this.reauthenticate();
       }
     });
 
@@ -391,10 +393,12 @@ export class Api {
   reauthenticate() {
     sessionStorage.removeItem("dropbox-token");
     authCache.evict("token");
+    this.authenticate();
   }
 
   isAuthenticated() {
     const [, status] = authCache.byId("token");
+
     return status === LOADED;
   }
 
