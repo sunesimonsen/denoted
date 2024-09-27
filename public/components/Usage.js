@@ -26,7 +26,7 @@ const usageStyles = css`
 const drawingStyles = css`
   & {
     border: thin solid var(--dc-color-neutral-70);
-    width: 35vw;
+    width: 33vw;
     border-radius: 2vw;
     margin-bottom: 30px;
   }
