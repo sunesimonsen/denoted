@@ -30,7 +30,7 @@ export class Api {
 
     if (!response.ok) {
       if (response.status === 401) {
-        this.reauthenticate();
+        return await this.reauthenticate();
       } else {
         throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
       }
@@ -395,7 +395,18 @@ export class Api {
   reauthenticate() {
     sessionStorage.removeItem("dropbox-token");
     authCache.evict("token");
+
+    this.router.navigate({
+      route: "home",
+      replace: true,
+      hash: "",
+      queryParams: {},
+    });
+
     this.authenticate();
+
+    // Blocking promise waiting for redirect
+    return new Promise((_) => {});
   }
 
   isAuthenticated() {
@@ -426,13 +437,17 @@ export class Api {
       body,
     });
 
-    if (response.ok) {
-      const { access_token } = await response.json();
+    if (!response.ok) {
+      if (response.status === 400) {
+        await this.reauthenticate();
+      }
 
-      return access_token;
-    } else {
       throw new Error("Extracting access token failed");
     }
+
+    const { access_token } = await response.json();
+
+    return access_token;
   }
 
   authenticate() {
