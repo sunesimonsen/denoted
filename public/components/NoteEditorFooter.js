@@ -1,6 +1,7 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
+
 import { noteDirtyState } from "../state.js";
-import { css } from "stylewars";
+
 import { Button } from "@dependable/components/Button/v0";
 import { margin } from "@dependable/components/theming/v0";
 import { Bar } from "@dependable/components/Bar/v0";
@@ -12,30 +13,45 @@ export class NoteEditorFooter {
     this.onView = () => {
       this.context.router.navigate("note/view");
     };
-
     this.onSave = () => {
       this.context.api.saveNote();
     };
   }
-
   render() {
-    return html`
-      <${Bar} data-layout="bottom">
-        <${ToolbarLayout} sections="start end">
-          <div><${DeleteNoteButton} /></div>
-          <div>
-            <${Button} basic onClick=${this.onView}>View<//>
-            <${Button}
-              className=${margin(2, "start")}
-              primary
-              loading=${noteDirtyState.saving()}
-              onClick=${this.onSave}
-            >
-              Save
-            <//>
-          </div>
-        <//>
-      <//>
-    `;
+    return h(
+      Bar,
+      {
+        "data-layout": "bottom",
+      },
+      h(
+        ToolbarLayout,
+        {
+          sections: "start end",
+        },
+        h("div", null, h(DeleteNoteButton, null)),
+        h(
+          "div",
+          null,
+          h(
+            Button,
+            {
+              basic: true,
+              onClick: this.onView,
+            },
+            "View",
+          ),
+          h(
+            Button,
+            {
+              className: margin(2, "start"),
+              primary: true,
+              loading: noteDirtyState.saving(),
+              onClick: this.onSave,
+            },
+            "Save",
+          ),
+        ),
+      ),
+    );
   }
 }

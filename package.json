@@ -4,10 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": [
-    "emacs",
-    "denote"
-  ],
+  "keywords": ["emacs", "denote"],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -42,10 +39,10 @@
     "@dependable/cache": "^0.10.0",
     "@dependable/components": "^0.43.0",
     "@dependable/debounce": "^0.1.1",
-    "@dependable/icons": "^0.1.0",
-    "@dependable/nano-router": "^0.8.1",
+    "@dependable/icons": "^0.6.0",
+    "@dependable/nano-router": "^0.9.0",
     "@dependable/state": "^0.20.0",
-    "@dependable/view": "^0.19.2",
+    "@dependable/view": "^0.22.0",
     "@dependable/vite": "^0.1.0",
     "@nano-router/history": "^2.12.0",
     "@nano-router/router": "^2.12.0",

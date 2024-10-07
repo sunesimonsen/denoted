@@ -1,7 +1,7 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
+
 import { css } from "stylewars";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
-
 const containerStyles = css`
   & {
     height: 100%;
@@ -22,7 +22,6 @@ const usageStyles = css`
     font-size: 14px;
   }
 `;
-
 const drawingStyles = css`
   & {
     border: thin solid var(--dc-color-neutral-70);
@@ -37,28 +36,41 @@ const drawingStyles = css`
     }
   }
 `;
-
 export class Usage {
   render() {
-    return html`
-      <${ScrollArea} className=${containerStyles}>
-        <article className=${usageStyles}>
-          <img
-            src=${new URL("../images/taking-notes.jpeg", import.meta.url)}
-            className=${drawingStyles}
-          />
-          <p>Find notes by searching<code>⌘k</code></p>
-          <p>All entered search terms will filter the notes displayed</p>
-          <p>
-            Filter notes by title only prefix search term with a dash
-            <code>-term</code>
-          </p>
-          <p>
-            Filter notes by tags only prefix search term with an underscore
-            <code>_term</code>
-          </p>
-        </article>
-      <//>
-    `;
+    return h(
+      ScrollArea,
+      {
+        className: containerStyles,
+      },
+      h(
+        "article",
+        {
+          className: usageStyles,
+        },
+        h("img", {
+          src: new URL("../images/taking-notes.jpeg", import.meta.url),
+          className: drawingStyles,
+        }),
+        h("p", null, "Find notes by searching", h("code", null, "\u2318k")),
+        h(
+          "p",
+          null,
+          "All entered search terms will filter the notes displayed",
+        ),
+        h(
+          "p",
+          null,
+          "Filter notes by title only prefix search term with a dash",
+          h("code", null, "-term"),
+        ),
+        h(
+          "p",
+          null,
+          "Filter notes by tags only prefix search term with an underscore",
+          h("code", null, "_term"),
+        ),
+      ),
+    );
   }
 }

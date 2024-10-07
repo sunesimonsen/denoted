@@ -1,4 +1,4 @@
-import { foldGutter, toggleFold, bracketMatching } from "@codemirror/language";
+import { foldGutter, bracketMatching } from "@codemirror/language";
 import { defaultKeymap } from "@codemirror/commands";
 import { EditorView, highlightActiveLine, keymap } from "@codemirror/view";
 import { cleanup } from "@orgajs/editor/extensions";

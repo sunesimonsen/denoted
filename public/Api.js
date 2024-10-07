@@ -154,7 +154,7 @@ export class Api {
   async startRefreshing() {
     if (!this.isAuthenticated()) return;
 
-    window.addEventListener("visibilitychange", (event) => {
+    window.addEventListener("visibilitychange", () => {
       if (this.isAuthenticated()) {
         if (document.visibilityState === "hidden") {
           this.refreshing = false;
@@ -255,21 +255,18 @@ export class Api {
 
     const contentWithFrontmatter = frontmatter(note) + "\n\n";
 
-    const { rev } = await this.fetchJson(
-      "https://content.dropboxapi.com/2/files/upload",
-      {
-        method: "POST",
-        headers: {
-          Authorization: this.getAuthHeader(),
-          "Content-Type": "application/octet-stream",
-          "Dropbox-API-Arg": headerSafeJson({
-            path: `/org/denote/${note.id}`,
-            mode: "add",
-          }),
-        },
-        body: contentWithFrontmatter,
+    await this.fetchJson("https://content.dropboxapi.com/2/files/upload", {
+      method: "POST",
+      headers: {
+        Authorization: this.getAuthHeader(),
+        "Content-Type": "application/octet-stream",
+        "Dropbox-API-Arg": headerSafeJson({
+          path: `/org/denote/${note.id}`,
+          mode: "add",
+        }),
       },
-    );
+      body: contentWithFrontmatter,
+    });
 
     this.router.navigate({
       route: "note/edit",
@@ -406,7 +403,7 @@ export class Api {
     this.authenticate();
 
     // Blocking promise waiting for redirect
-    return new Promise((_) => {});
+    return new Promise(() => {});
   }
 
   isAuthenticated() {

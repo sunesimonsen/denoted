@@ -26,7 +26,7 @@ const addTargetBlankToExternalLinks = () => (tree) =>
     node.properties.rel = "noopener noreferrer";
   });
 
-const urlRegex = /^((?![^<]*>|[^<>]*<\/)((https?:)\/\/[a-z0-9&#=.\/\-?_]+))$/gi;
+const urlRegex = /^((?![^<]*>|[^<>]*<\/)((https?:)\/\/[a-z0-9&#=./\-?_]+))$/gi;
 
 const isUrlText = (node) => node.type === "text" && node.value.match(urlRegex);
 

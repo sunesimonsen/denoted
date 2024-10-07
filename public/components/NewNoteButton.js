@@ -1,7 +1,7 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
+
 import { IconButton } from "@dependable/components/IconButton/v0";
 import PlusCircleStroke16Icon from "@dependable/icons/PlusCircleStroke16Icon";
-import { Link } from "@dependable/nano-router";
 
 export class NewNoteButton {
   constructor() {
@@ -15,10 +15,18 @@ export class NewNoteButton {
   }
 
   render(props) {
-    return html`
-      <${IconButton} basic pill onClick=${this.onClick} ...${props}>
-        <${PlusCircleStroke16Icon} width="24" height="24" />
-      <//>
-    `;
+    return h(
+      IconButton,
+      {
+        basic: true,
+        pill: true,
+        onClick: this.onClick,
+        ...props,
+      },
+      h(PlusCircleStroke16Icon, {
+        width: "24",
+        height: "24",
+      }),
+    );
   }
 }

@@ -1,4 +1,5 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
+
 import { observable } from "@dependable/state";
 import { params } from "@dependable/nano-router";
 import {
@@ -27,12 +28,12 @@ export class DeleteNoteDialog {
         deleteNoteDialogVisible(false);
       }
     };
-
     this.onSubmit = async () => {
       const { id } = params();
+
       deleting(true);
       try {
-        await this.context.api.deleteNote(params());
+        await this.context.api.deleteNote({ id });
         deleting(false);
         this.onClose();
       } catch {
@@ -40,22 +41,35 @@ export class DeleteNoteDialog {
       }
     };
   }
-
   render() {
     if (!deleteNoteDialogVisible()) return null;
-
-    return html`
-      <${Dialog} onClose=${this.onClose} onSubmit=${this.onSubmit}>
-        <${DialogHeader}>Are you sure?<//>
-        <${DialogBody}>
-          <p>Are you sure you want to delete this note?</p>
-          <p>Deleted content cannot be recovered.</p>
-        <//>
-        <${DialogFooter}>
-          <${DialogSubmitButton} loading=${deleting()} danger primary>Delete<//>
-        <//>
-        <${DialogCloseButton} />
-      <//>
-    `;
+    return h(
+      Dialog,
+      {
+        onClose: this.onClose,
+        onSubmit: this.onSubmit,
+      },
+      h(DialogHeader, null, "Are you sure?"),
+      h(
+        DialogBody,
+        null,
+        h("p", null, "Are you sure you want to delete this note?"),
+        h("p", null, "Deleted content cannot be recovered."),
+      ),
+      h(
+        DialogFooter,
+        null,
+        h(
+          DialogSubmitButton,
+          {
+            loading: deleting(),
+            danger: true,
+            primary: true,
+          },
+          "Delete",
+        ),
+      ),
+      h(DialogCloseButton, null),
+    );
   }
 }

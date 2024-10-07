@@ -1,5 +1,5 @@
 import "@dependable/vite";
-import { html, render } from "@dependable/view";
+import { render, h } from "@dependable/view";
 import { RootView } from "./components/RootView.js";
 import { Router, Routing } from "@dependable/nano-router";
 import { createBrowserHistory } from "@nano-router/history";
@@ -12,14 +12,12 @@ const history = createBrowserHistory();
 
 const router = new Router({ routes, history });
 
-render(html`
-  <${Routing} router=${router}>
-    <Context api=${new Api({ router })}>
-      <${ThemeProvider}>
-        <${Keyboard}>
-          <${RootView} />
-        <//>
-      <//>
-    </Context>
-  <//>
-`);
+const api = new Api({ router });
+
+render(
+  h(
+    Routing,
+    { router },
+    h("Context", { api }, h(ThemeProvider, {}, h(Keyboard, {}, h(RootView)))),
+  ),
+);

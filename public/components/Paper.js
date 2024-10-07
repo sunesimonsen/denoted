@@ -1,6 +1,6 @@
-import { html } from "@dependable/view";
-import { css, classes } from "stylewars";
+import { h } from "@dependable/view";
 
+import { css, classes } from "stylewars";
 const styles = css`
   & {
     position: relative;
@@ -74,9 +74,13 @@ const styles = css`
     margin: 0.5em 0;
   }
 `;
-
 export class Paper {
-  render({ children, className }) {
-    return html`<div className=${classes(styles, className)}>${children}</div>`;
+  render({
+    children,
+    className
+  }) {
+    return h("div", {
+      className: classes(styles, className)
+    }, children);
   }
 }

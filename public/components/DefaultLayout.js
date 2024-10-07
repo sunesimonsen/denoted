@@ -1,7 +1,6 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
 import { SidebarLayout } from "@dependable/components/Sidebar/v0";
-
 const styles = css`
   & {
     position: fixed;
@@ -20,9 +19,14 @@ const styles = css`
     }
   }
 `;
-
 export class DefaultLayout {
   render({ children }) {
-    return html`<${SidebarLayout} className=${styles}>${children}<//>`;
+    return h(
+      SidebarLayout,
+      {
+        className: styles,
+      },
+      children,
+    );
   }
 }
