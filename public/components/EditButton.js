@@ -13,7 +13,7 @@ export class EditButton {
     return h(
       IconButton,
       { basic: true, pill: true, onClick: this.onClick, ...props },
-      h(PencilStroke16Icon, null),
+      h(PencilStroke16Icon),
     );
   }
 }

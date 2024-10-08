@@ -32,16 +32,16 @@ export class NoteEditorHeader {
         { sections: "start end", className: toolbarStyles },
         h(
           "div",
-          null,
+          {},
           status === LOADED
             ? h(NoteMetadata, {
                 title: noteDirtyState.title(),
                 date: note.date,
                 tags: noteDirtyState.tags(),
               })
-            : h(NoteMetadataSkeleton, null),
+            : h(NoteMetadataSkeleton),
         ),
-        h("div", null, h(StarButton, null), h(EditMetadataButton, null)),
+        h("div", {}, h(StarButton), h(EditMetadataButton)),
       ),
     );
   }

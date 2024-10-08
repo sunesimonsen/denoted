@@ -16,9 +16,9 @@ export class EditMetadataButton {
       h(
         IconButton,
         { basic: true, pill: true, onClick: this.onClick },
-        h(PencilStroke16Icon, null),
+        h(PencilStroke16Icon),
       ),
-      h(NoteMetadataDialog, null),
+      h(NoteMetadataDialog),
     ];
   }
 }

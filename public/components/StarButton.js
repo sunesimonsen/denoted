@@ -15,7 +15,7 @@ export class StarButton {
   renderIcon() {
     return isStarred()
       ? h(StarFill16Icon, { className: iconStyles })
-      : h(StarStroke16Icon, null);
+      : h(StarStroke16Icon);
   }
 
   render() {

@@ -21,8 +21,8 @@ export class NoteMetadataSkeleton {
     return h(
       "div",
       { className: styles },
-      h("h1", { style: "width: 230px" }, h(Skeleton, null)),
-      h("div", { style: "width: 130px" }, h(Skeleton, null)),
+      h("h1", { style: "width: 230px" }, h(Skeleton)),
+      h("div", { style: "width: 130px" }, h(Skeleton)),
     );
   }
 }
@@ -32,7 +32,7 @@ export class NoteMetadata {
     return h(
       "header",
       { className: styles },
-      h("h1", null, title),
+      h("h1", {}, title),
       h(NoteDate, { date: date }),
       h(Tags, { tags: tags }),
     );

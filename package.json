@@ -4,13 +4,16 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": ["emacs", "denote"],
+  "keywords": [
+    "emacs",
+    "denote"
+  ],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
     "start": "vite --port 5000 public",
     "build": "rm -rf dist && vite build -c ./vite.config.js --outDir ../dist public && cp dist/index.html dist/200.html",
-    "format": "prettier --write '**/*.{js,mjs,md,json}'",
+    "format": "prettier --write '**/*.{js,mjs,md,json}'; npm run lint:eslint -- --fix",
     "lint:format": "prettier --check '**/*.{js,mjs,md,json}'",
     "lint:eslint": "eslint '**/*.{js,mjs}'",
     "lint": "npm run lint:eslint && npm run lint:format",

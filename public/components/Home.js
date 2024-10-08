@@ -10,10 +10,10 @@ export class Home {
     return h(
       DefaultLayout,
       { stretched: true },
-      h(Topbar, null),
-      h(NotesSidebar, null),
-      h(ContentPanel, null),
-      h(NewNoteDialog, null),
+      h(Topbar),
+      h(NotesSidebar),
+      h(ContentPanel),
+      h(NewNoteDialog),
     );
   }
 }

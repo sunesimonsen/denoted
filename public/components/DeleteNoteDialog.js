@@ -49,23 +49,23 @@ export class DeleteNoteDialog {
     return h(
       Dialog,
       { onClose: this.onClose, onSubmit: this.onSubmit },
-      h(DialogHeader, null, "Are you sure?"),
+      h(DialogHeader, {}, "Are you sure?"),
       h(
         DialogBody,
-        null,
-        h("p", null, "Are you sure you want to delete this note?"),
-        h("p", null, "Deleted content cannot be recovered."),
+        {},
+        h("p", {}, "Are you sure you want to delete this note?"),
+        h("p", {}, "Deleted content cannot be recovered."),
       ),
       h(
         DialogFooter,
-        null,
+        {},
         h(
           DialogSubmitButton,
           { loading: deleting(), danger: true, primary: true },
           "Delete",
         ),
       ),
-      h(DialogCloseButton, null),
+      h(DialogCloseButton),
     );
   }
 }

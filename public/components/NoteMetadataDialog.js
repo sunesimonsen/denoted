@@ -60,10 +60,10 @@ export class NoteMetadataDialog {
     return h(
       Dialog,
       { onClose: this.onClose, onSubmit: this.onSubmit },
-      h(DialogHeader, null, "Note metadata"),
+      h(DialogHeader, {}, "Note metadata"),
       h(
         DialogBody,
-        null,
+        {},
         h(TitleInput, {
           id: "metadata-title-input",
           title: title(),
@@ -77,8 +77,8 @@ export class NoteMetadataDialog {
           onTagsChange: this.onTagsChange,
         }),
       ),
-      h(DialogFooter, null, h(DialogSubmitButton, { primary: true }, "Change")),
-      h(DialogCloseButton, null),
+      h(DialogFooter, {}, h(DialogSubmitButton, { primary: true }, "Change")),
+      h(DialogCloseButton),
     );
   }
 }

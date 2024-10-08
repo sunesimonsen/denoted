@@ -28,12 +28,12 @@ export class Topbar {
         { sections: "start center end" },
         h(
           "div",
-          null,
+          {},
           h(SidebarToggle, { pill: true, basic: true }),
-          h(HomeLink, null),
+          h(HomeLink),
         ),
-        h("div", { className: centerStyles }, h(FileSearch, null)),
-        h("div", null, h(NewNoteButton, null)),
+        h("div", { className: centerStyles }, h(FileSearch)),
+        h("div", {}, h(NewNoteButton)),
       ),
     );
   }

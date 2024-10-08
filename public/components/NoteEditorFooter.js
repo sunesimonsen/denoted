@@ -24,10 +24,10 @@ export class NoteEditorFooter {
       h(
         ToolbarLayout,
         { sections: "start end" },
-        h("div", null, h(DeleteNoteButton, null)),
+        h("div", {}, h(DeleteNoteButton)),
         h(
           "div",
-          null,
+          {},
           h(Button, { basic: true, onClick: this.onView }, "View"),
           h(
             Button,
