@@ -1,7 +1,5 @@
 import { h } from "@dependable/view";
-
 import { noteDirtyState } from "../state.js";
-
 import { Button } from "@dependable/components/Button/v0";
 import { margin } from "@dependable/components/theming/v0";
 import { Bar } from "@dependable/components/Bar/v0";
@@ -13,33 +11,24 @@ export class NoteEditorFooter {
     this.onView = () => {
       this.context.router.navigate("note/view");
     };
+
     this.onSave = () => {
       this.context.api.saveNote();
     };
   }
+
   render() {
     return h(
       Bar,
-      {
-        "data-layout": "bottom",
-      },
+      { "data-layout": "bottom" },
       h(
         ToolbarLayout,
-        {
-          sections: "start end",
-        },
+        { sections: "start end" },
         h("div", null, h(DeleteNoteButton, null)),
         h(
           "div",
           null,
-          h(
-            Button,
-            {
-              basic: true,
-              onClick: this.onView,
-            },
-            "View",
-          ),
+          h(Button, { basic: true, onClick: this.onView }, "View"),
           h(
             Button,
             {

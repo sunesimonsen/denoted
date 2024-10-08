@@ -9,12 +9,7 @@ export class DeleteNoteButton {
     return [
       h(
         IconButton,
-        {
-          onClick: showDeleteNoteDialog,
-          pill: true,
-          basic: true,
-          ...props,
-        },
+        { onClick: showDeleteNoteDialog, pill: true, basic: true, ...props },
         h(TrashStroke16Icon, null),
       ),
       h(DeleteNoteDialog, null),

@@ -40,6 +40,7 @@ const autoLink = () => (tree) =>
       },
       children: [node],
     };
+
     return "skip";
   });
 
@@ -58,6 +59,7 @@ const autoLinkTel = () => (tree) =>
       },
       children: [node],
     };
+
     return "skip";
   });
 
@@ -66,6 +68,7 @@ const isHeading = (node) => node.tagName?.match(/h\d/);
 const incrementHeaderLevels = () => (tree) => {
   return visit(tree, isHeading, (node) => {
     node.tagName = node.tagName.replace(/\d/, (v) => parseInt(v) + 1);
+
     return "skip";
   });
 };

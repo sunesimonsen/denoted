@@ -1,7 +1,7 @@
 import { h } from "@dependable/view";
-
 import { css } from "stylewars";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
+
 const containerStyles = css`
   & {
     height: 100%;
@@ -13,7 +13,6 @@ const usageStyles = css`
     color: var(--dc-color-foreground);
     padding: var(--dc-spacing-5);
   }
-
   & code {
     display: inline-block;
     padding: 4px 6px;
@@ -29,25 +28,21 @@ const drawingStyles = css`
     border-radius: 2vw;
     margin-bottom: 30px;
   }
-
   @media screen and (max-width: 1200px) {
     & {
       width: 60vw;
     }
   }
 `;
+
 export class Usage {
   render() {
     return h(
       ScrollArea,
-      {
-        className: containerStyles,
-      },
+      { className: containerStyles },
       h(
         "article",
-        {
-          className: usageStyles,
-        },
+        { className: usageStyles },
         h("img", {
           src: new URL("../images/taking-notes.jpeg", import.meta.url),
           className: drawingStyles,

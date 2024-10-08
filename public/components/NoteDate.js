@@ -1,5 +1,4 @@
 import { h } from "@dependable/view";
-
 import { css } from "stylewars";
 
 const styles = css`
@@ -21,12 +20,7 @@ export class NoteDate {
         date.seconds,
       ),
     ).toISOString();
-    return h(
-      "div",
-      {
-        className: styles,
-      },
-      timestamp,
-    );
+
+    return h("div", { className: styles }, timestamp);
   }
 }

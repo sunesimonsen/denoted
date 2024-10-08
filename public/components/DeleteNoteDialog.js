@@ -1,5 +1,4 @@
 import { h } from "@dependable/view";
-
 import { observable } from "@dependable/state";
 import { params } from "@dependable/nano-router";
 import {
@@ -28,10 +27,12 @@ export class DeleteNoteDialog {
         deleteNoteDialogVisible(false);
       }
     };
+
     this.onSubmit = async () => {
       const { id } = params();
 
       deleting(true);
+
       try {
         await this.context.api.deleteNote({ id });
         deleting(false);
@@ -41,14 +42,13 @@ export class DeleteNoteDialog {
       }
     };
   }
+
   render() {
     if (!deleteNoteDialogVisible()) return null;
+
     return h(
       Dialog,
-      {
-        onClose: this.onClose,
-        onSubmit: this.onSubmit,
-      },
+      { onClose: this.onClose, onSubmit: this.onSubmit },
       h(DialogHeader, null, "Are you sure?"),
       h(
         DialogBody,
@@ -61,11 +61,7 @@ export class DeleteNoteDialog {
         null,
         h(
           DialogSubmitButton,
-          {
-            loading: deleting(),
-            danger: true,
-            primary: true,
-          },
+          { loading: deleting(), danger: true, primary: true },
           "Delete",
         ),
       ),

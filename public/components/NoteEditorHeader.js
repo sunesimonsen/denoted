@@ -8,12 +8,14 @@ import { StarButton } from "./StarButton.js";
 import { EditMetadataButton } from "./EditMetadataButton.js";
 import { NoteMetadata, NoteMetadataSkeleton } from "./NoteMetadata.js";
 import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
+
 const toolbarStyles = css`
   & {
     --dc-toolbar-align-items: start;
     --dc-toolbar-gap: var(--dc-spacing-2);
   }
 `;
+
 export class NoteEditorHeader {
   render() {
     const [note, status] = notesCache.byId(params().id);
@@ -24,15 +26,10 @@ export class NoteEditorHeader {
 
     return h(
       Bar,
-      {
-        "data-layout": "top",
-      },
+      { "data-layout": "top" },
       h(
         ToolbarLayout,
-        {
-          sections: "start end",
-          className: toolbarStyles,
-        },
+        { sections: "start end", className: toolbarStyles },
         h(
           "div",
           null,

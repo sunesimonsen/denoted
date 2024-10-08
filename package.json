@@ -11,12 +11,15 @@
     "start": "vite --port 5000 public",
     "build": "rm -rf dist && vite build -c ./vite.config.js --outDir ../dist public && cp dist/index.html dist/200.html",
     "format": "prettier --write '**/*.{js,mjs,md,json}'",
-    "lint": "eslint '**/*.{js,mjs}' && prettier --check '**/*.{js,mjs,md,json}'",
+    "lint:format": "prettier --check '**/*.{js,mjs,md,json}'",
+    "lint:eslint": "eslint '**/*.{js,mjs}'",
+    "lint": "npm run lint:eslint && npm run lint:format",
     "deploy": "npm run build && surge dist denoted.surge.sh",
     "test": "mocha"
   },
   "devDependencies": {
     "@rollup/plugin-babel": "^5.3.0",
+    "@stylistic/eslint-plugin": "^2.9.0",
     "babel-plugin-htm": "^3.0.0",
     "babel-plugin-stylewars": "^0.1.0",
     "eslint": "^8.56.0",

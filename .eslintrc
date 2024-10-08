@@ -1,6 +1,6 @@
 {
   "extends": ["prettier", "eslint:recommended"],
-  "plugins": ["import", "mocha"],
+  "plugins": ["import", "mocha", "@stylistic"],
   "globals": {
     "__DEV__": true
   },
@@ -21,7 +21,7 @@
       {
         "devDependencies": [
           "test/*.js",
-          "rollup.config.js",
+          "vite.config.js",
         ],
         "optionalDependencies": false,
         "peerDependencies": true
@@ -29,7 +29,31 @@
     ],
     "mocha/no-exclusive-tests": "error",
     "mocha/no-nested-tests": "error",
-    "mocha/no-identical-title": "error"
+    "mocha/no-identical-title": "error",
+    "lines-between-class-members": "error",
+    "padding-line-between-statements": [
+      "error",
+      {
+        blankLine: "always",
+        prev: ["block-like", "class", "multiline-expression", "export", "import", "const", "multiline-const"],
+        next: "*"
+      },
+      {
+        blankLine: "always",
+        prev: "*",
+        next: ["block-like", "class", "return", "multiline-expression", "export", "const", "multiline-const"]
+      },
+      {
+        blankLine: "any",
+        prev: ["import"],
+        next: ["import"]
+      },
+      {
+        blankLine: "any",
+        prev: ["const", "let"],
+        next: ["const", "let"]
+      }
+     ]
   },
   "parserOptions": {
     "ecmaVersion": 2020,

@@ -3,11 +3,15 @@ import { Cache } from "@dependable/cache";
 import { debounce } from "@dependable/debounce";
 
 export const moduleCache = new Cache();
+
 export const searches = new Cache("searches");
+
 export const notesCache = new Cache("notes");
+
 export const authCache = new Cache("auth");
 
 export const searchText = observable("", { id: "searchText" });
+
 const debouncedSearchText = debounce(searchText, 50);
 
 const searchTerms = computed(() => debouncedSearchText().split(/\s+/));
@@ -41,6 +45,7 @@ export const allNotes = computed(() => {
   const notes = (files || []).map(nameToNote).sort((a, b) => {
     if (a.title < b.title) return -1;
     if (a.title > b.title) return 1;
+
     return 0;
   });
 
@@ -75,6 +80,7 @@ export const filteredNotes = computed(() => {
 
 const currentTagFilter = computed(() => {
   const m = debouncedSearchText().match(/_[^_ ]*$/);
+
   return m && m[0];
 });
 
@@ -111,6 +117,7 @@ export const searchResults = computed(() => {
 
   if (currentTagFilter()) {
     const tags = filteredNotesTags();
+
     searchResults.push(
       ...tags
         .filter(
