@@ -43,30 +43,30 @@ class NotePreviewSkeleton {
       { className: classes(containerStyles, skeletonStyles) },
       h(
         Paper,
-        null,
-        h("h2", null, h(Skeleton, null)),
-        h("p", null, h(Skeleton, null), h(Skeleton, null), h(Skeleton, null)),
-        h("h2", null, h(Skeleton, null)),
+        {},
+        h("h2", {}, h(Skeleton)),
+        h("p", {}, h(Skeleton), h(Skeleton), h(Skeleton)),
+        h("h2", {}, h(Skeleton)),
         h(
           "p",
-          null,
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
+          {},
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
         ),
-        h("h2", null, h(Skeleton, null)),
-        h("p", null, h(Skeleton, null), h(Skeleton, null), h(Skeleton, null)),
-        h("h2", null, h(Skeleton, null)),
+        h("h2", {}, h(Skeleton)),
+        h("p", {}, h(Skeleton), h(Skeleton), h(Skeleton)),
+        h("h2", {}, h(Skeleton)),
         h(
           "p",
-          null,
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
-          h(Skeleton, null),
+          {},
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
+          h(Skeleton),
         ),
       ),
     );
@@ -119,7 +119,7 @@ export class NotePreview {
     }
 
     if (status !== LOADED) {
-      return h(NotePreviewSkeleton, null);
+      return h(NotePreviewSkeleton);
     }
 
     return h(
@@ -127,14 +127,14 @@ export class NotePreview {
       { className: containerStyles, ref: this.setScrollRef, tabindex: "-1" },
       h(
         Paper,
-        null,
+        {},
         h(EditButton, { className: editButtonStyles }),
         h(NoteMetadata, {
           title: note.title,
           date: note.date,
           tags: note.tags,
         }),
-        h("hr", null),
+        h("hr"),
         h("div", { ref: this.setDocmentRef }),
       ),
     );

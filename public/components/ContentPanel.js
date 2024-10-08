@@ -13,10 +13,10 @@ const styles = css`
 export class ContentPanel {
   renderPanel() {
     if (route().startsWith("note/")) {
-      return h(NotePanel, null);
+      return h(NotePanel);
     }
 
-    return h(Usage, null);
+    return h(Usage);
   }
 
   render() {

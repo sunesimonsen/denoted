@@ -61,10 +61,10 @@ export class NewNoteDialog {
     return h(
       Dialog,
       { onClose: this.onClose, onSubmit: this.onSubmit },
-      h(DialogHeader, null, "Create note"),
+      h(DialogHeader, {}, "Create note"),
       h(
         DialogBody,
-        null,
+        {},
         h(TitleInput, {
           id: "metadata-title-input",
           title: title(),
@@ -80,10 +80,10 @@ export class NewNoteDialog {
       ),
       h(
         DialogFooter,
-        null,
+        {},
         h(DialogSubmitButton, { primary: true, loading: creating() }, "Create"),
       ),
-      h(DialogCloseButton, null),
+      h(DialogCloseButton),
     );
   }
 }

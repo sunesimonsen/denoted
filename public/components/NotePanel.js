@@ -9,9 +9,9 @@ export class NotePanel {
 
     switch (route()) {
       case "note/edit":
-        return h(NoteEditor, null);
+        return h(NoteEditor);
       default:
-        return h(NotePreview, null);
+        return h(NotePreview);
     }
   }
 }

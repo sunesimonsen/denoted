@@ -13,7 +13,7 @@ export class RootView {
 
     switch (route()) {
       default:
-        return h(Home, null);
+        return h(Home);
     }
   }
 }

@@ -19,17 +19,17 @@ class NotePreviewSkeleton {
     return h(
       "div",
       { className: skeletonStyles },
-      h("h2", null, h(Skeleton, null)),
-      h("p", null, h(Skeleton, null), h(Skeleton, null), h(Skeleton, null)),
-      h("h2", null, h(Skeleton, null)),
+      h("h2", {}, h(Skeleton)),
+      h("p", {}, h(Skeleton), h(Skeleton), h(Skeleton)),
+      h("h2", {}, h(Skeleton)),
       h(
         "p",
-        null,
-        h(Skeleton, null),
-        h(Skeleton, null),
-        h(Skeleton, null),
-        h(Skeleton, null),
-        h(Skeleton, null),
+        {},
+        h(Skeleton),
+        h(Skeleton),
+        h(Skeleton),
+        h(Skeleton),
+        h(Skeleton),
       ),
     );
   }
@@ -99,14 +99,14 @@ export class NoteEditor {
     return h(
       BorderLayout,
       { stretched: true },
-      h(NoteEditorHeader, null),
-      this.isLoading() && h(NotePreviewSkeleton, null),
+      h(NoteEditorHeader),
+      this.isLoading() && h(NotePreviewSkeleton),
       h("div", {
         ref: this.setRef,
         "data-layout": "main",
         style: "overflow: hidden",
       }),
-      h(NoteEditorFooter, null),
+      h(NoteEditorFooter),
     );
   }
 }

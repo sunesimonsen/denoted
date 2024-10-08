@@ -88,7 +88,7 @@ export class TagsInput {
           onInput: this.onSearchTextChange,
           onClear: this.onTagSearchInputClear,
         }),
-        h(AutocompletePopup, null, this.renderTagsOptions()),
+        h(AutocompletePopup, {}, this.renderTagsOptions()),
       ),
       h(Tags, { tags: tags, className: margin(2, "block-start") }),
     );

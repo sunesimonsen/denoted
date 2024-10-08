@@ -3,7 +3,7 @@ import { Tag } from "@dependable/components/Tag/v0";
 
 export class Tags {
   renderTag(tag) {
-    return [h(Tag, null, tag), " "];
+    return [h(Tag, {}, tag), " "];
   }
 
   render({ className, tags }) {

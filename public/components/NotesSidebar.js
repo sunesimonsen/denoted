@@ -57,21 +57,18 @@ export class NotesSidebar {
     }
 
     if (status !== LOADED) {
-      return h(ReferencesSkeleton, null);
+      return h(ReferencesSkeleton);
     }
 
     const items = notes.map((note) => {
-      return h("li", null, h(NoteReference, { note: note }));
+      return h("li", {}, h(NoteReference, { note: note }));
     });
 
     if (!items.length) {
       return null;
     }
 
-    return [
-      h("h2", null, "Starred", h(StarFill16Icon, null)),
-      h("ul", null, items),
-    ];
+    return [h("h2", {}, "Starred", h(StarFill16Icon)), h("ul", {}, items)];
   }
 
   renderFileList() {
@@ -82,14 +79,14 @@ export class NotesSidebar {
     }
 
     if (status !== LOADED) {
-      return h(ReferencesSkeleton, null);
+      return h(ReferencesSkeleton);
     }
 
     const items = notes.map((note) => {
-      return h("li", null, h(NoteReference, { note: note }));
+      return h("li", {}, h(NoteReference, { note: note }));
     });
 
-    return [h("h2", null, "All"), h("ul", null, items)];
+    return [h("h2", {}, "All"), h("ul", {}, items)];
   }
 
   render() {
@@ -99,7 +96,7 @@ export class NotesSidebar {
       h(
         ScrollArea,
         { className: scrollAreaStyles },
-        h("nav", null, this.renderStarred(), " ", this.renderFileList()),
+        h("nav", {}, this.renderStarred(), " ", this.renderFileList()),
       ),
     );
   }

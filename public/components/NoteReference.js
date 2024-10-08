@@ -30,11 +30,7 @@ const activeStyles = css`
 
 export class NoteReferenceSkeleton {
   render({ width }) {
-    return h(
-      "span",
-      { className: styles, style: { width } },
-      h(Skeleton, null),
-    );
+    return h("span", { className: styles, style: { width } }, h(Skeleton));
   }
 }
 
