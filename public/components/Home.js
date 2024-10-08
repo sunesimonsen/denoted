@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { NotesSidebar } from "./NotesSidebar.js";
 import { ContentPanel } from "./ContentPanel.js";
 import { DefaultLayout } from "./DefaultLayout.js";
@@ -7,13 +7,13 @@ import { NewNoteDialog } from "./NewNoteDialog.js";
 
 export class Home {
   render() {
-    return html`
-      <${DefaultLayout} stretched>
-        <${Topbar} />
-        <${NotesSidebar} />
-        <${ContentPanel} />
-        <${NewNoteDialog} />
-      <//>
-    `;
+    return h(
+      DefaultLayout,
+      { stretched: true },
+      h(Topbar, null),
+      h(NotesSidebar, null),
+      h(ContentPanel, null),
+      h(NewNoteDialog, null),
+    );
   }
 }

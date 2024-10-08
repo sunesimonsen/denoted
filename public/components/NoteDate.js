@@ -1,6 +1,5 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
-import { Skeleton } from "@dependable/components/Skeleton/v0";
 
 const styles = css`
   & {
@@ -22,6 +21,6 @@ export class NoteDate {
       ),
     ).toISOString();
 
-    return html`<div className=${styles}>${timestamp}</div>`;
+    return h("div", { className: styles }, timestamp);
   }
 }

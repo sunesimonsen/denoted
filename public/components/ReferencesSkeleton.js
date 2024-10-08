@@ -1,24 +1,24 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { NoteReferenceSkeleton } from "./NoteReference";
 
 export class ReferencesSkeleton {
   render() {
-    return html`
-      <ul>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-        <li><${NoteReferenceSkeleton} width="80%" /></li>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-        <li><${NoteReferenceSkeleton} width="80%" /></li>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-        <li><${NoteReferenceSkeleton} width="80%" /></li>
-        <li><${NoteReferenceSkeleton} width="90%" /></li>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-        <li><${NoteReferenceSkeleton} width="90%" /></li>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-        <li><${NoteReferenceSkeleton} width="80%" /></li>
-        <li><${NoteReferenceSkeleton} width="90%" /></li>
-        <li><${NoteReferenceSkeleton} width="70%" /></li>
-      </ul>
-    `;
+    return h(
+      "ul",
+      null,
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "80%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "80%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "80%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "90%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "90%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "80%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "90%" })),
+      h("li", null, h(NoteReferenceSkeleton, { width: "70%" })),
+    );
   }
 }

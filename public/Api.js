@@ -140,8 +140,10 @@ export class Api {
         }
 
         const [note] = notesCache.byId(entry.name);
+
         if (note && note.rev !== entry.rev) {
           const updatedNote = await this.fetchNote(entry.name);
+
           notesCache.load(updatedNote.id, () => updatedNote);
         }
       } else if (tag === "deleted") {
@@ -154,7 +156,7 @@ export class Api {
   async startRefreshing() {
     if (!this.isAuthenticated()) return;
 
-    window.addEventListener("visibilitychange", (event) => {
+    window.addEventListener("visibilitychange", () => {
       if (this.isAuthenticated()) {
         if (document.visibilityState === "hidden") {
           this.refreshing = false;
@@ -184,6 +186,7 @@ export class Api {
 
     searches.initialize("notes", async () => {
       const files = this.fetchFiles();
+
       return files;
     });
   }
@@ -216,6 +219,7 @@ export class Api {
 
     for (const propertyMatch of propertiesMatches) {
       const { key, value } = propertyMatch.groups;
+
       properties[key] = value;
     }
 
@@ -255,21 +259,18 @@ export class Api {
 
     const contentWithFrontmatter = frontmatter(note) + "\n\n";
 
-    const { rev } = await this.fetchJson(
-      "https://content.dropboxapi.com/2/files/upload",
-      {
-        method: "POST",
-        headers: {
-          Authorization: this.getAuthHeader(),
-          "Content-Type": "application/octet-stream",
-          "Dropbox-API-Arg": headerSafeJson({
-            path: `/org/denote/${note.id}`,
-            mode: "add",
-          }),
-        },
-        body: contentWithFrontmatter,
+    await this.fetchJson("https://content.dropboxapi.com/2/files/upload", {
+      method: "POST",
+      headers: {
+        Authorization: this.getAuthHeader(),
+        "Content-Type": "application/octet-stream",
+        "Dropbox-API-Arg": headerSafeJson({
+          path: `/org/denote/${note.id}`,
+          mode: "add",
+        }),
       },
-    );
+      body: contentWithFrontmatter,
+    });
 
     this.router.navigate({
       route: "note/edit",
@@ -277,6 +278,7 @@ export class Api {
     });
 
     const [notes] = searches.byId("notes");
+
     searches.load("notes", [...notes, note.id]);
   }
 
@@ -295,8 +297,10 @@ export class Api {
     });
 
     notesCache.evict(id);
+
     const [notes] = searches.byId("notes");
     const deletedId = id;
+
     searches.load(
       "notes",
       notes.filter((id) => id !== deletedId),
@@ -305,6 +309,7 @@ export class Api {
 
   async saveNote() {
     const [note] = notesCache.byId(noteDirtyState.id);
+
     if (!note) {
       throw new Error("Note is not loaded");
     }
@@ -356,6 +361,7 @@ export class Api {
         );
 
         const [notes] = searches.byId("notes");
+
         searches.load("notes", () => [
           newId,
           ...notes.filter((id) => id !== note.id),
@@ -406,7 +412,7 @@ export class Api {
     this.authenticate();
 
     // Blocking promise waiting for redirect
-    return new Promise((_) => {});
+    return new Promise(() => {});
   }
 
   isAuthenticated() {
@@ -453,14 +459,18 @@ export class Api {
   authenticate() {
     authCache.initialize("token", async () => {
       const token = sessionStorage.getItem("dropbox-token");
+
       if (token) return token;
 
       const { code } = this.router.queryParams;
+
       if (this.router.route === "authorized" && code) {
         const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
+
         sessionStorage.removeItem("dropbox-code-verifier");
 
         const token = await this.tradeCodeForAccessToken(code, codeVerifier);
+
         sessionStorage.setItem("dropbox-token", token);
 
         this.router.navigate({

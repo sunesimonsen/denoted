@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
 import {
   Autocomplete,
@@ -13,7 +13,6 @@ const popStyles = css`
   & {
     width: 60vw;
   }
-
   @media screen and (max-width: 900px) {
     & {
       margin-top: 2px;
@@ -21,11 +20,9 @@ const popStyles = css`
     }
   }
 `;
-
 const onInput = (e) => {
   searchText(e.target.value);
 };
-
 const onClear = () => {
   searchText("");
 };
@@ -71,35 +68,31 @@ export class FileSearch {
         const { id, title, tags } = data;
         const label = tags.length ? `${title} (${tags.join(",")})` : title;
 
-        return html`
-          <${AutocompleteOption} key=${id} value=${match}>${label}<//>
-        `;
+        return h(AutocompleteOption, { key: id, value: match }, label);
       } else {
         const { id, tag } = data;
 
-        return html`
-          <${AutocompleteOption} key=${id} value=${match}>tag: ${tag}<//>
-        `;
+        return h(AutocompleteOption, { key: id, value: match }, "tag: ", tag);
       }
     });
   }
 
   render() {
-    return html`
-      <${Autocomplete}
-        id="file-search"
-        onSelectItem=${this.onSelectItem}
-        placement="bottom"
-      >
-        <${AutocompleteInput}
-          .value=${searchText()}
-          onInput=${onInput}
-          onFocus=${this.onFocus}
-          autofocus=${route() === "home"}
-          onClear=${onClear}
-        />
-        <${AutocompletePopup} className=${popStyles}>${this.renderItems()}<//>
-      <//>
-    `;
+    return h(
+      Autocomplete,
+      {
+        id: "file-search",
+        onSelectItem: this.onSelectItem,
+        placement: "bottom",
+      },
+      h(AutocompleteInput, {
+        ".value": searchText(),
+        onInput: onInput,
+        onFocus: this.onFocus,
+        autofocus: route() === "home",
+        onClear: onClear,
+      }),
+      h(AutocompletePopup, { className: popStyles }, this.renderItems()),
+    );
   }
 }

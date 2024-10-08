@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
 import { route } from "@dependable/nano-router";
 import { NotePanel } from "./NotePanel.js";
@@ -13,15 +13,17 @@ const styles = css`
 export class ContentPanel {
   renderPanel() {
     if (route().startsWith("note/")) {
-      return html`<${NotePanel} />`;
+      return h(NotePanel, null);
     }
 
-    return html`<${Usage} />`;
+    return h(Usage, null);
   }
 
   render() {
-    return html`
-      <main data-layout="main" className=${styles}>${this.renderPanel()}</main>
-    `;
+    return h(
+      "main",
+      { "data-layout": "main", className: styles },
+      this.renderPanel(),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
 import { allNotes, starredNotes } from "../state.js";
 import { FAILED, LOADED } from "@dependable/cache";
@@ -13,7 +13,6 @@ const styles = css`
     overflow: hidden;
     width: 300px;
   }
-
   & h2 {
     margin-block-start: var(--dc-spacing-4);
     margin-inline-start: var(--dc-spacing-4);
@@ -24,23 +23,19 @@ const styles = css`
     align-items: center;
     gap: var(--dc-spacing-1);
   }
-
   & h2 svg {
     color: var(--dc-color-warning-50);
   }
-
   & ul {
     padding: 0 var(--dc-spacing-4);
     margin: 0;
   }
-
   & ul > li {
     padding: 0;
     margin: 4px;
     list-style-type: none;
   }
 `;
-
 const scrollAreaStyles = css`
   & {
     flex: 1;
@@ -62,23 +57,21 @@ export class NotesSidebar {
     }
 
     if (status !== LOADED) {
-      return html`<${ReferencesSkeleton} />`;
+      return h(ReferencesSkeleton, null);
     }
 
     const items = notes.map((note) => {
-      return html`<li><${NoteReference} note=${note} /></li>`;
+      return h("li", null, h(NoteReference, { note: note }));
     });
 
     if (!items.length) {
       return null;
     }
 
-    return html`
-      <h2>Starred<${StarFill16Icon} /></h2>
-      <ul>
-        ${items}
-      </ul>
-    `;
+    return [
+      h("h2", null, "Starred", h(StarFill16Icon, null)),
+      h("ul", null, items),
+    ];
   }
 
   renderFileList() {
@@ -89,32 +82,25 @@ export class NotesSidebar {
     }
 
     if (status !== LOADED) {
-      return html`<${ReferencesSkeleton} />`;
+      return h(ReferencesSkeleton, null);
     }
 
     const items = notes.map((note) => {
-      return html`<li><${NoteReference} note=${note} /></li>`;
+      return h("li", null, h(NoteReference, { note: note }));
     });
 
-    return html`
-      <h2>All</h2>
-      <ul>
-        ${items}
-      </ul>
-    `;
+    return [h("h2", null, "All"), h("ul", null, items)];
   }
 
   render() {
-    return html`
-      <${Sidebar}
-        data-layout="start"
-        className=${styles}
-        onClick=${this.onClick}
-      >
-        <${ScrollArea} className=${scrollAreaStyles}>
-          <nav>${this.renderStarred()} ${this.renderFileList()}</nav>
-        <//>
-      <//>
-    `;
+    return h(
+      Sidebar,
+      { "data-layout": "start", className: styles, onClick: this.onClick },
+      h(
+        ScrollArea,
+        { className: scrollAreaStyles },
+        h("nav", null, this.renderStarred(), " ", this.renderFileList()),
+      ),
+    );
   }
 }

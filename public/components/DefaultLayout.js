@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { css } from "stylewars";
 import { SidebarLayout } from "@dependable/components/Sidebar/v0";
 
@@ -9,10 +9,8 @@ const styles = css`
     right: 0;
     left: 0;
     bottom: 0;
-
     --dc-sidebar-initial-display: flex;
   }
-
   @media screen and (max-width: 1200px) {
     & {
       --dc-sidebar-display: none;
@@ -23,6 +21,6 @@ const styles = css`
 
 export class DefaultLayout {
   render({ children }) {
-    return html`<${SidebarLayout} className=${styles}>${children}<//>`;
+    return h(SidebarLayout, { className: styles }, children);
   }
 }

@@ -6,5 +6,6 @@ export async function sha256(text) {
     .replace(/\+/g, "-")
     .replace(/\//g, "_")
     .replace(/=+$/, "");
+
   return base64UriEncoded;
 }

@@ -1,6 +1,5 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { observable } from "@dependable/state";
-
 import {
   Dialog,
   DialogHeader,
@@ -9,7 +8,6 @@ import {
   DialogCloseButton,
   DialogSubmitButton,
 } from "@dependable/components/Dialog/v0";
-
 import { noteDirtyState } from "../state.js";
 import { margin } from "@dependable/components/theming/v0";
 import { TitleInput } from "./TitleInput.js";
@@ -19,7 +17,6 @@ import { isTitleInvalid } from "../validations/isTitleInvalid.js";
 const metadataDialogVisible = observable(false, {
   id: "metadataDialogVisible",
 });
-
 const title = observable("", { id: "noteMetadataTitle" });
 const tags = observable([], { id: "noteMetadataTags" });
 const invalidTitle = observable(false, { id: "editNoteTitleInvalid" });
@@ -60,28 +57,28 @@ export class NoteMetadataDialog {
   render() {
     if (!metadataDialogVisible()) return null;
 
-    return html`
-      <${Dialog} onClose=${this.onClose} onSubmit=${this.onSubmit}>
-        <${DialogHeader}>Note metadata<//>
-        <${DialogBody}>
-          <${TitleInput}
-            id="metadata-title-input"
-            title=${title()}
-            onTitleChange=${this.onTitleChange}
-            invalid=${invalidTitle()}
-          />
-          <${TagsInput}
-            id="metadata-tags-input"
-            className=${margin(3, "block-start")}
-            tags=${tags()}
-            onTagsChange=${this.onTagsChange}
-          />
-        <//>
-        <${DialogFooter}>
-          <${DialogSubmitButton} primary>Change<//>
-        <//>
-        <${DialogCloseButton} />
-      <//>
-    `;
+    return h(
+      Dialog,
+      { onClose: this.onClose, onSubmit: this.onSubmit },
+      h(DialogHeader, null, "Note metadata"),
+      h(
+        DialogBody,
+        null,
+        h(TitleInput, {
+          id: "metadata-title-input",
+          title: title(),
+          onTitleChange: this.onTitleChange,
+          invalid: invalidTitle(),
+        }),
+        h(TagsInput, {
+          id: "metadata-tags-input",
+          className: margin(3, "block-start"),
+          tags: tags(),
+          onTagsChange: this.onTagsChange,
+        }),
+      ),
+      h(DialogFooter, null, h(DialogSubmitButton, { primary: true }, "Change")),
+      h(DialogCloseButton, null),
+    );
   }
 }

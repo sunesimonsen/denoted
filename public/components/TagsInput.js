@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { observable } from "@dependable/state";
 import { Tags } from "./Tags.js";
 import {
@@ -26,10 +26,11 @@ export class TagsInput {
     this.onTagSelect = (e) => {
       const { key } = e.detail;
       const { tags } = this.props;
-
       let updatedTags;
+
       if (key === ".add") {
         const searchText = this.searchText().toLowerCase();
+
         updatedTags = [...tags, searchText].sort();
       } else if (tags.includes(key)) {
         updatedTags = tags.filter((tag) => tag != key);
@@ -46,32 +47,28 @@ export class TagsInput {
     const tags = this.searchText()
       ? Array.from(new Set([...allNoteTags(), ...this.props.tags])).sort()
       : this.props.tags;
-
     const searchText = this.searchText().toLowerCase();
-
     const options = tags
       .filter((tag) => tag.includes(searchText))
       .slice(0, 6)
-      .map(
-        (tag) => html`
-          <${AutocompleteOption}
-            key=${tag}
-            value=${tag}
-            selected=${this.props.tags.includes(tag)}
-          >
-            ${tag}
-          <//>
-        `,
+      .map((tag) =>
+        h(
+          AutocompleteOption,
+          { key: tag, value: tag, selected: this.props.tags.includes(tag) },
+          tag,
+        ),
       );
 
     if (searchText && !tags.includes(searchText)) {
       return [
         ...options,
-        html`
-          <${AutocompleteOption} key=".add" value=".add">
-            Add tag "${searchText}"
-          <//>
-        `,
+        h(
+          AutocompleteOption,
+          { key: ".add", value: ".add" },
+          'Add tag "',
+          searchText,
+          '"',
+        ),
       ];
     }
 
@@ -79,19 +76,21 @@ export class TagsInput {
   }
 
   render({ id, className, tags }) {
-    return html`
-      <${FieldLayout} className=${className} stretched>
-        <label for=${id}>Tags</label>
-        <${Autocomplete} id=${id} onSelectItem=${this.onTagSelect}>
-          <${AutocompleteInput}
-            .value=${this.searchText()}
-            onInput=${this.onSearchTextChange}
-            onClear=${this.onTagSearchInputClear}
-          />
-          <${AutocompletePopup}>${this.renderTagsOptions()}<//>
-        <//>
-        <${Tags} tags=${tags} className=${margin(2, "block-start")} />
-      <//>
-    `;
+    return h(
+      FieldLayout,
+      { className: className, stretched: true },
+      h("label", { for: id }, "Tags"),
+      h(
+        Autocomplete,
+        { id: id, onSelectItem: this.onTagSelect },
+        h(AutocompleteInput, {
+          ".value": this.searchText(),
+          onInput: this.onSearchTextChange,
+          onClear: this.onTagSearchInputClear,
+        }),
+        h(AutocompletePopup, null, this.renderTagsOptions()),
+      ),
+      h(Tags, { tags: tags, className: margin(2, "block-start") }),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { IconButton } from "@dependable/components/IconButton/v0";
 import PencilStroke16Icon from "@dependable/icons/PencilStroke16Icon";
 import { NoteMetadataDialog } from "./NoteMetadataDialog.js";
@@ -12,11 +12,13 @@ export class EditMetadataButton {
   }
 
   render() {
-    return html`
-      <${IconButton} basic pill onClick=${this.onClick}>
-        <${PencilStroke16Icon} />
-      <//>
-      <${NoteMetadataDialog} />
-    `;
+    return [
+      h(
+        IconButton,
+        { basic: true, pill: true, onClick: this.onClick },
+        h(PencilStroke16Icon, null),
+      ),
+      h(NoteMetadataDialog, null),
+    ];
   }
 }

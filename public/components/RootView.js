@@ -1,4 +1,4 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { route } from "@dependable/nano-router";
 import { Home } from "./Home.js";
 
@@ -13,7 +13,7 @@ export class RootView {
 
     switch (route()) {
       default:
-        return html`<${Home} />`;
+        return h(Home, null);
     }
   }
 }

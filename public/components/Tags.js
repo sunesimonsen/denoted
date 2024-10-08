@@ -1,9 +1,9 @@
-import { html } from "@dependable/view";
+import { h } from "@dependable/view";
 import { Tag } from "@dependable/components/Tag/v0";
 
 export class Tags {
   renderTag(tag) {
-    return html`<${Tag}>${tag}<//> `;
+    return [h(Tag, null, tag), " "];
   }
 
   render({ className, tags }) {
@@ -11,6 +11,6 @@ export class Tags {
       return null;
     }
 
-    return html`<div className=${className}>${tags.map(this.renderTag)}</div>`;
+    return h("div", { className: className }, tags.map(this.renderTag));
   }
 }
