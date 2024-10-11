@@ -28,38 +28,36 @@ export const showMetadataDialog = () => {
 };
 
 export class NoteMetadataDialog {
-  constructor() {
-    this.onClose = () => {
-      metadataDialogVisible(false);
-      invalidTitle(false);
-    };
+  #onClose = () => {
+    metadataDialogVisible(false);
+    invalidTitle(false);
+  };
 
-    this.onSubmit = () => {
-      if (isTitleInvalid(title())) {
-        console.log(title());
-        invalidTitle(true);
-      } else {
-        noteDirtyState.title(title());
-        noteDirtyState.tags(tags());
-        this.onClose();
-      }
-    };
+  #onSubmit = () => {
+    if (isTitleInvalid(title())) {
+      console.log(title());
+      invalidTitle(true);
+    } else {
+      noteDirtyState.title(title());
+      noteDirtyState.tags(tags());
+      this.#onClose();
+    }
+  };
 
-    this.onTitleChange = (e) => {
-      title(e.target.value);
-    };
+  #onTitleChange = (e) => {
+    title(e.target.value);
+  };
 
-    this.onTagsChange = (updatedTags) => {
-      tags(updatedTags);
-    };
-  }
+  #onTagsChange = (updatedTags) => {
+    tags(updatedTags);
+  };
 
   render() {
     if (!metadataDialogVisible()) return null;
 
     return h(
       Dialog,
-      { onClose: this.onClose, onSubmit: this.onSubmit },
+      { onClose: this.#onClose, onSubmit: this.#onSubmit },
       h(DialogHeader, {}, "Note metadata"),
       h(
         DialogBody,
@@ -67,14 +65,14 @@ export class NoteMetadataDialog {
         h(TitleInput, {
           id: "metadata-title-input",
           title: title(),
-          onTitleChange: this.onTitleChange,
+          onTitleChange: this.#onTitleChange,
           invalid: invalidTitle(),
         }),
         h(TagsInput, {
           id: "metadata-tags-input",
           className: margin(3, "block-start"),
           tags: tags(),
-          onTagsChange: this.onTagsChange,
+          onTagsChange: this.#onTagsChange,
         }),
       ),
       h(DialogFooter, {}, h(DialogSubmitButton, { primary: true }, "Change")),

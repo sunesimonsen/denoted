@@ -28,35 +28,33 @@ const onClear = () => {
 };
 
 export class FileSearch {
-  constructor() {
-    this.onFocus = () => {
-      this.context.visibleSidebar("");
-    };
+  #onFocus = () => {
+    this.context.visibleSidebar("");
+  };
 
-    this.onSelectItem = (e) => {
-      if (e.detail) {
-        const { value } = e.detail;
+  #onSelectItem = (e) => {
+    if (e.detail) {
+      const { value } = e.detail;
 
-        if (value.type === "note") {
-          this.context.router.navigate({
-            route: "note/view",
-            params: { id: value.data.id },
-            state: { scrollIntoView: true },
-          });
+      if (value.type === "note") {
+        this.context.router.navigate({
+          route: "note/view",
+          params: { id: value.data.id },
+          state: { scrollIntoView: true },
+        });
 
-          searchText("");
-        } else if (value.type === "tag") {
-          searchText(
-            searchText().replace(/_[^_ ]*$/, "_" + value.data.tag + " "),
-          );
+        searchText("");
+      } else if (value.type === "tag") {
+        searchText(
+          searchText().replace(/_[^_ ]*$/, "_" + value.data.tag + " "),
+        );
 
-          e.preventDefault();
-        }
-      } else {
         e.preventDefault();
       }
-    };
-  }
+    } else {
+      e.preventDefault();
+    }
+  };
 
   renderItems() {
     const [notes] = searchResults();
@@ -82,13 +80,13 @@ export class FileSearch {
       Autocomplete,
       {
         id: "file-search",
-        onSelectItem: this.onSelectItem,
+        onSelectItem: this.#onSelectItem,
         placement: "bottom",
       },
       h(AutocompleteInput, {
         ".value": searchText(),
         onInput: onInput,
-        onFocus: this.onFocus,
+        onFocus: this.#onFocus,
         autofocus: route() === "home",
         onClear: onClear,
       }),

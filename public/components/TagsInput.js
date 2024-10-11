@@ -12,42 +12,44 @@ import { FieldLayout } from "@dependable/components/FieldLayout/v0";
 import { margin } from "@dependable/components/theming/v0";
 
 export class TagsInput {
+  #searchText;
+
+  #onSearchTextChange = (e) => {
+    this.#searchText(e.target.value);
+  };
+
+  #onTagSearchInputClear = () => {
+    this.#searchText("");
+  };
+
+  #onTagSelect = (e) => {
+    const { key } = e.detail;
+    const { tags } = this.props;
+    let updatedTags;
+
+    if (key === ".add") {
+      const searchText = this.#searchText().toLowerCase();
+
+      updatedTags = [...tags, searchText].sort();
+    } else if (tags.includes(key)) {
+      updatedTags = tags.filter((tag) => tag != key);
+    } else {
+      updatedTags = [...tags, key].sort();
+    }
+
+    this.#searchText("");
+    this.props.onTagsChange(updatedTags);
+  };
+
   constructor({ id }) {
-    this.searchText = observable("", { id: id + "SearchText" });
-
-    this.onSearchTextChange = (e) => {
-      this.searchText(e.target.value);
-    };
-
-    this.onTagSearchInputClear = () => {
-      this.searchText("");
-    };
-
-    this.onTagSelect = (e) => {
-      const { key } = e.detail;
-      const { tags } = this.props;
-      let updatedTags;
-
-      if (key === ".add") {
-        const searchText = this.searchText().toLowerCase();
-
-        updatedTags = [...tags, searchText].sort();
-      } else if (tags.includes(key)) {
-        updatedTags = tags.filter((tag) => tag != key);
-      } else {
-        updatedTags = [...tags, key].sort();
-      }
-
-      this.searchText("");
-      this.props.onTagsChange(updatedTags);
-    };
+    this.#searchText = observable("", { id: id + "SearchText" });
   }
 
   renderTagsOptions() {
-    const tags = this.searchText()
+    const tags = this.#searchText()
       ? Array.from(new Set([...allNoteTags(), ...this.props.tags])).sort()
       : this.props.tags;
-    const searchText = this.searchText().toLowerCase();
+    const searchText = this.#searchText().toLowerCase();
     const options = tags
       .filter((tag) => tag.includes(searchText))
       .slice(0, 6)
@@ -82,11 +84,11 @@ export class TagsInput {
       h("label", { for: id }, "Tags"),
       h(
         Autocomplete,
-        { id: id, onSelectItem: this.onTagSelect },
+        { id: id, onSelectItem: this.#onTagSelect },
         h(AutocompleteInput, {
-          ".value": this.searchText(),
-          onInput: this.onSearchTextChange,
-          onClear: this.onTagSearchInputClear,
+          ".value": this.#searchText(),
+          onInput: this.#onSearchTextChange,
+          onClear: this.#onTagSearchInputClear,
         }),
         h(AutocompletePopup, {}, this.renderTagsOptions()),
       ),

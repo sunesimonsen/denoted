@@ -26,7 +26,7 @@ export default [
         __DEV__: true,
       },
 
-      ecmaVersion: 2020,
+      ecmaVersion: 2024,
       sourceType: "module",
     },
 

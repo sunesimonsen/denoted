@@ -35,20 +35,18 @@ export class NoteReferenceSkeleton {
 }
 
 export class NoteReference {
-  constructor() {
-    this.setRef = (ref) => {
-      this.ref = ref;
-    };
-  }
+  #setRef = (ref) => {
+    this.ref = ref;
+  };
 
-  isActive() {
+  #isActive() {
     return route().startsWith("note") && this.props.note.id === params().id;
   }
 
   didRender() {
     const { state } = location();
 
-    if (this.isActive() && state?.scrollIntoView) {
+    if (this.#isActive() && state?.scrollIntoView) {
       this.ref.scrollIntoView(false);
       this.context.router.navigate({ state: {}, replace: true });
     }
@@ -58,11 +56,11 @@ export class NoteReference {
     return h(
       Link,
       {
-        ref: this.setRef,
+        ref: this.#setRef,
         route: "note/view",
         params: { id: note.id },
         hash: "",
-        className: classes(styles, this.isActive() && activeStyles),
+        className: classes(styles, this.#isActive() && activeStyles),
         ...other,
       },
       note.title,

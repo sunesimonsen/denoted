@@ -74,30 +74,29 @@ class NotePreviewSkeleton {
 }
 
 export class NotePreview {
-  constructor() {
-    this.setScrollRef = (ref) => {
-      this.scrollRef = ref;
-    };
+  #setScrollRef = (ref) => {
+    this.scrollRef = ref;
+  };
 
-    this.setDocmentRef = (ref) => {
-      this.documentRef = ref;
+  #anchorClickHandler = (e) => {
+    if (e.target.nodeName === "A") {
+      const href = e.target.getAttribute("href");
 
-      this.documentRef.addEventListener("click", (e) => {
-        if (e.target.nodeName === "A") {
-          const href = e.target.getAttribute("href");
+      if (href.startsWith("/note/")) {
+        this.context.router.navigate({
+          route: "note/view",
+          params: { id: href.slice("/note/".length) },
+        });
 
-          if (href.startsWith("/note/")) {
-            this.context.router.navigate({
-              route: "note/view",
-              params: { id: href.slice("/note/".length) },
-            });
+        e.preventDefault();
+      }
+    }
+  };
 
-            e.preventDefault();
-          }
-        }
-      });
-    };
-  }
+  #setDocmentRef = (ref) => {
+    this.documentRef = ref;
+    this.documentRef.addEventListener("click", this.#anchorClickHandler);
+  };
 
   didRender() {
     const { id } = params();
@@ -124,7 +123,7 @@ export class NotePreview {
 
     return h(
       ScrollArea,
-      { className: containerStyles, ref: this.setScrollRef, tabindex: "-1" },
+      { className: containerStyles, ref: this.#setScrollRef, tabindex: "-1" },
       h(
         Paper,
         {},
@@ -135,7 +134,7 @@ export class NotePreview {
           tags: note.tags,
         }),
         h("hr"),
-        h("div", { ref: this.setDocmentRef }),
+        h("div", { ref: this.#setDocmentRef }),
       ),
     );
   }

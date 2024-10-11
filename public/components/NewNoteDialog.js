@@ -20,47 +20,45 @@ const invalidTitle = observable(false, { id: "newNoteTitleInvalid" });
 const creating = observable(false);
 
 export class NewNoteDialog {
-  constructor() {
-    this.onClose = () => {
-      if (!creating()) {
-        this.context.router.navigate({ queryParams: {}, replace: true });
-        title("");
-        tags([]);
-        invalidTitle(false);
+  #onClose = () => {
+    if (!creating()) {
+      this.context.router.navigate({ queryParams: {}, replace: true });
+      title("");
+      tags([]);
+      invalidTitle(false);
+    }
+  };
+
+  #onSubmit = async () => {
+    creating(true);
+
+    try {
+      await this.context.api.createNote({ title: title(), tags: tags() });
+      creating(false);
+      this.#onClose();
+    } catch (e) {
+      creating(false);
+
+      if (e instanceof InvalidTitleError) {
+        invalidTitle(true);
       }
-    };
+    }
+  };
 
-    this.onSubmit = async () => {
-      creating(true);
+  #onTitleChange = (e) => {
+    title(e.target.value);
+  };
 
-      try {
-        await this.context.api.createNote({ title: title(), tags: tags() });
-        creating(false);
-        this.onClose();
-      } catch (e) {
-        creating(false);
-
-        if (e instanceof InvalidTitleError) {
-          invalidTitle(true);
-        }
-      }
-    };
-
-    this.onTitleChange = (e) => {
-      title(e.target.value);
-    };
-
-    this.onTagsChange = (updatedTags) => {
-      tags(updatedTags);
-    };
-  }
+  #onTagsChange = (updatedTags) => {
+    tags(updatedTags);
+  };
 
   render() {
     if (queryParams().create !== "note") return null;
 
     return h(
       Dialog,
-      { onClose: this.onClose, onSubmit: this.onSubmit },
+      { onClose: this.#onClose, onSubmit: this.#onSubmit },
       h(DialogHeader, {}, "Create note"),
       h(
         DialogBody,
@@ -68,14 +66,14 @@ export class NewNoteDialog {
         h(TitleInput, {
           id: "metadata-title-input",
           title: title(),
-          onTitleChange: this.onTitleChange,
+          onTitleChange: this.#onTitleChange,
           invalid: invalidTitle(),
         }),
         h(TagsInput, {
           id: "metadata-tags-input",
           className: margin(3, "block-start"),
           tags: tags(),
-          onTagsChange: this.onTagsChange,
+          onTagsChange: this.#onTagsChange,
         }),
       ),
       h(
