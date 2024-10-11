@@ -35,7 +35,6 @@ export class NoteMetadataDialog {
 
   #onSubmit = () => {
     if (isTitleInvalid(title())) {
-      console.log(title());
       invalidTitle(true);
     } else {
       noteDirtyState.title(title());

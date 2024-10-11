@@ -4,10 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": [
-    "emacs",
-    "denote"
-  ],
+  "keywords": ["emacs", "denote"],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -26,7 +23,6 @@
     "@eslint/js": "^9.12.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@stylistic/eslint-plugin": "^2.9.0",
-    "babel-plugin-htm": "^3.0.0",
     "babel-plugin-stylewars": "^0.1.0",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
