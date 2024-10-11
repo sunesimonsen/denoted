@@ -5,17 +5,15 @@ import { NoteMetadataDialog } from "./NoteMetadataDialog.js";
 import { showMetadataDialog } from "./NoteMetadataDialog.js";
 
 export class EditMetadataButton {
-  constructor() {
-    this.onClick = () => {
-      showMetadataDialog();
-    };
-  }
+  #onClick = () => {
+    showMetadataDialog();
+  };
 
   render() {
     return [
       h(
         IconButton,
-        { basic: true, pill: true, onClick: this.onClick },
+        { basic: true, pill: true, onClick: this.#onClick },
         h(PencilStroke16Icon),
       ),
       h(NoteMetadataDialog),

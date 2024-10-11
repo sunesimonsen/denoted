@@ -36,17 +36,15 @@ class NotePreviewSkeleton {
 }
 
 export class NoteEditor {
-  constructor() {
-    this.setRef = (ref) => {
-      this.ref = ref;
-    };
+  #setRef = (ref) => {
+    this.ref = ref;
+  };
 
-    this.onChange = (state) => {
-      noteDirtyState.content(state.doc.toString());
-    };
-  }
+  #onChange = (state) => {
+    noteDirtyState.content(state.doc.toString());
+  };
 
-  prepareEditor(id) {
+  #prepareEditor(id) {
     if (this.id === id) return;
 
     const [editorModule, moduleStatus, moduleError] =
@@ -72,7 +70,7 @@ export class NoteEditor {
     const { editor } = makeEditor({
       target: this.ref,
       content: note.content,
-      onChange: this.onChange,
+      onChange: this.#onChange,
     });
 
     this.editor = editor;
@@ -92,7 +90,7 @@ export class NoteEditor {
     const { id } = params();
 
     this.context.api.loadEditor();
-    this.prepareEditor(id);
+    this.#prepareEditor(id);
   }
 
   render() {
@@ -102,7 +100,7 @@ export class NoteEditor {
       h(NoteEditorHeader),
       this.isLoading() && h(NotePreviewSkeleton),
       h("div", {
-        ref: this.setRef,
+        ref: this.#setRef,
         "data-layout": "main",
         style: "overflow: hidden",
       }),

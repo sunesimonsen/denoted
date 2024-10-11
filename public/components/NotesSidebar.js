@@ -43,11 +43,9 @@ const scrollAreaStyles = css`
 `;
 
 export class NotesSidebar {
-  constructor() {
-    this.onClick = () => {
-      this.context.visibleSidebar("");
-    };
-  }
+  #onClick = () => {
+    this.context.visibleSidebar("");
+  };
 
   renderStarred() {
     const [notes, status] = starredNotes();
@@ -92,7 +90,7 @@ export class NotesSidebar {
   render() {
     return h(
       Sidebar,
-      { "data-layout": "start", className: styles, onClick: this.onClick },
+      { "data-layout": "start", className: styles, onClick: this.#onClick },
       h(
         ScrollArea,
         { className: scrollAreaStyles },

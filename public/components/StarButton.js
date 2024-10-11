@@ -19,8 +19,6 @@ export class StarButton {
   }
 
   render() {
-    console.log();
-
     return h(
       IconButton,
       { basic: true, pill: true, onClick: toggleStarred },

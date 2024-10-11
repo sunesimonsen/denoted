@@ -7,15 +7,13 @@ import { ToolbarLayout } from "@dependable/components/ToolbarLayout/v0";
 import { DeleteNoteButton } from "./DeleteNoteButton.js";
 
 export class NoteEditorFooter {
-  constructor() {
-    this.onView = () => {
-      this.context.router.navigate("note/view");
-    };
+  #onView = () => {
+    this.context.router.navigate("note/view");
+  };
 
-    this.onSave = () => {
-      this.context.api.saveNote();
-    };
-  }
+  #onSave = () => {
+    this.context.api.saveNote();
+  };
 
   render() {
     return h(
@@ -28,14 +26,14 @@ export class NoteEditorFooter {
         h(
           "div",
           {},
-          h(Button, { basic: true, onClick: this.onView }, "View"),
+          h(Button, { basic: true, onClick: this.#onView }, "View"),
           h(
             Button,
             {
               className: margin(2, "start"),
               primary: true,
               loading: noteDirtyState.saving(),
-              onClick: this.onSave,
+              onClick: this.#onSave,
             },
             "Save",
           ),

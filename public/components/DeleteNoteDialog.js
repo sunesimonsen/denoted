@@ -21,34 +21,32 @@ export const showDeleteNoteDialog = () => {
 const deleting = observable(false);
 
 export class DeleteNoteDialog {
-  constructor() {
-    this.onClose = () => {
-      if (!deleting()) {
-        deleteNoteDialogVisible(false);
-      }
-    };
+  #onClose = () => {
+    if (!deleting()) {
+      deleteNoteDialogVisible(false);
+    }
+  };
 
-    this.onSubmit = async () => {
-      const { id } = params();
+  #onSubmit = async () => {
+    const { id } = params();
 
-      deleting(true);
+    deleting(true);
 
-      try {
-        await this.context.api.deleteNote({ id });
-        deleting(false);
-        this.onClose();
-      } catch {
-        deleting(false);
-      }
-    };
-  }
+    try {
+      await this.context.api.deleteNote({ id });
+      deleting(false);
+      this.#onClose();
+    } catch {
+      deleting(false);
+    }
+  };
 
   render() {
     if (!deleteNoteDialogVisible()) return null;
 
     return h(
       Dialog,
-      { onClose: this.onClose, onSubmit: this.onSubmit },
+      { onClose: this.#onClose, onSubmit: this.#onSubmit },
       h(DialogHeader, {}, "Are you sure?"),
       h(
         DialogBody,
