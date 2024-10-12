@@ -10,8 +10,9 @@ import StarFill16Icon from "@dependable/icons/StarFill16Icon";
 
 const styles = css`
   & {
-    overflow: hidden;
-    width: 300px;
+    --dc-sidebar-width: 300px;
+    --dc-sidebar-min-width: 200px;
+    --dc-sidebar-max-width: 500px;
   }
   & h2 {
     margin-block-start: var(--dc-spacing-4);
@@ -90,7 +91,12 @@ export class NotesSidebar {
   render() {
     return h(
       Sidebar,
-      { "data-layout": "start", className: styles, onClick: this.#onClick },
+      {
+        "data-layout": "start",
+        className: styles,
+        onClick: this.#onClick,
+        resizable: true,
+      },
       h(
         ScrollArea,
         { className: scrollAreaStyles },
