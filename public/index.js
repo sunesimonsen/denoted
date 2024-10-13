@@ -6,7 +6,7 @@ import { createBrowserHistory } from "@nano-router/history";
 import { ThemeProvider } from "@dependable/components/default-theme/v0";
 import { Keyboard } from "./components/Keyboard.js";
 import { routes } from "./routes.js";
-import { Api } from "./api.js";
+import { Api } from "./Api.js";
 
 const history = createBrowserHistory();
 

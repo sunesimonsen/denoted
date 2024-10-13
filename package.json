@@ -4,10 +4,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Dropbox frontend for Emacs Denote files",
-  "keywords": [
-    "emacs",
-    "denote"
-  ],
+  "keywords": ["emacs", "denote"],
   "author": "Sune Simonsen",
   "license": "MIT",
   "scripts": {
@@ -62,6 +59,5 @@
     "rehype-stringify": "^9.0.4",
     "stylewars": "^2.4.0",
     "unist-util-visit": "^5.0.0"
-  },
-  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+  }
 }
