@@ -7,13 +7,6 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-FROM node:22.6.0-alpine
+FROM sunesimonsen/spa-base-image
 
-COPY --from=builder /app/dist dist
-
-RUN npm install -g serve
-
-EXPOSE 8080
-
-ADD entrypoint.sh /entrypoint.sh
-ENTRYPOINT ["serve", "-s", "-p", "8080", "dist"]
+COPY --from=builder /app/dist public
