@@ -3,7 +3,7 @@ import { render, h } from "@dependable/view";
 import { RootView } from "./components/RootView.js";
 import { Router, Routing } from "@dependable/nano-router";
 import { createBrowserHistory } from "@nano-router/history";
-import { ThemeProvider } from "@dependable/components/default-theme/v0";
+import { ThemeProvider } from "@dependable/components/brown-theme/v0";
 import { Keyboard } from "./components/Keyboard.js";
 import { routes } from "./routes.js";
 import { Api } from "./Api.js";
