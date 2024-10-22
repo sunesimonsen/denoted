@@ -7,6 +7,8 @@ import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { ReferencesSkeleton } from "./ReferencesSkeleton.js";
 import { Sidebar } from "@dependable/components/Sidebar/v0";
 import StarFill16Icon from "@dependable/icons/StarFill16Icon";
+import { FatalErrorScreen } from "./FatalErrorScreen.js";
+import { ErrorBoundary } from "@dependable/components/ErrorBoundary/v0";
 
 const styles = css`
   & {
@@ -33,60 +35,49 @@ const styles = css`
   }
   & ul > li {
     padding: 0;
-    margin: 4px;
+    margin: var(--dc-spacing-1);
     list-style-type: none;
   }
+  & [data-failed] {
+    padding: 0 calc(var(--dc-spacing-1) + var(--dc-spacing-4));
+    color: var(--dc-color-error-40);
+  }
 `;
+
 const scrollAreaStyles = css`
   & {
     flex: 1;
   }
 `;
 
+class FailedToLoadNotes {
+  render() {
+    return h("div", { "data-failed": true }, "Loading failed");
+  }
+}
+
+class Notes {
+  render({ title, noteResolver }) {
+    const [notes, status] = noteResolver();
+
+    if (status === FAILED) {
+      return [h("h2", {}, title), h(FailedToLoadNotes)];
+    }
+
+    if (status !== LOADED) {
+      return h(ReferencesSkeleton);
+    }
+
+    const items = notes.map((note) => h("li", {}, h(NoteReference, { note })));
+
+    return [h("h2", {}, title), h("ul", {}, items)];
+  }
+}
+
 export class NotesSidebar {
   #onClick = () => {
     this.context.visibleSidebar("");
   };
-
-  renderStarred() {
-    const [notes, status] = starredNotes();
-
-    if (status === FAILED) {
-      return "Failed";
-    }
-
-    if (status !== LOADED) {
-      return h(ReferencesSkeleton);
-    }
-
-    const items = notes.map((note) => {
-      return h("li", {}, h(NoteReference, { note: note }));
-    });
-
-    if (!items.length) {
-      return null;
-    }
-
-    return [h("h2", {}, "Starred", h(StarFill16Icon)), h("ul", {}, items)];
-  }
-
-  renderFileList() {
-    const [notes, status] = allNotes();
-
-    if (status === FAILED) {
-      return "Failed";
-    }
-
-    if (status !== LOADED) {
-      return h(ReferencesSkeleton);
-    }
-
-    const items = notes.map((note) => {
-      return h("li", {}, h(NoteReference, { note: note }));
-    });
-
-    return [h("h2", {}, "All"), h("ul", {}, items)];
-  }
 
   render() {
     return h(
@@ -100,7 +91,23 @@ export class NotesSidebar {
       h(
         ScrollArea,
         { className: scrollAreaStyles },
-        h("nav", {}, this.renderStarred(), " ", this.renderFileList()),
+        h(
+          "nav",
+          {},
+          h(
+            ErrorBoundary,
+            {
+              name: "NotesSidebar",
+              fallback: h(FatalErrorScreen),
+              onError: console.error,
+            },
+            h(Notes, {
+              title: ["Starred", h(StarFill16Icon)],
+              noteResolver: starredNotes,
+            }),
+            h(Notes, { title: "All", noteResolver: allNotes }),
+          ),
+        ),
       ),
     );
   }

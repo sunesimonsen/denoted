@@ -3,6 +3,8 @@ import { css } from "stylewars";
 import { route } from "@dependable/nano-router";
 import { NotePanel } from "./NotePanel.js";
 import { Usage } from "./Usage.js";
+import { FatalErrorScreen } from "./FatalErrorScreen.js";
+import { ErrorBoundary } from "@dependable/components/ErrorBoundary/v0";
 
 const styles = css`
   & {
@@ -23,7 +25,15 @@ export class ContentPanel {
     return h(
       "main",
       { "data-layout": "main", className: styles },
-      this.renderPanel(),
+      h(
+        ErrorBoundary,
+        {
+          name: "ContentPanel",
+          fallback: h(FatalErrorScreen),
+          onError: console.error,
+        },
+        this.renderPanel(),
+      ),
     );
   }
 }

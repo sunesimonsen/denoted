@@ -18,10 +18,10 @@ const toolbarStyles = css`
 
 export class NoteEditorHeader {
   render() {
-    const [note, status] = notesCache.byId(params().id);
+    const [note, status, error] = notesCache.byId(params().id);
 
     if (status === FAILED) {
-      return "Failed";
+      throw error;
     }
 
     return h(

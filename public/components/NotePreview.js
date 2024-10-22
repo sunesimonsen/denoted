@@ -111,10 +111,10 @@ export class NotePreview {
   }
 
   render() {
-    const [note, status] = notesCache.byId(params().id);
+    const [note, status, error] = notesCache.byId(params().id);
 
     if (status === FAILED) {
-      return "Failed";
+      throw error;
     }
 
     if (status !== LOADED) {
