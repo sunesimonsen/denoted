@@ -247,7 +247,7 @@ export class Api {
   loadNote(id) {
     if (!this.isAuthenticated()) return;
 
-    notesCache.initialize(id, async () => this.fetchNote(id));
+    notesCache.initialize(id, () => this.fetchNote(id));
   }
 
   loadEditor() {
