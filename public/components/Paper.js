@@ -13,6 +13,8 @@ const styles = css`
     overflow-x: hidden;
     overflow-wrap: break-word;
     box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-radius: var(--dc-component-border-radius);
   }
   @media screen and (max-width: 900px) {
     & {

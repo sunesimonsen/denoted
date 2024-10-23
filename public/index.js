@@ -5,6 +5,8 @@ import { Router, Routing } from "@dependable/nano-router";
 import { createBrowserHistory } from "@nano-router/history";
 import { ThemeProvider } from "@dependable/components/brown-theme/v0";
 import { Keyboard } from "./components/Keyboard.js";
+import { ErrorBoundary } from "@dependable/components/ErrorBoundary/v0";
+import { FatalErrorScreen } from "./components/FatalErrorScreen.js";
 import { routes } from "./routes.js";
 import { Api } from "./Api.js";
 
@@ -18,6 +20,26 @@ render(
   h(
     Routing,
     { router },
-    h("Context", { api }, h(ThemeProvider, {}, h(Keyboard, {}, h(RootView)))),
+    h(
+      "Context",
+      { api },
+      h(
+        ThemeProvider,
+        {},
+        h(
+          Keyboard,
+          {},
+          h(
+            ErrorBoundary,
+            {
+              name: "ContentPanel",
+              fallback: h(FatalErrorScreen),
+              onError: console.error,
+            },
+            h(RootView),
+          ),
+        ),
+      ),
+    ),
   ),
 );

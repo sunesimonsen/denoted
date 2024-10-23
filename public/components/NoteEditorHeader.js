@@ -2,7 +2,6 @@ import { h } from "@dependable/view";
 import { FAILED, LOADED } from "@dependable/cache";
 import { css } from "stylewars";
 import { Bar } from "@dependable/components/Bar/v0";
-import { params } from "@dependable/nano-router";
 import { noteDirtyState, notesCache } from "../state.js";
 import { StarButton } from "./StarButton.js";
 import { EditMetadataButton } from "./EditMetadataButton.js";
@@ -17,8 +16,8 @@ const toolbarStyles = css`
 `;
 
 export class NoteEditorHeader {
-  render() {
-    const [note, status, error] = notesCache.byId(params().id);
+  render({ id }) {
+    const [note, status, error] = notesCache.byId(id);
 
     if (status === FAILED) {
       throw error;

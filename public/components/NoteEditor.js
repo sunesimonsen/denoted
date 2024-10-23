@@ -2,7 +2,6 @@ import { h } from "@dependable/view";
 import { css } from "stylewars";
 import { moduleCache, notesCache, noteDirtyState } from "../state.js";
 import { LOADED } from "@dependable/cache";
-import { params } from "@dependable/nano-router";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { BorderLayout } from "@dependable/components/BorderLayout/v0";
 import { NoteEditorHeader } from "./NoteEditorHeader.js";
@@ -79,25 +78,22 @@ export class NoteEditor {
   }
 
   isLoading() {
-    const { id } = params();
     const moduleStatus = moduleCache.statusById("editor");
-    const noteStatus = notesCache.statusById(id);
+    const noteStatus = notesCache.statusById(this.props.id);
 
     return moduleStatus !== LOADED || noteStatus !== LOADED;
   }
 
   didRender() {
-    const { id } = params();
-
     this.context.api.loadEditor();
-    this.#prepareEditor(id);
+    this.#prepareEditor(this.props.id);
   }
 
-  render() {
+  render({ id }) {
     return h(
       BorderLayout,
       { stretched: true },
-      h(NoteEditorHeader),
+      h(NoteEditorHeader, { id }),
       this.isLoading() && h(NotePreviewSkeleton),
       h("div", {
         ref: this.#setRef,
