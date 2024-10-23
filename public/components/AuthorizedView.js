@@ -6,6 +6,7 @@ import { DefaultLayout } from "./DefaultLayout";
 export class AuthorizedView {
   async recieveDropboxToken() {
     const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
+
     sessionStorage.removeItem("dropbox-code-verifier");
 
     const { code } = queryParams();
