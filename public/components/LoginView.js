@@ -3,7 +3,7 @@ import { Center } from "@dependable/components/Center/v0";
 import { sha256 } from "../utils/sha256.js";
 import { DefaultLayout } from "./DefaultLayout.js";
 
-export class AuthorizeView {
+export class LoginView {
   async authorizeWithDropbox() {
     const codeVerifier = (crypto.randomUUID() + crypto.randomUUID()).replaceAll(
       "-",

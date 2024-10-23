@@ -455,7 +455,7 @@ export class Api {
 
   authenticate() {
     this.router.navigate({
-      route: "authorize",
+      route: "login",
       hash: "",
       replace: true,
       queryParams: {},
