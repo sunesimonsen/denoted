@@ -1,17 +1,19 @@
 import { h } from "@dependable/view";
 import { NotePreview } from "./NotePreview.js";
 import { NoteEditor } from "./NoteEditor.js";
-import { route, params } from "@dependable/nano-router";
+import { route } from "@dependable/nano-router";
 
 export class NotePanel {
-  render() {
-    this.context.api.loadNote(params().id);
+  didRender() {
+    this.context.api.loadNote(this.props.id);
+  }
 
+  render({ id }) {
     switch (route()) {
       case "note/edit":
-        return h(NoteEditor);
+        return h(NoteEditor, { id });
       default:
-        return h(NotePreview);
+        return h(NotePreview, { id });
     }
   }
 }

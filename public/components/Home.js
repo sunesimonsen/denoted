@@ -6,10 +6,23 @@ import { Topbar } from "./Topbar.js";
 import { NewNoteDialog } from "./NewNoteDialog.js";
 
 export class Home {
+  didMount() {
+    const api = this.context.api;
+
+    if (api.isAuthenticated()) {
+      api.loadNotes();
+      api.startRefreshing();
+    } else {
+      api.authenticate();
+    }
+  }
+
   render() {
+    if (!this.context.api.isAuthenticated()) return null;
+
     return h(
       DefaultLayout,
-      { stretched: true },
+      {},
       h(Topbar),
       h(NotesSidebar),
       h(ContentPanel),

@@ -2,10 +2,10 @@ import { h } from "@dependable/view";
 import { css, classes } from "stylewars";
 import { notesCache } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
-import { params } from "@dependable/nano-router";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
 import { EditButton } from "./EditButton.js";
+import { FatalErrorScreen } from "./FatalErrorScreen.js";
 import { Paper } from "./Paper.js";
 import { NoteMetadata } from "./NoteMetadata.js";
 
@@ -99,7 +99,7 @@ export class NotePreview {
   };
 
   didRender() {
-    const { id } = params();
+    const id = this.props.id;
     const [note, status] = notesCache.byId(id);
 
     if (status === LOADED && (id !== this.id || note.rev !== this.rev)) {
@@ -110,11 +110,11 @@ export class NotePreview {
     }
   }
 
-  render() {
-    const [note, status, error] = notesCache.byId(params().id);
+  render({ id }) {
+    const [note, status] = notesCache.byId(id);
 
     if (status === FAILED) {
-      throw error;
+      return h(FatalErrorScreen);
     }
 
     if (status !== LOADED) {

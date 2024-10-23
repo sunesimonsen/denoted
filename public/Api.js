@@ -3,15 +3,12 @@ import {
   moduleCache,
   notesCache,
   nameToNote,
-  authCache,
   noteDirtyState,
 } from "./state.js";
-import { sha256 } from "./utils/sha256.js";
 import { delay } from "./utils/delay.js";
 import { newNote } from "./utils/notes.js";
 import { idFrom } from "./utils/ids.js";
 import { frontmatter } from "./utils/frontmatter.js";
-import { LOADED } from "@dependable/cache";
 import { orgToHtml } from "./org.js";
 
 function headerSafeJson(v) {
@@ -48,7 +45,7 @@ export class Api {
   async fetchFiles() {
     const paths = [];
 
-    const authHeader = this.getAuthHeader();
+    const authHeader = await this.getAuthHeader();
 
     let result = await this.fetchJson(
       "https://api.dropboxapi.com/2/files/list_folder",
@@ -93,7 +90,7 @@ export class Api {
   }
 
   async refresh() {
-    const authHeader = this.getAuthHeader();
+    const authHeader = await this.getAuthHeader();
 
     if (!this.cursor) {
       let { cursor } = await this.fetchJson(
@@ -154,17 +151,11 @@ export class Api {
   }
 
   async startRefreshing() {
-    if (!this.isAuthenticated()) return;
-
     window.addEventListener("visibilitychange", () => {
-      if (this.isAuthenticated()) {
-        if (document.visibilityState === "hidden") {
-          this.refreshing = false;
-        } else if (!this.refreshing) {
-          this.startRefreshing();
-        }
-      } else {
-        this.reauthenticate();
+      if (document.visibilityState === "hidden") {
+        this.refreshing = false;
+      } else if (!this.refreshing) {
+        this.startRefreshing();
       }
     });
 
@@ -172,7 +163,6 @@ export class Api {
       this.refreshing = true;
 
       while (this.refreshing) {
-        if (!this.isAuthenticated()) break;
         await this.refresh();
         await delay(5000);
       }
@@ -182,8 +172,6 @@ export class Api {
   }
 
   loadNotes() {
-    if (!this.isAuthenticated()) return;
-
     searches.initialize("notes", async () => {
       const files = this.fetchFiles();
 
@@ -192,7 +180,7 @@ export class Api {
   }
 
   async fetchNote(id) {
-    const authHeader = this.getAuthHeader();
+    const authHeader = await this.getAuthHeader();
 
     const response = await this.fetch(
       "https://content.dropboxapi.com/2/files/download",
@@ -245,8 +233,6 @@ export class Api {
   }
 
   loadNote(id) {
-    if (!this.isAuthenticated()) return;
-
     notesCache.initialize(id, () => this.fetchNote(id));
   }
 
@@ -262,7 +248,7 @@ export class Api {
     await this.fetchJson("https://content.dropboxapi.com/2/files/upload", {
       method: "POST",
       headers: {
-        Authorization: this.getAuthHeader(),
+        Authorization: await this.getAuthHeader(),
         "Content-Type": "application/octet-stream",
         "Dropbox-API-Arg": headerSafeJson({
           path: `/org/denote/${note.id}`,
@@ -286,7 +272,7 @@ export class Api {
     await this.fetchJson("https://api.dropboxapi.com/2/files/delete_v2", {
       method: "POST",
       headers: {
-        Authorization: this.getAuthHeader(),
+        Authorization: await this.getAuthHeader(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ path: `/org/denote/${id}` }),
@@ -327,7 +313,7 @@ export class Api {
         {
           method: "POST",
           headers: {
-            Authorization: this.getAuthHeader(),
+            Authorization: await this.getAuthHeader(),
             "Content-Type": "application/octet-stream",
             "Dropbox-API-Arg": headerSafeJson({
               path: `/org/denote/${noteDirtyState.id}`,
@@ -350,7 +336,7 @@ export class Api {
           {
             method: "POST",
             headers: {
-              Authorization: this.getAuthHeader(),
+              Authorization: await this.getAuthHeader(),
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -393,32 +379,21 @@ export class Api {
   }
 
   getAuthHeader() {
-    const [token] = authCache.byId("token");
+    if (!this.isAuthenticated()) {
+      return this.reauthenticate();
+    }
 
-    return `Bearer ${token}`;
+    return `Bearer ${this.accessToken}`;
   }
 
   reauthenticate() {
-    sessionStorage.removeItem("dropbox-token");
-    authCache.evict("token");
+    this.accessToken = null;
 
-    this.router.navigate({
-      route: "home",
-      replace: true,
-      hash: "",
-      queryParams: {},
-    });
-
-    this.authenticate();
-
-    // Blocking promise waiting for redirect
-    return new Promise(() => {});
+    return this.authenticate();
   }
 
   isAuthenticated() {
-    const [, status] = authCache.byId("token");
-
-    return status === LOADED;
+    return Boolean(this.accessToken);
   }
 
   async tradeCodeForAccessToken(code, codeVerifier) {
@@ -435,13 +410,16 @@ export class Api {
       )
       .join("&");
 
-    const response = await fetch("https://api.dropboxapi.com/oauth2/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    const response = await this.fetch(
+      "https://api.dropboxapi.com/oauth2/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        },
+        body,
       },
-      body,
-    });
+    );
 
     if (!response.ok) {
       if (response.status === 400) {
@@ -453,54 +431,37 @@ export class Api {
 
     const { access_token } = await response.json();
 
-    return access_token;
+    this.accessToken = access_token;
+
+    this.router.navigate({
+      route: "home",
+      queryParams: {},
+      hash: "",
+      replace: true,
+    });
+  }
+
+  get accessToken() {
+    return sessionStorage.getItem("dropbox-token");
+  }
+
+  set accessToken(token) {
+    if (token) {
+      sessionStorage.setItem("dropbox-token", token);
+    } else {
+      sessionStorage.removeItem("dropbox-token");
+    }
   }
 
   authenticate() {
-    authCache.initialize("token", async () => {
-      const token = sessionStorage.getItem("dropbox-token");
-
-      if (token) return token;
-
-      const { code } = this.router.queryParams;
-
-      if (this.router.route === "authorized" && code) {
-        const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
-
-        sessionStorage.removeItem("dropbox-code-verifier");
-
-        const token = await this.tradeCodeForAccessToken(code, codeVerifier);
-
-        sessionStorage.setItem("dropbox-token", token);
-
-        this.router.navigate({
-          route: "home",
-          queryParams: {},
-          hash: "",
-          replace: true,
-        });
-
-        return token;
-      } else {
-        const codeVerifier = (
-          crypto.randomUUID() + crypto.randomUUID()
-        ).replaceAll("-", "");
-
-        sessionStorage.setItem("dropbox-code-verifier", codeVerifier);
-
-        this.router.navigate({
-          route: "authorize",
-          queryParams: {
-            client_id: "23m5fpdg74lyhna",
-            response_type: "code",
-            code_challenge: await sha256(codeVerifier),
-            code_challenge_method: "S256",
-            redirect_uri: window.location.origin + "/authorized",
-          },
-        });
-
-        await new Promise(() => {});
-      }
+    this.router.navigate({
+      route: "authorize",
+      hash: "",
+      replace: true,
+      queryParams: {},
     });
+
+    // Blocking promise waiting for redirect
+    return new Promise(() => {});
   }
 }

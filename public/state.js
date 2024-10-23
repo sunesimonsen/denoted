@@ -8,8 +8,6 @@ export const searches = new Cache("searches");
 
 export const notesCache = new Cache("notes");
 
-export const authCache = new Cache("auth");
-
 export const searchText = observable("", { id: "searchText" });
 
 const debouncedSearchText = debounce(searchText, 50);
