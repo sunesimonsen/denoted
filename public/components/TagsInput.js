@@ -45,7 +45,7 @@ export class TagsInput {
     this.#searchText = observable("", { id: id + "SearchText" });
   }
 
-  renderTagsOptions() {
+  #renderTagsOptions() {
     const tags = this.#searchText()
       ? Array.from(new Set([...allNoteTags(), ...this.props.tags])).sort()
       : this.props.tags;
@@ -80,7 +80,7 @@ export class TagsInput {
   render({ id, className, tags }) {
     return h(
       FieldLayout,
-      { className: className, stretched: true },
+      { className, stretched: true },
       h("label", { for: id }, "Tags"),
       h(
         Autocomplete,
@@ -90,9 +90,9 @@ export class TagsInput {
           onInput: this.#onSearchTextChange,
           onClear: this.#onTagSearchInputClear,
         }),
-        h(AutocompletePopup, {}, this.renderTagsOptions()),
+        h(AutocompletePopup, {}, this.#renderTagsOptions()),
       ),
-      h(Tags, { tags: tags, className: margin(2, "block-start") }),
+      h(Tags, { tags, className: margin(2, "block-start") }),
     );
   }
 }

@@ -45,7 +45,7 @@ export class Api {
   async fetchFiles() {
     const paths = [];
 
-    const authHeader = await this.getAuthHeader();
+    const authHeader = await this.#getAuthHeader();
 
     let result = await this.fetchJson(
       "https://api.dropboxapi.com/2/files/list_folder",
@@ -90,7 +90,7 @@ export class Api {
   }
 
   async refresh() {
-    const authHeader = await this.getAuthHeader();
+    const authHeader = await this.#getAuthHeader();
 
     if (!this.cursor) {
       let { cursor } = await this.fetchJson(
@@ -180,7 +180,7 @@ export class Api {
   }
 
   async fetchNote(id) {
-    const authHeader = await this.getAuthHeader();
+    const authHeader = await this.#getAuthHeader();
 
     const response = await this.fetch(
       "https://content.dropboxapi.com/2/files/download",
@@ -248,7 +248,7 @@ export class Api {
     await this.fetchJson("https://content.dropboxapi.com/2/files/upload", {
       method: "POST",
       headers: {
-        Authorization: await this.getAuthHeader(),
+        Authorization: await this.#getAuthHeader(),
         "Content-Type": "application/octet-stream",
         "Dropbox-API-Arg": headerSafeJson({
           path: `/org/denote/${note.id}`,
@@ -272,7 +272,7 @@ export class Api {
     await this.fetchJson("https://api.dropboxapi.com/2/files/delete_v2", {
       method: "POST",
       headers: {
-        Authorization: await this.getAuthHeader(),
+        Authorization: await this.#getAuthHeader(),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ path: `/org/denote/${id}` }),
@@ -313,7 +313,7 @@ export class Api {
         {
           method: "POST",
           headers: {
-            Authorization: await this.getAuthHeader(),
+            Authorization: await this.#getAuthHeader(),
             "Content-Type": "application/octet-stream",
             "Dropbox-API-Arg": headerSafeJson({
               path: `/org/denote/${noteDirtyState.id}`,
@@ -336,7 +336,7 @@ export class Api {
           {
             method: "POST",
             headers: {
-              Authorization: await this.getAuthHeader(),
+              Authorization: await this.#getAuthHeader(),
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
@@ -378,7 +378,7 @@ export class Api {
     }
   }
 
-  getAuthHeader() {
+  #getAuthHeader() {
     if (!this.isAuthenticated()) {
       return this.reauthenticate();
     }

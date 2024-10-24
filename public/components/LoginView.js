@@ -4,7 +4,7 @@ import { sha256 } from "../utils/sha256.js";
 import { DefaultLayout } from "./DefaultLayout.js";
 
 export class LoginView {
-  async authorizeWithDropbox() {
+  async #authorizeWithDropbox() {
     const codeVerifier = (crypto.randomUUID() + crypto.randomUUID()).replaceAll(
       "-",
       "",
@@ -25,7 +25,7 @@ export class LoginView {
   }
 
   willMount() {
-    this.authorizeWithDropbox();
+    this.#authorizeWithDropbox();
   }
 
   render() {
