@@ -18,12 +18,14 @@ function headerSafeJson(v) {
 }
 
 export class Api {
-  constructor({ router }) {
+  constructor({ fetch, router, sessionStorage }) {
     this.router = router;
+    this.realFetch = fetch;
+    this.sessionStorage = sessionStorage;
   }
 
   async fetch(url, options) {
-    const response = await fetch(url, options);
+    const response = await this.realFetch(url, options);
 
     if (!response.ok) {
       if (response.status === 401) {
@@ -172,7 +174,7 @@ export class Api {
   }
 
   loadNotes() {
-    searches.initialize("notes", async () => {
+    return searches.initialize("notes", async () => {
       const files = this.fetchFiles();
 
       return files;
@@ -233,11 +235,11 @@ export class Api {
   }
 
   loadNote(id) {
-    notesCache.initialize(id, () => this.fetchNote(id));
+    return notesCache.initialize(id, () => this.fetchNote(id));
   }
 
   loadEditor() {
-    moduleCache.initialize("editor", import("./editor.js"));
+    return moduleCache.initialize("editor", import("./editor.js"));
   }
 
   async createNote({ title, tags }) {
@@ -442,14 +444,14 @@ export class Api {
   }
 
   get accessToken() {
-    return sessionStorage.getItem("dropbox-token");
+    return this.sessionStorage.getItem("dropbox-token");
   }
 
   set accessToken(token) {
     if (token) {
-      sessionStorage.setItem("dropbox-token", token);
+      this.sessionStorage.setItem("dropbox-token", token);
     } else {
-      sessionStorage.removeItem("dropbox-token");
+      this.sessionStorage.removeItem("dropbox-token");
     }
   }
 

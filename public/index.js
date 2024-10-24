@@ -14,7 +14,7 @@ const history = createBrowserHistory();
 
 const router = new Router({ routes, history });
 
-const api = new Api({ router });
+const api = new Api({ fetch, router });
 
 render(
   h(
