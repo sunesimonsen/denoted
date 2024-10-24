@@ -1,6 +1,6 @@
 import { h } from "@dependable/view";
 import { css } from "stylewars";
-import { allNotes, starredNotes } from "../state.js";
+import { starredNotes, unstarredNotes } from "../state.js";
 import { FAILED, LOADED } from "@dependable/cache";
 import { NoteReference } from "./NoteReference.js";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
@@ -105,7 +105,7 @@ export class NotesSidebar {
               title: ["Starred", h(StarFill16Icon)],
               noteResolver: starredNotes,
             }),
-            h(Notes, { title: "All", noteResolver: allNotes }),
+            h(Notes, { title: "All", noteResolver: unstarredNotes }),
           ),
         ),
       ),
