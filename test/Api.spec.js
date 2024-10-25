@@ -20,12 +20,13 @@ describe("Api", () => {
 
   beforeEach(() => {
     fakeFetch = new FakeFetch();
+    const sessionStorage = new FakeSessionStorage();
     api = new Api({
       fetch: fakeFetch.fetch,
-      sessionStorage: new FakeSessionStorage(),
+      sessionStorage,
     });
 
-    api.accessToken = "token";
+    sessionStorage.setItem("dropbox-token", "token");
   });
 
   describe("loadNote", () => {

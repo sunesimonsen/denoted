@@ -4,18 +4,14 @@ import { queryParams } from "@dependable/nano-router";
 import { DefaultLayout } from "./DefaultLayout";
 
 export class AuthorizedView {
-  async #recieveDropboxToken() {
-    const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
-
-    sessionStorage.removeItem("dropbox-code-verifier");
-
+  async #receiveDropboxToken() {
     const { code } = queryParams();
 
-    this.context.api.tradeCodeForAccessToken(code, codeVerifier);
+    this.context.api.tradeCodeForAccessToken(code);
   }
 
   willMount() {
-    this.#recieveDropboxToken();
+    this.#receiveDropboxToken();
   }
 
   render() {
