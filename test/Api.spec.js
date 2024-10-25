@@ -33,7 +33,7 @@ describe("Api", () => {
     const id = "20240302T001523--denote-test__denote_test.org";
 
     it("fetches the note with the given id and stores it in the notes cache", async () => {
-      fakeFetch.response.body = content;
+      fakeFetch.respondWithText(content);
       fakeFetch.response.headers.set(
         "Dropbox-Api-Result",
         JSON.stringify({ rev: "6242e992bf97d0841b75c" }),

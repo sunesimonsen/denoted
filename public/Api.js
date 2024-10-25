@@ -49,9 +49,7 @@ export class Api {
 
   async refresh() {
     if (!this.cursor) {
-      let { cursor } = await this.dropbox.getLatestCursor("/org/denote/");
-
-      this.cursor = cursor;
+      this.cursor = await this.dropbox.getLatestCursor("/org/denote/");
     }
 
     const result = await this.dropbox.listFolderFromCursor(this.cursor);

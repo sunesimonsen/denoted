@@ -38,7 +38,7 @@ export class Dropbox {
   }
 
   async getLatestCursor(path) {
-    return await this.#fetchJson(
+    const { cursor } = await this.#fetchJson(
       "https://api.dropboxapi.com/2/files/list_folder/get_latest_cursor",
       {
         method: "POST",
@@ -49,6 +49,8 @@ export class Dropbox {
         body: JSON.stringify({ path }),
       },
     );
+
+    return cursor;
   }
 
   async listFolder(path, limit = 2000) {

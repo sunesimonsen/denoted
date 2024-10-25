@@ -3,7 +3,7 @@ class FakeResponse {
   status = 200;
   headers = new Map();
   text = () => Promise.resolve(this.body);
-  json = () => Promise.resolve(this.json || JSON.parse(this.body));
+  json = () => Promise.resolve(JSON.parse(this.body));
 }
 
 export class FakeFetch {
@@ -13,4 +13,19 @@ export class FakeFetch {
     this.request = { url, options };
     return Promise.resolve(this.response);
   };
+
+  respondWithJson(value) {
+    this.respondWithText(JSON.stringify(value));
+  }
+
+  respondWithText(value) {
+    this.response.body = value;
+    this.response.ok = true;
+    this.response.status = 200;
+  }
+
+  rejectWith(status) {
+    this.response.ok = false;
+    this.response.status = status;
+  }
 }
