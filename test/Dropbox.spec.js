@@ -190,4 +190,49 @@ describe("Dropbox", () => {
       });
     });
   });
+
+  describe("listFolderFromCursor", () => {
+    it("responds with the content of the given folder", async () => {
+      const listResponse = {
+        entries: [
+          { ".tag": "file", name: "20221212T100717--zendesk-shards.org" },
+          { ".tag": "file", name: "20230106T150823--ghost-in-the-machine.org" },
+        ],
+        cursor: "next-cursor",
+        has_more: false,
+      };
+
+      fakeFetch.respondWithJson(listResponse);
+
+      await expect(
+        dropbox.listFolderFromCursor("first-cursor"),
+        "to be fulfilled with",
+        listResponse,
+      );
+
+      expect(fakeFetch.request, "to equal", {
+        url: "https://api.dropboxapi.com/2/files/list_folder/continue",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer token",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cursor: "first-cursor" }),
+        },
+      });
+    });
+
+    describe("when the request fails", () => {
+      it("throw an exception", async () => {
+        fakeFetch.rejectWith(403);
+
+        await expect(
+          dropbox.listFolderFromCursor("first-cursor"),
+          "to be rejected with",
+          "HTTP ERROR 403",
+        );
+      });
+    });
+  });
 });
