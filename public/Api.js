@@ -5,14 +5,42 @@ import {
   nameToNote,
   noteDirtyState,
 } from "./state.js";
-import { delay } from "./utils/delay.js";
 import { newNote } from "./utils/notes.js";
 import { idFrom } from "./utils/ids.js";
 import { frontmatter } from "./utils/frontmatter.js";
 import { orgToHtml } from "./org.js";
 import { Dropbox } from "./storage/Dropbox.js";
 
+class Changelistener {
+  constructor(path) {
+    this.path = path;
+  }
+
+  async onFileChanged({ name, rev }) {
+    const [notes] = searches.byId("notes");
+
+    if (!notes.includes(name)) {
+      searches.load("notes", () => [...notes, name]);
+    }
+
+    const [note] = notesCache.byId(name);
+
+    if (note && note.rev !== rev) {
+      notesCache.evict(name);
+    }
+  }
+
+  onFileDeleted({ name }) {
+    const [notes] = searches.byId("notes");
+
+    notesCache.evict(name);
+    searches.load("notes", () => notes.filter((id) => id !== name));
+  }
+}
+
 export class Api {
+  #changeListener = new Changelistener("/org/denote");
+
   constructor({ fetch, router, location, sessionStorage }) {
     this.router = router;
 
@@ -47,60 +75,6 @@ export class Api {
     return paths;
   }
 
-  async refresh() {
-    if (!this.cursor) {
-      this.cursor = await this.dropbox.getLatestCursor("/org/denote/");
-    }
-
-    const result = await this.dropbox.listFolderFromCursor(this.cursor);
-
-    this.cursor = result.cursor;
-
-    for (const entry of result.entries) {
-      const tag = entry[".tag"];
-
-      const [notes] = searches.byId("notes");
-
-      if (tag === "file") {
-        if (!notes.includes(entry.name)) {
-          searches.load("notes", () => [...notes, entry.name]);
-        }
-
-        const [note] = notesCache.byId(entry.name);
-
-        if (note && note.rev !== entry.rev) {
-          const updatedNote = await this.fetchNote(entry.name);
-
-          notesCache.load(updatedNote.id, () => updatedNote);
-        }
-      } else if (tag === "deleted") {
-        notesCache.evict(entry.name);
-        searches.load("notes", () => notes.filter((id) => id !== entry.name));
-      }
-    }
-  }
-
-  async startRefreshing() {
-    window.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
-        this.refreshing = false;
-      } else if (!this.refreshing) {
-        this.startRefreshing();
-      }
-    });
-
-    if (!this.refreshing && document.visibilityState === "visible") {
-      this.refreshing = true;
-
-      while (this.refreshing) {
-        await this.refresh();
-        await delay(5000);
-      }
-
-      this.refreshing = false;
-    }
-  }
-
   loadNotes() {
     return searches.initialize("notes", async () => {
       const files = this.fetchFiles();
@@ -125,22 +99,18 @@ export class Api {
       properties[key] = value;
     }
 
-    try {
-      const html = await orgToHtml(content);
+    const html = await orgToHtml(content);
 
-      return {
-        ...info,
-        rev,
-        properties,
-        title: properties.title,
-        html,
-        content: content
-          .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
-          .trim(),
-      };
-    } catch (e) {
-      throw e;
-    }
+    return {
+      ...info,
+      rev,
+      properties,
+      title: properties.title,
+      html,
+      content: content
+        .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
+        .trim(),
+    };
   }
 
   loadNote(id) {
@@ -278,5 +248,19 @@ export class Api {
       replace: true,
       queryParams: {},
     });
+  }
+
+  async listenForUpdates() {
+    window.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        this.dropbox.removeChangeListener(this.#changeListener);
+      } else {
+        this.dropbox.addChangeListener(this.#changeListener);
+      }
+    });
+
+    if (document.visibilityState === "visible") {
+      this.dropbox.addChangeListener(this.#changeListener);
+    }
   }
 }

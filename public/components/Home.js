@@ -8,7 +8,7 @@ import { NewNoteDialog } from "./NewNoteDialog.js";
 export class Home {
   didMount() {
     this.context.api.loadNotes();
-    this.context.api.startRefreshing();
+    this.context.api.listenForUpdates();
   }
 
   render() {

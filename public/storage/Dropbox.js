@@ -1,3 +1,4 @@
+import { NotFoundError } from "../errors/NotFoundError.js";
 import { sha256 } from "../utils/sha256.js";
 
 function headerSafeJson(v) {
@@ -6,10 +7,24 @@ function headerSafeJson(v) {
   });
 }
 
+export class HttpError extends Error {
+  constructor({ statusText, status, body }) {
+    super(statusText || `HTTP ERROR ${status}`);
+    this.status = status;
+    this.body = body;
+  }
+}
+
 export class Dropbox {
   #realFetch = null;
+
   #location = null;
+
   #sessionStorage = null;
+
+  #changeListeners = new Set();
+
+  #interval = null;
 
   constructor({ fetch, location, sessionStorage }) {
     this.#realFetch = fetch;
@@ -24,7 +39,10 @@ export class Dropbox {
       if (response.status === 401) {
         return await this.#reauthenticate();
       } else {
-        throw new Error(response.statusText || `HTTP ERROR ${response.status}`);
+        const body = await response.text();
+        const { status, statusText } = response;
+
+        throw new HttpError({ status, statusText, body });
       }
     }
 
@@ -79,22 +97,36 @@ export class Dropbox {
   }
 
   async download(path) {
-    const response = await this.#fetch(
-      "https://content.dropboxapi.com/2/files/download",
-      {
-        method: "POST",
-        headers: {
-          Authorization: await this.#getAuthHeader(),
-          "Content-Type": "text/plain; charset=utf-8",
-          "Dropbox-API-Arg": headerSafeJson({ path }),
+    try {
+      const response = await this.#fetch(
+        "https://content.dropboxapi.com/2/files/download",
+        {
+          method: "POST",
+          headers: {
+            Authorization: await this.#getAuthHeader(),
+            "Content-Type": "text/plain; charset=utf-8",
+            "Dropbox-API-Arg": headerSafeJson({ path }),
+          },
         },
-      },
-    );
+      );
 
-    const apiResult = JSON.parse(response.headers.get("Dropbox-Api-Result"));
-    const content = await response.text();
+      const apiResult = JSON.parse(response.headers.get("Dropbox-Api-Result"));
+      const content = await response.text();
 
-    return { ...apiResult, content };
+      return { ...apiResult, content };
+    } catch (err) {
+      if (err instanceof HttpError) {
+        if (err.status === 409) {
+          const response = JSON.parse(err.body);
+
+          if (response?.error?.path[".tag"] === "not_found") {
+            throw new NotFoundError();
+          }
+        }
+      }
+
+      throw err;
+    }
   }
 
   async create(path, body) {
@@ -138,14 +170,14 @@ export class Dropbox {
     });
   }
 
-  async delete() {
+  async delete(path) {
     return this.#fetchJson("https://api.dropboxapi.com/2/files/delete_v2", {
       method: "POST",
       headers: {
         Authorization: await this.#getAuthHeader(),
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ path: `/org/denote/${id}` }),
+      body: JSON.stringify({ path }),
     });
   }
 
@@ -243,4 +275,47 @@ export class Dropbox {
       this.#sessionStorage.removeItem("dropbox-token");
     }
   }
+
+  addChangeListener(listener) {
+    this.#changeListeners.add(listener);
+
+    if (!this.#interval) {
+      this.#interval = setInterval(this.#checkForUpdates, 5000);
+    }
+  }
+
+  removeChangeListener(listener) {
+    this.#changeListeners.delete(listener);
+
+    if (this.#changeListeners.size === 0) {
+      clearInterval(this.#interval);
+    }
+  }
+
+  #checkForUpdates = async () => {
+    for (const listener of this.#changeListeners) {
+      const folder = listener.path;
+
+      if (!listener.cursor) {
+        listener.cursor = await this.getLatestCursor(folder);
+      }
+
+      const result = await this.listFolderFromCursor(listener.cursor);
+
+      for (const entry of result.entries) {
+        const { name, rev } = entry;
+
+        switch (entry[".tag"]) {
+          case "file":
+            await listener.onFileChanged({ folder, name, rev });
+            break;
+          case "deleted":
+            await listener.onFileDeleted({ folder, name, rev });
+            break;
+        }
+      }
+
+      listener.cursor = result.cursor;
+    }
+  };
 }
