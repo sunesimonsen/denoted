@@ -124,4 +124,70 @@ describe("Dropbox", () => {
       });
     });
   });
+
+  describe("listFolder", () => {
+    it("responds with the content of the given folder", async () => {
+      const listResponse = {
+        entries: [
+          { ".tag": "file", name: "20221212T100717--zendesk-shards.org" },
+          { ".tag": "file", name: "20230106T150823--ghost-in-the-machine.org" },
+        ],
+        cursor: "my-cursor",
+        has_more: false,
+      };
+
+      fakeFetch.respondWithJson(listResponse);
+
+      await expect(
+        dropbox.listFolder(notePath),
+        "to be fulfilled with",
+        listResponse,
+      );
+
+      expect(fakeFetch.request, "to equal", {
+        url: "https://api.dropboxapi.com/2/files/list_folder",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer token",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ path: notePath, limit: 2000 }),
+        },
+      });
+    });
+
+    describe("when the path can't be found", () => {
+      it("throw a not found error", async () => {
+        fakeFetch.respondWithJson({
+          error: {
+            ".tag": "path",
+            path: {
+              ".tag": "not_found",
+            },
+          },
+        });
+
+        fakeFetch.rejectWith(409);
+
+        await expect(
+          dropbox.listFolder(notePath),
+          "to be rejected with",
+          new NotFoundError(),
+        );
+      });
+    });
+
+    describe("when the request fails", () => {
+      it("throw an exception", async () => {
+        fakeFetch.rejectWith(403);
+
+        await expect(
+          dropbox.listFolder(notePath),
+          "to be rejected with",
+          "HTTP ERROR 403",
+        );
+      });
+    });
+  });
 });

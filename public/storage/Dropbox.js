@@ -15,6 +15,20 @@ export class HttpError extends Error {
   }
 }
 
+const convertErrors = (err) => {
+  if (err instanceof HttpError) {
+    if (err.status === 409) {
+      const response = JSON.parse(err.body);
+
+      if (response?.error?.path[".tag"] === "not_found") {
+        return new NotFoundError();
+      }
+    }
+  }
+
+  return err;
+};
+
 export class Dropbox {
   #realFetch = null;
 
@@ -72,14 +86,21 @@ export class Dropbox {
   }
 
   async listFolder(path, limit = 2000) {
-    return this.#fetchJson("https://api.dropboxapi.com/2/files/list_folder", {
-      method: "POST",
-      headers: {
-        Authorization: await this.#getAuthHeader(),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ path, limit }),
-    });
+    try {
+      return await this.#fetchJson(
+        "https://api.dropboxapi.com/2/files/list_folder",
+        {
+          method: "POST",
+          headers: {
+            Authorization: await this.#getAuthHeader(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ path, limit }),
+        },
+      );
+    } catch (err) {
+      throw convertErrors(err);
+    }
   }
 
   async listFolderFromCursor(cursor) {
@@ -115,17 +136,7 @@ export class Dropbox {
 
       return { ...apiResult, content };
     } catch (err) {
-      if (err instanceof HttpError) {
-        if (err.status === 409) {
-          const response = JSON.parse(err.body);
-
-          if (response?.error?.path[".tag"] === "not_found") {
-            throw new NotFoundError();
-          }
-        }
-      }
-
-      throw err;
+      throw convertErrors(err);
     }
   }
 
