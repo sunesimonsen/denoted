@@ -197,6 +197,8 @@ export class Dropbox {
       redirect_uri: this.#location.origin + "/authorized",
     });
 
+    this.#sessionStorage.setItem("redirect-location", this.#location.href);
+
     this.#location.assign(
       "https://www.dropbox.com/oauth2/authorize?" + params.toString(),
     );
@@ -206,9 +208,9 @@ export class Dropbox {
   }
 
   async tradeCodeForAccessToken(code) {
-    const codeVerifier = sessionStorage.getItem("dropbox-code-verifier");
+    const codeVerifier = this.#sessionStorage.getItem("dropbox-code-verifier");
 
-    sessionStorage.removeItem("dropbox-code-verifier");
+    this.#sessionStorage.removeItem("dropbox-code-verifier");
 
     const params = new URLSearchParams({
       client_id: "23m5fpdg74lyhna",
@@ -240,6 +242,11 @@ export class Dropbox {
     const { access_token } = await response.json();
 
     this.#accessToken = access_token;
+
+    const href = this.#sessionStorage.getItem("redirect-location");
+
+    this.#sessionStorage.removeItem("redirect-location");
+    this.#location.assign(href);
   }
 
   isAuthenticated() {

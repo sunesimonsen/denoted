@@ -227,27 +227,8 @@ export class Api {
 
   authenticate() {
     if (!this.isAuthenticated()) {
-      this.router.navigate({
-        route: "login",
-        hash: "",
-        replace: true,
-        queryParams: {},
-      });
+      return this.dropbox.authenticate();
     }
-
-    // Blocking promise waiting for redirect
-    return new Promise(() => {});
-  }
-
-  async tradeCodeForAccessToken(code) {
-    await this.dropbox.tradeCodeForAccessToken(code);
-
-    this.router.navigate({
-      route: "home",
-      hash: "",
-      replace: true,
-      queryParams: {},
-    });
   }
 
   async listenForUpdates() {

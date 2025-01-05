@@ -7,7 +7,7 @@ export class AuthorizedView {
   async #receiveDropboxToken() {
     const { code } = queryParams();
 
-    this.context.api.tradeCodeForAccessToken(code);
+    this.context.api.dropbox.tradeCodeForAccessToken(code);
   }
 
   willMount() {
