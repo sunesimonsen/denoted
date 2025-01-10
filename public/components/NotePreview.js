@@ -8,6 +8,7 @@ import { EditButton } from "./EditButton.js";
 import { FatalErrorScreen } from "./FatalErrorScreen.js";
 import { Paper } from "./Paper.js";
 import { NoteMetadata } from "./NoteMetadata.js";
+import { NotFoundError } from "../errors/NotFoundError.js";
 
 const containerStyles = css`
   & {
@@ -99,6 +100,8 @@ export class NotePreview {
   };
 
   didRender() {
+    this.context.api.loadNote(this.props.id);
+
     const id = this.props.id;
     const [note, status] = notesCache.byId(id);
 
@@ -111,9 +114,15 @@ export class NotePreview {
   }
 
   render({ id }) {
-    const [note, status] = notesCache.byId(id);
+    const [note, status, error] = notesCache.byId(id);
 
     if (status === FAILED) {
+      if (error instanceof NotFoundError) {
+        this.context.router.navigate("home");
+
+        return h(NotePreviewSkeleton);
+      }
+
       return h(FatalErrorScreen);
     }
 

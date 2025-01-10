@@ -85,6 +85,7 @@ export class NoteEditor {
   }
 
   didRender() {
+    this.context.api.loadNote(this.props.id);
     this.context.api.loadEditor();
     this.#prepareEditor(this.props.id);
   }
