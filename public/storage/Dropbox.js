@@ -1,11 +1,6 @@
 import { NotFoundError } from "../errors/NotFoundError.js";
 import { sha256 } from "../utils/sha256.js";
-
-function headerSafeJson(v) {
-  return JSON.stringify(v).replace(/[\u007f-\uffff]/g, function (c) {
-    return "\\u" + ("000" + c.charCodeAt(0).toString(16)).slice(-4);
-  });
-}
+import { headerSafeJSON } from "../utils/headerSafeJSON.js";
 
 export class HttpError extends Error {
   constructor({ statusText, status, body }) {
@@ -126,7 +121,7 @@ export class Dropbox {
           headers: {
             Authorization: await this.#getAuthHeader(),
             "Content-Type": "text/plain; charset=utf-8",
-            "Dropbox-API-Arg": headerSafeJson({ path }),
+            "Dropbox-API-Arg": headerSafeJSON({ path }),
           },
         },
       );
@@ -146,7 +141,7 @@ export class Dropbox {
       headers: {
         Authorization: await this.#getAuthHeader(),
         "Content-Type": "application/octet-stream",
-        "Dropbox-API-Arg": headerSafeJson({ path, mode: "add" }),
+        "Dropbox-API-Arg": headerSafeJSON({ path, mode: "add" }),
       },
       body,
     });
@@ -158,7 +153,7 @@ export class Dropbox {
       headers: {
         Authorization: await this.#getAuthHeader(),
         "Content-Type": "application/octet-stream",
-        "Dropbox-API-Arg": headerSafeJson({
+        "Dropbox-API-Arg": headerSafeJSON({
           path,
           mode: { ".tag": "update", update: rev },
         }),

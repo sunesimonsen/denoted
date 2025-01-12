@@ -3,12 +3,14 @@ import { FakeFetch } from "./FakeFetch.js";
 import { FakeSessionStorage } from "./FakeSessionStorage.js";
 import { Dropbox } from "../public/storage/Dropbox.js";
 import { NotFoundError } from "../public/errors/NotFoundError.js";
+import { headerSafeJSON } from "../public/utils/headerSafeJSON.js";
 
 describe("Dropbox", () => {
   let dropbox, fakeFetch;
 
   const folderPath = "/my/path";
-  const notePath = folderPath + "/note.org";
+  const noteName = "20250112T151828--note__test.org";
+  const notePath = `${folderPath}/${noteName}`;
 
   beforeEach(() => {
     fakeFetch = new FakeFetch();
@@ -229,6 +231,48 @@ describe("Dropbox", () => {
 
         await expect(
           dropbox.listFolderFromCursor("first-cursor"),
+          "to be rejected with",
+          "HTTP ERROR 403",
+        );
+      });
+    });
+  });
+
+  describe("create", () => {
+    const content = "Body text";
+    const rev = "62b83007e4fad0841b75c";
+
+    it("posts the body to the upload endpoint", async () => {
+      fakeFetch.respondWithJson({
+        name: noteName,
+        rev,
+      });
+
+      await expect(dropbox.create(notePath, content), "to be fulfilled with", {
+        name: noteName,
+        rev,
+      });
+
+      expect(fakeFetch.request, "to equal", {
+        url: "https://content.dropboxapi.com/2/files/upload",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer token",
+            "Content-Type": "application/octet-stream",
+            "Dropbox-API-Arg": headerSafeJSON({ path: notePath, mode: "add" }),
+          },
+          body: content,
+        },
+      });
+    });
+
+    describe("when the request fails", () => {
+      it("throw an exception", async () => {
+        fakeFetch.rejectWith(403);
+
+        await expect(
+          dropbox.create(notePath, content),
           "to be rejected with",
           "HTTP ERROR 403",
         );
