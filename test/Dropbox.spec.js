@@ -279,4 +279,53 @@ describe("Dropbox", () => {
       });
     });
   });
+
+  describe("update", () => {
+    const content = "Body text";
+    const rev = "62b83007e4fad0841b75c";
+
+    it("posts the body to the upload endpoint", async () => {
+      fakeFetch.respondWithJson({
+        name: noteName,
+        rev,
+      });
+
+      await expect(
+        dropbox.update(notePath, rev, content),
+        "to be fulfilled with",
+        {
+          name: noteName,
+          rev,
+        },
+      );
+
+      expect(fakeFetch.request, "to equal", {
+        url: "https://content.dropboxapi.com/2/files/upload",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer token",
+            "Content-Type": "application/octet-stream",
+            "Dropbox-API-Arg": headerSafeJSON({
+              path: notePath,
+              mode: { ".tag": "update", update: rev },
+            }),
+          },
+          body: content,
+        },
+      });
+    });
+
+    describe("when the request fails", () => {
+      it("throw an exception", async () => {
+        fakeFetch.rejectWith(403);
+
+        await expect(
+          dropbox.update(notePath, rev, content),
+          "to be rejected with",
+          "HTTP ERROR 403",
+        );
+      });
+    });
+  });
 });
