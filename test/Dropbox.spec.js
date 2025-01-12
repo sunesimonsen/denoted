@@ -331,7 +331,8 @@ describe("Dropbox", () => {
 
   describe("move", () => {
     const toPath = `${folderPath}/20250112T151828--note__test_demo.org`;
-    it("posts the body to the upload endpoint", async () => {
+
+    it("calls the move command on dropbox", async () => {
       const response = {
         metadata: {
           ".tag": "file",
@@ -369,6 +370,46 @@ describe("Dropbox", () => {
 
         await expect(
           dropbox.move(notePath, toPath),
+          "to be rejected with",
+          "HTTP ERROR 403",
+        );
+      });
+    });
+  });
+
+  describe("delete", () => {
+    it("calls the delete command on dropbox", async () => {
+      const response = {
+        metadata: {
+          ".tag": "file",
+          name: noteName,
+          rev: "62b83bcae6eb00841b75c",
+        },
+      };
+
+      fakeFetch.respondWithJson(response);
+
+      await expect(dropbox.delete(notePath), "to be fulfilled with", response);
+
+      expect(fakeFetch.request, "to equal", {
+        url: "https://api.dropboxapi.com/2/files/delete_v2",
+        options: {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer token",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ path: notePath }),
+        },
+      });
+    });
+
+    describe("when the request fails", () => {
+      it("throw an exception", async () => {
+        fakeFetch.rejectWith(403);
+
+        await expect(
+          dropbox.delete(notePath),
           "to be rejected with",
           "HTTP ERROR 403",
         );
