@@ -5,12 +5,7 @@ import { FakeSessionStorage } from "./FakeSessionStorage.js";
 import { notesCache } from "../public/state.js";
 
 const content = `\
-#+title:      Denote test
-#+date:       [2024-03-02 Tue 00:15]
-#+filetags:   :denote:test:
-#+identifier: 20240302T001523
-
-* Denote test
+# Denote test
 
 This file is just for playing around with Denote.
 `;
@@ -32,7 +27,7 @@ describe("Api", () => {
   });
 
   describe("loadNote", () => {
-    const id = "20240302T001523--denote-test__denote_test.org";
+    const id = "20240302T001523--Denote-test__denote_test.org";
 
     it("fetches the note with the given id and stores it in the notes cache", async () => {
       fakeFetch.respondWithText(content);
@@ -53,7 +48,7 @@ describe("Api", () => {
           headers: {
             Authorization: "Bearer token",
             "Content-Type": "text/plain; charset=utf-8",
-            "Dropbox-API-Arg": `{"path":"/org/denote/${id}"}`,
+            "Dropbox-API-Arg": `{"path":"/denoted/${id}"}`,
           },
         },
       });
@@ -72,15 +67,9 @@ describe("Api", () => {
         title: "Denote test",
         tags: ["denote", "test"],
         rev: "6242e992bf97d0841b75c",
-        properties: {
-          title: "Denote test",
-          date: "[2024-03-02 Tue 00:15]",
-          filetags: ":denote:test:",
-          identifier: "20240302T001523",
-        },
-        html: '<div class="section"><h2>Denote test</h2><p>This file is just for playing around with Denote. </p></div>',
+        html: "<h1>Denote test</h1>\n<p>This file is just for playing around with Denote.</p>\n",
         content:
-          "* Denote test\n\nThis file is just for playing around with Denote.",
+          "# Denote test\n\nThis file is just for playing around with Denote.",
       });
     });
   });

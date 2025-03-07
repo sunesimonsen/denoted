@@ -7,8 +7,7 @@ import {
 } from "./state.js";
 import { newNote } from "./utils/notes.js";
 import { idFrom } from "./utils/ids.js";
-import { frontmatter } from "./utils/frontmatter.js";
-import { orgToHtml } from "./org.js";
+import { markdownToHtml } from "./markdownToHtml.js";
 import { Dropbox } from "./storage/Dropbox.js";
 
 class Changelistener {
@@ -39,7 +38,7 @@ class Changelistener {
 }
 
 export class Api {
-  #changeListener = new Changelistener("/org/denote");
+  #changeListener = new Changelistener("/denoted");
 
   constructor({ fetch, router, location, sessionStorage }) {
     this.router = router;
@@ -54,7 +53,7 @@ export class Api {
   async fetchFiles() {
     const paths = [];
 
-    let result = await this.dropbox.listFolder("/org/denote");
+    let result = await this.dropbox.listFolder("/denoted");
 
     for (const entry of result.entries) {
       if (entry[".tag"] === "file") {
@@ -84,28 +83,15 @@ export class Api {
   }
 
   async fetchNote(id) {
-    const { rev, content } = await this.dropbox.download(`/org/denote/${id}`);
+    const { rev, content } = await this.dropbox.download(`/denoted/${id}`);
 
     const info = nameToNote(id);
 
-    const properties = {};
-    const propertiesMatches = content.matchAll(
-      /^#\+(?<key>[^:]+):\s*(?<value>.*)/gm,
-    );
-
-    for (const propertyMatch of propertiesMatches) {
-      const { key, value } = propertyMatch.groups;
-
-      properties[key] = value;
-    }
-
-    const html = await orgToHtml(content);
+    const html = await markdownToHtml(content);
 
     return {
       ...info,
       rev,
-      properties,
-      title: properties.title,
       html,
       content: content
         .replace(/^#\+(title|identifier|filetags|date):[^\n]*/gm, "")
@@ -124,9 +110,7 @@ export class Api {
   async createNote({ title, tags }) {
     const note = newNote({ title, tags });
 
-    const contentWithFrontmatter = frontmatter(note) + "\n\n";
-
-    await this.dropbox.create(`/org/denote/${note.id}`, contentWithFrontmatter);
+    await this.dropbox.create(`/denoted/${note.id}`, "");
 
     this.router.navigate({
       route: "note/edit",
@@ -139,7 +123,7 @@ export class Api {
   }
 
   async deleteNote({ id }) {
-    await this.dropbox.delete(`/org/denote/${id}`);
+    await this.dropbox.delete(`/denoted/${id}`);
 
     this.router.navigate({
       route: "home",
@@ -167,17 +151,16 @@ export class Api {
       const title = noteDirtyState.title();
       const content = noteDirtyState.content();
       const tags = noteDirtyState.tags();
-      const contentWithFrontmatter = frontmatter(note) + "\n\n" + content;
 
       noteDirtyState.saving(true);
 
       const { rev } = await this.dropbox.update(
-        `/org/denote/${noteDirtyState.id}`,
+        `/denoted/${noteDirtyState.id}`,
         noteDirtyState.rev,
-        contentWithFrontmatter,
+        content,
       );
 
-      const html = await orgToHtml(content);
+      const html = await markdownToHtml(content);
 
       noteDirtyState.rev = rev;
 
@@ -185,8 +168,8 @@ export class Api {
 
       if (newId !== note.id) {
         const result = this.dropbox.move(
-          `/org/denote/${noteDirtyState.id}`,
-          `/org/denote/${newId}`,
+          `/denoted/${noteDirtyState.id}`,
+          `/denoted/${newId}`,
         );
 
         const [notes] = searches.byId("notes");
