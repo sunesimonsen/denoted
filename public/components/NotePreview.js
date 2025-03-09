@@ -1,6 +1,6 @@
 import { h } from "@dependable/view";
 import { css, classes } from "stylewars";
-import { notesCache } from "../state.js";
+import { notesCache, searches } from "../state.js";
 import { LOADED, FAILED } from "@dependable/cache";
 import { Skeleton } from "@dependable/components/Skeleton/v0";
 import { ScrollArea } from "@dependable/components/ScrollArea/v0";
@@ -83,10 +83,14 @@ export class NotePreview {
     if (e.target.nodeName === "A") {
       const href = e.target.getAttribute("href");
 
-      if (href.startsWith("/note/")) {
+      if (href.endsWith(".id")) {
+        const timestamp = href.slice(0, -3);
+        const [ids] = searches.byId("notes");
+        const id = ids.find((id) => id.startsWith(timestamp));
+        console.log(id);
         this.context.router.navigate({
           route: "note/view",
-          params: { id: href.slice("/note/".length) },
+          params: { id },
         });
 
         e.preventDefault();

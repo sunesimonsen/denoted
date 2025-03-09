@@ -1,10 +1,14 @@
-import { foldGutter, bracketMatching } from "@codemirror/language";
+import {
+  foldGutter,
+  bracketMatching,
+  defaultHighlightStyle,
+} from "@codemirror/language";
 import { defaultKeymap } from "@codemirror/commands";
 import { EditorView, highlightActiveLine, keymap } from "@codemirror/view";
-import { cleanup } from "@orgajs/editor/extensions";
-import { org } from "@orgajs/cm-lang";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import { languages } from "@codemirror/language-data";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
-import { tags as t } from "@orgajs/cm-lang";
+import { tags as t } from "@lezer/highlight";
 import { EditorState } from "@codemirror/state";
 
 const baseTheme = EditorView.baseTheme({
@@ -17,12 +21,6 @@ const baseTheme = EditorView.baseTheme({
   },
   ".cm-link": {
     cursor: "pointer",
-  },
-  ".cm-org-todo": {
-    color: "red",
-  },
-  ".cm-org-done": {
-    color: "green",
   },
   ".cm-gutters": {
     minWidth: "1rem",
@@ -45,15 +43,13 @@ const baseStyle = HighlightStyle.define([
     padding: "1px 4px",
     fontFamily: "'JetBrains Mono', monospace",
   },
-  { tag: t.strikethrough, textDecoration: "line-through" },
-  { tag: t.underline, textDecoration: "underline" },
-  { tag: t.keyword, color: "#e45649" },
-  { tag: t.comment, color: "#9ca0a4" },
-  { tag: t.processingInstruction, color: "#9ca0a4" },
-  { tag: t.attributeName, color: "#9ca0a4" },
 ]);
 
-const theme = [baseTheme, syntaxHighlighting(baseStyle)];
+const theme = [
+  baseTheme,
+  syntaxHighlighting(defaultHighlightStyle),
+  syntaxHighlighting(baseStyle),
+];
 
 export function makeEditor(config) {
   const { target, content = "", extensions = [], onChange } = config;
@@ -61,14 +57,13 @@ export function makeEditor(config) {
   const state = EditorState.create({
     doc: "",
     extensions: [
-      org(),
+      markdown({ base: markdownLanguage, codeLanguages: languages }),
       keymap.of([...defaultKeymap]),
       highlightActiveLine(),
       EditorView.lineWrapping,
       bracketMatching(),
       foldGutter(),
       theme,
-      cleanup,
       extensions,
     ],
   });

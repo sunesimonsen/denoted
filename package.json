@@ -42,7 +42,9 @@
   },
   "dependencies": {
     "@codemirror/commands": "^6.3.3",
+    "@codemirror/lang-markdown": "^6.3.2",
     "@codemirror/language": "^6.10.1",
+    "@codemirror/language-data": "^6.5.1",
     "@codemirror/state": "^6.4.0",
     "@codemirror/view": "^6.23.1",
     "@dependable/cache": "^0.11.0",
@@ -53,14 +55,10 @@
     "@dependable/state": "^0.20.0",
     "@dependable/view": "^0.22.0",
     "@dependable/vite": "^0.1.0",
+    "@lezer/highlight": "^1.2.1",
     "@nano-router/history": "^2.12.0",
     "@nano-router/router": "^2.12.0",
-    "@orgajs/cm-lang": "^1.1.4",
-    "@orgajs/editor": "^1.1.7",
-    "@orgajs/reorg": "^4.1.2",
-    "@orgajs/reorg-rehype": "^4.1.2",
-    "rehype-stringify": "^9.0.4",
-    "stylewars": "^2.4.0",
-    "unist-util-visit": "^5.0.0"
+    "marked": "^15.0.7",
+    "stylewars": "^2.4.0"
   }
 }
