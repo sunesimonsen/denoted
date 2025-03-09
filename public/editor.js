@@ -28,12 +28,27 @@ const baseTheme = EditorView.baseTheme({
 });
 
 const baseStyle = HighlightStyle.define([
-  { tag: t.heading1, fontWeight: "bold", fontSize: "1.6em" },
-  { tag: t.heading2, fontWeight: "bold", fontSize: "1.4em" },
-  { tag: t.heading3, fontWeight: "bold", fontSize: "1.2em" },
-  { tag: t.heading4, fontWeight: "bold" },
-  { tag: t.heading5, fontWeight: "bold" },
-  { tag: t.heading6, fontWeight: "bold" },
+  {
+    tag: t.heading1,
+    fontWeight: "bold",
+    textDecoration: "none",
+    fontSize: "1.6em",
+  },
+  {
+    tag: t.heading2,
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: "1.4em",
+  },
+  {
+    tag: t.heading3,
+    textDecoration: "none",
+    fontWeight: "bold",
+    fontSize: "1.2em",
+  },
+  { tag: t.heading4, textDecoration: "none", fontWeight: "bold" },
+  { tag: t.heading5, textDecoration: "none", fontWeight: "bold" },
+  { tag: t.heading6, textDecoration: "none", fontWeight: "bold" },
   { tag: t.keyword, fontWeight: "bold" },
   { tag: t.strong, fontWeight: "bold" },
   { tag: t.emphasis, fontStyle: "italic" },
@@ -47,8 +62,8 @@ const baseStyle = HighlightStyle.define([
 
 const theme = [
   baseTheme,
-  syntaxHighlighting(defaultHighlightStyle),
   syntaxHighlighting(baseStyle),
+  syntaxHighlighting(defaultHighlightStyle),
 ];
 
 export function makeEditor(config) {
