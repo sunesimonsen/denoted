@@ -1,12 +1,12 @@
 export const newDatetime = () => {
   const now = new Date();
 
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  const day = now.getDate();
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  const seconds = now.getSeconds();
+  const year = now.getUTCFullYear();
+  const month = now.getUTCMonth() + 1;
+  const day = now.getUTCDate();
+  const hours = now.getUTCHours();
+  const minutes = now.getUTCMinutes();
+  const seconds = now.getUTCSeconds();
 
   return { year, month, day, hours, minutes, seconds };
 };
