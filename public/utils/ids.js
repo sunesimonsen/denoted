@@ -9,7 +9,11 @@ export const idFrom = ({ timestamp, title, tags }) => {
 
   const escapedTags = tags
     .map((tag) => removeInvalidChars(tag.toLowerCase()))
+    .filter(Boolean)
     .join("_");
 
-  return `${timestamp}--${escapedTitle}__${escapedTags}.md`;
+  return (
+    [`${timestamp}--${escapedTitle}`, escapedTags].filter(Boolean).join("__") +
+    ".md"
+  );
 };
