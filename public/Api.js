@@ -56,7 +56,7 @@ export class Api {
     let result = await this.dropbox.listFolder("/denoted");
 
     for (const entry of result.entries) {
-      if (entry[".tag"] === "file") {
+      if (entry[".tag"] === "file" && entry.name.endsWith(".md")) {
         paths.push(entry.name);
       }
     }
@@ -65,7 +65,7 @@ export class Api {
       result = await this.dropbox.listFolderFromCursor(result.cursor);
 
       for (const entry of result.entries) {
-        if (entry[".tag"] === "file") {
+        if (entry[".tag"] === "file" && entry.name.endsWith(".md")) {
           paths.push(entry.name);
         }
       }
