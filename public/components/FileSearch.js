@@ -8,6 +8,7 @@ import {
 } from "@dependable/components/Autocomplete/v0";
 import { route } from "@dependable/nano-router";
 import { searchText, searchResults } from "../state.js";
+import { Tags } from "./Tags.js";
 
 const popStyles = css`
   & {
@@ -26,6 +27,30 @@ const onInput = (e) => {
 const onClear = () => {
   searchText("");
 };
+
+const timestampStyles = css`
+  & {
+    color: var(--dc-text-color-1);
+    font-size: 12px;
+  }
+`;
+
+const comletionLabelStyles = css`
+  & {
+    display: flex;
+    gap: var(--dc-spacing-2);
+  }
+`;
+
+class CompletionLabel {
+  render({ title, tags, timestamp }) {
+    return h("div", { className: comletionLabelStyles }, [
+      title,
+      h(Tags, { tags }),
+      h("span", { className: timestampStyles }, timestamp),
+    ]);
+  }
+}
 
 export class FileSearch {
   #onFocus = () => {
@@ -63,10 +88,13 @@ export class FileSearch {
       const { type, data } = match;
 
       if (type === "note") {
-        const { id, title, tags } = data;
-        const label = tags.length ? `${title} (${tags.join(",")})` : title;
+        const { id, title, tags, timestamp } = data;
 
-        return h(AutocompleteOption, { key: id, value: match }, label);
+        return h(
+          AutocompleteOption,
+          { key: id, value: match },
+          h(CompletionLabel, { title, tags, timestamp }),
+        );
       } else {
         const { id, tag } = data;
 
