@@ -33,10 +33,17 @@ const timestampStyles = css`
     color: var(--dc-text-color-1);
     font-size: 12px;
   }
+  @media screen and (max-width: 900px) {
+    & {
+      visibility: hidden;
+    }
+  }
 `;
 
-const comletionLabelStyles = css`
+const completionLabelStyles = css`
   & {
+    white-space: nowrap;
+    overflow: hidden;
     display: flex;
     gap: var(--dc-spacing-2);
   }
@@ -44,7 +51,7 @@ const comletionLabelStyles = css`
 
 class CompletionLabel {
   render({ title, tags, timestamp }) {
-    return h("div", { className: comletionLabelStyles }, [
+    return h("div", { className: completionLabelStyles }, [
       title,
       h(Tags, { tags }),
       h("span", { className: timestampStyles }, timestamp),

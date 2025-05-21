@@ -292,7 +292,8 @@ export class Dropbox {
   addChangeListener(listener) {
     this.#changeListeners.add(listener);
 
-    if (!this.#interval) {
+    if (this.#interval == null) {
+      this.#checkForUpdates();
       this.#interval = setInterval(this.#checkForUpdates, 5000);
     }
   }
@@ -302,6 +303,7 @@ export class Dropbox {
 
     if (this.#changeListeners.size === 0) {
       clearInterval(this.#interval);
+      this.#interval = null;
     }
   }
 
