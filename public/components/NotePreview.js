@@ -87,7 +87,7 @@ export class NotePreview {
         const timestamp = href.slice(0, -3);
         const [ids] = searches.byId("notes");
         const id = ids.find((id) => id.startsWith(timestamp));
-        console.log(id);
+
         this.context.router.navigate({
           route: "note/view",
           params: { id },
